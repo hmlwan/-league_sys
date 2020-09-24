@@ -1,0 +1,20 @@
+<script src="/Public/mobile/js/common/main.js"></script>
+<script src="/Public/mobile/js/common/fontSize.js"></script>
+<script src="/Public/mobile/js/common/swiper.min.js"></script>
+<script src="/Public/mobile/js/common/utils.js"></script>
+<script src="/Public/mobile/js/layui/layui.js"></script>
+<script src="/Public/mobile/js/layer/layer.js"></script>
+<script src="/Public/mobile/js/common/clipboard.min.js"></script>
+<script type="text/javascript">
+$(function () {
+    $(".mui-item").each(function (i) {
+        var i = i+1;
+        var cur_active_class = "footer_active_f"+i;
+        $(this).removeClass(cur_active_class);
+        var footer_active = $("input[name='mui-tab-item']").val();
+        if(i == footer_active){
+            $(this).addClass(cur_active_class);
+        }
+    })
+})
+</script>

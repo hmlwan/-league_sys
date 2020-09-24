@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>
+        <switch name="type_id">
+            <case value="1">热门咨询</case>
+            <case value="2">热门交易所</case>
+            <case value="3">热门项目</case>
+        </switch>
+    </title>
+    <include file="Public:header"/>
+</head>
+<body>
+    <header>
+        <div class="header_bt">
+            <div class="header_f"><a href="javascript:history.back()" class="header_fh"></a></div>
+            <div class="header_c">
+                <switch name="type_id">
+                    <case value="1">热门咨询</case>
+                    <case value="2">热门交易所</case>
+                    <case value="3">热门项目</case>
+                </switch>
+            </div>
+        </div>
+        <div style="height: .74rem;clear: both;"></div>
+    </header>
+    <if condition="$list">
+        <div class="sy_page rmzx_page">
+            <div class="sy_box sy_xm flow_load">
+
+            </div>
+        </div>
+    <else />
+        <div class="show_on_content">
+            <p><img src="/Public/mobile/image/no_data_icon.png" alt=""></p>
+            <p class="show_text">暂无内容</p>
+        </div>
+    </if>
+
+
+</body>
+<include file="Public:footer"/>
+<script>
+    lazy_loading('/index/index/get_more/type_id/{$type_id}');
+</script>
+</html>
+

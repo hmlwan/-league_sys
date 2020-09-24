@@ -1,0 +1,141 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <include file="Public:header"/>
+</head>
+<body style="background-color: #eeebef">
+<input type="hidden" name="mui-tab-item" value="1">
+    <div class="sy_page">
+        <div class="sy_top">
+           <div class="sy_top_con flexbox  wrap spacebetween">
+               <p>
+                   <span>生态积分</span>
+                   <span class="st_num">1574.<em>87</em> </span>
+               </p>
+               <p>
+                   <span>联盟积分</span>
+                   <span class="lm_num">123.<em>3233</em></span>
+               </p>
+           </div>
+           <div class="djlq">
+               <i></i>
+           </div>
+        </div>
+        <div class="sy_box sy_rm">
+            <p class="sy_rm_con flexbox wrap spacebetween">
+                <a href="{:U('/index/index/contract_address')}">
+                    <img src="/Public/mobile/image/heyuedizhi.png" alt="">
+                    <span>合约地址</span>
+                </a>
+                <a href="{:U('/index/index/white_paper')}">
+                    <img src="/Public/mobile/image/baipishu.png" alt="">
+                    <span>白皮书</span>
+                </a>
+                <a href="{:U('/index/index/economic_book')}">
+                    <img src="/Public/mobile/image/jingjishu.png" alt="">
+                    <span>经济书</span>
+                </a>
+                <a href="">
+                    <img src="/Public/mobile/image/yaoqinghaoyou.png" alt="">
+                    <span>邀请好友</span>
+                </a>
+            </p>
+        </div>
+        <div class="sy_box sy_zx">
+            <div class="top">
+                <if condition="$zx_count gt 4">
+                    <a href="{:U('/index/index/get_more',array('type_id'=>1))}">
+                        <p class="more_title flexbox spacebetween">
+                            <span>热门咨询</span>
+                            <span class="more">点击查看更多></span>
+                        </p>
+                    </a>
+                <else />
+                    <a href="javascript:;">
+                        <p class="more_title flexbox spacebetween">
+                            <span>热门咨询</span>
+                        </p>
+                    </a>
+                </if>
+            </div>
+            <p class="sy_zx_con flexbox wrap">
+                <volist name="zx_list" id="v1" key="k1">
+                    <a href="{$v1.jump_url}" <if condition="$k1 eq 1">class="active"</if>  >
+                        <i class="b{$k1}_icon"> </i>
+                        <span class="title">{$v1.name}</span>
+                        <span>{$v1.summary}</span>
+                    </a>
+                </volist>
+            </p>
+        </div>
+        <div class="sy_box sy_xm">
+            <div class="top">
+                <if condition="$jys_count gt 3">
+                    <a href="{:U('/index/index/get_more',array('type_id'=>2))}">
+                        <p class="more_title flexbox spacebetween">
+                            <span>热门交易所</span>
+                            <span class="more">点击查看更多></span>
+                        </p>
+                    </a>
+                <else />
+                    <a href="javascript:;">
+                        <p class="more_title flexbox spacebetween">
+                            <span>热门交易所</span>
+                        </p>
+                    </a>
+                </if>
+
+            </div>
+            <volist name="jys_list" id="v2">
+                <div class="sy_xm_con">
+                    <a href="{$v2.jump_url}">
+                        <div class="sy_xm_item flexbox wrap">
+                            <img src="{$v2.logo_url}" alt="">
+                            <p class="sy_xm_l flexbox column">
+                                <span class="title">{$v2.summary}</span>
+                                <span class="zz">{$v2.operator}</span>
+                            </p>
+                        </div>
+                    </a>
+
+                </div>
+            </volist>
+        </div>
+        <div class="sy_box sy_xmm">
+            <div class="top">
+                <if condition="$xm_count gt 3">
+                    <a href="{:U('/index/index/get_more',array('type_id'=>3))}">
+                        <p class="more_title flexbox spacebetween">
+                            <span>热门项目</span>
+                            <span class="more">点击查看更多></span>
+                        </p>
+                    </a>
+                    <else />
+                    <a href="javascript:;">
+                        <p class="more_title flexbox spacebetween">
+                            <span>热门项目</span>
+                        </p>
+                    </a>
+                </if>
+            </div>
+            <div class="sy_xmm_con flexbox wrap">
+                <volist name="xm_list" id="v3">
+
+                        <p>
+                            <a href="{$v3.jump_url}">
+                            <img src="{$v3.logo_url}" alt="">
+                            <span>{$v3.name}</span>
+                            </a>
+                        </p>
+
+                </volist>
+            </div>
+        </div>
+    </div>
+<include file="Public:nav"/>
+</body>
+<include file="Public:footer"/>
+</html>
+

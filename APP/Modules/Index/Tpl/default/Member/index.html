@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>我的</title>
+    <include file="Public:header"/>
+</head>
+<body style="background-color: #f4f3fb">
+<input type="hidden" name="mui-tab-item" value="4">
+<div class="wd_page">
+    <div class="wd_box wd_top flexbox wrap">
+        <img class="logo" src="/Public/mobile/image/logo.png" alt="">
+        <div class="info">
+            <p class="name">{$m_info.username}</p>
+            <p class="yqm"><span>邀请码：{$m_info.inviteCode}</span><i class="copy copy_btn" data-clipboard-text="{$m_info.inviteCode}"></i></p>
+        </div>
+        <div class="sign">
+            签到
+        </div>
+    </div>
+    <div class="wd_box wd_nav">
+        <ul class="flexbox spacebetween wrap">
+            <li>
+                <a href="stjf.html">
+                    <img src="/Public/mobile/image/jfmx.png" alt="">
+                    <span>积分明细</span>
+                </a>
+            </li>
+            <li>
+                <a href="lmqb.html">
+                    <img src="/Public/mobile/image/qb.png" alt="">
+                    <span>联盟钱包</span>
+                </a>
+            </li>
+            <li>
+                <a href="yqhy.html">
+                    <img src="/Public/mobile/image/yqhy.png" alt="">
+                    <span>邀请好友</span>
+                </a>
+            </li>
+            <li>
+                <a href="wdtd.html">
+                    <img src="/Public/mobile/image/wdtu.png" alt="">
+                    <span>我的团队</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="wd_ad">
+        <a href="lmjl.html"><img src="/Public/mobile/image/lmjl.png" alt=""></a>
+    </div>
+    <div class="wd_box wd_item">
+        <ul class="flexbox column">
+            <li>
+                <a href="wddd.html">
+                    <span>消费订单</span><i></i>
+                </a>
+            </li>
+            <li>
+                <a href="">
+                    <span>实名认证</span><i></i>
+                </a>
+            </li>
+            <li>
+                <a href="{:U('/index/member/edit_pwd')}">
+                    <span>密码管理</span><i></i>
+                </a>
+            </li>
+            <li>
+                <a href="{:U('/index/member/announce')}">
+                    <span>官方公告</span><i></i>
+                </a>
+            </li>
+            <li>
+                <a href="{:U('/index/member/help')}">
+                    <span>在线帮助</span><i></i>
+                </a>
+            </li>
+            <li>
+                <a href="javascript:;" onclick="logout()">
+                    <span>安全退出</span><i></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+</div>
+
+<include file="Public:nav"/>
+</body>
+<include file="Public:footer"/>
+<script>
+    copy();
+    function logout(){
+        layer.confirm('确定退出？', {
+            title:'提示',
+            btn: ['确定'] //按钮
+        }, function(){
+            window.location.href = "{:U('/index/index/logout')}";
+        }, function(){
+
+        });
+    }
+</script>
+</html>
+

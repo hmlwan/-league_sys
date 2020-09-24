@@ -1,0 +1,99 @@
+<?php if (!defined('THINK_PATH')) exit();?><!DOCTYPE html>
+
+<html class="pixel-ratio-3 retina android android-5 android-5-0 watch-active-state">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta http-equiv="pragma" content="no-cache">
+  <meta http-equiv="cache-control" content="no-cache">
+  <meta http-equiv="expires" content="0">
+
+  <title>生态圈</title>
+  <link rel="stylesheet" href="/Public/dianyun/css/app.css">
+  <link rel="stylesheet" href="/Public/dianyun/css/iconfont.css">
+  <style type="text/css">
+    * {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .tixianlog {
+      background: #ffffff00;
+    }
+
+    .tixianlog span {
+      color: #484848;
+    }
+
+    .headers {
+      width: 100%;
+      height: 50px;
+      text-align: center;
+      background-color: deepskyblue;
+      color: #fff;
+
+    }
+
+    .headers p {
+      padding-top: 10px;
+    }
+
+    .ren {
+      width: 100%;
+      height: 8em;
+      background: deepskyblue;
+    }
+
+    .ren ul {
+      margin-left: 2em;
+      padding-top: 2em;
+      color: #fff;
+    }
+
+    .ren li {
+      float: left;
+      text-align: center;
+      margin-left: 20px;
+    }
+
+    .ren p {
+      margin-top: 5px;
+    }
+  </style>
+
+
+</head>
+<body style="background: #f6f8fa;">
+<div class="headers">
+  <p>生态圈</p>
+</div>
+<div class="ren">
+  <ul>
+    <li>
+      <p><?php echo ($zhitui); ?></p>
+      <p>直接推广人数</p>
+    </li>
+    <li>
+      <p><?php echo ($totalPeople); ?></p>
+      <p>生态圈总人数</p>
+    </li>
+    <li>
+      <p><?php echo ($totalCount); ?></p>
+      <p>生态圈总树木</p>
+    </li>
+  </ul>
+</div>
+<div class="tixianlog">
+  <p class="tixianlog_t"><span>账户</span> <span>电话</span> <span>余额</span> <span>直推</span></p>
+  <?php if(is_array($list)): foreach($list as $key=>$v): ?><p class="tixianlog_b"><span><?php echo ($v["truename"]); ?></span> <span><?php echo ($v["mobile"]); ?></span> <span><?php echo ($v["money"]); ?></span> <span><?php echo ($v["zhitui"]); ?></span>
+    </p><?php endforeach; endif; ?>
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>密码管理</title>
+    <include file="Public:header"/>
+</head>
+<body style="background-color: #f2f2f2">
+<input type="hidden" name="mui-tab-item" value="4">
+    <header>
+        <div class="header_bt">
+            <div class="header_f"><a href="javascript:history.back()" class="header_fh"></a></div>
+            <div class="header_c">密码管理</div>
+        </div>
+        <div style="height: .74rem;clear: both;"></div>
+    </header>
+    <form id="editpwd-form" action="{:U('member/edit_pwd')}" method="post" onsubmit="return false">
+        <input type="hidden" id="mobile" name="username" value="{$mobile}">
+        <input type="hidden" name="type" value="1">
+        <div class="smrz_page dlogin_page zcreg_page mmgl_page">
+        <div class="dlogin_con smrz_con">
+            <p class="nav flexbox spacebetween">
+                <a href="{:U('edit_pwd ')}">登录密码</a>
+                <a href="javascript:;"  class="active">支付密码</a>
+            </p>
+            <ul class="dlogin_item">
+                <li>
+                    <label>支付密码</label>
+                    <p><input  class="input_line" name="password" placeholder="请输入支付密码" type="password"><i class="eye" onclick="openeye($(this));" data-active="0"> </i></p>
+                </li>
+                <li>
+                    <label>确认密码</label>
+                    <p><input  class="input_line" name="repassword" placeholder="请再次输入支付密码" type="password"><i class="eye" onclick="openeye($(this));" data-active="0"></i></p>
+                </li>
+                <li class="yzm">
+                    <label>短信验证码</label>
+                    <div class="flexbox spacebetween">
+                        <input type="text" name="code" class="input_line " placeholder="请输入短信验证码">
+                        <button class="get_yzm" data-mobile="mobile" id="send-code" data-url="{:U('sem/send_edit_code',array('token'=>$token))}" onclick="sendCode(this)">获取验证码</button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <button class="dlogin_sub_button" data-form="editpwd-form" onclick="ajaxPost(this)">确认修改</button>
+    </div>
+    </form>
+<include file="Public:nav"/>
+</body>
+<include file="Public:footer"/>
+<script>
+
+</script>
+</html>
+

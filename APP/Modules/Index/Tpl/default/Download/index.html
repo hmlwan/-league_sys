@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>我的</title>
+    <include file="Public:header"/>
+</head>
+<body>
+    <header>
+        <div class="header_bt">
+            <div class="header_f"><a href="javascript:history.back()" class="header_fh"></a></div>
+            <div class="header_c">528联盟</div>
+        </div>
+        <div style="height: .74rem;clear: both;"></div>
+    </header>
+    <div class="xzy_page">
+        <div class="xzy_top flexbox wrap">
+            <img src="{$info.logo_url}" alt="">
+             <div class="xzy_top_con">
+                 <p><span class="title">{$info.title}</span><i class="gf_icon"></i></p>
+                 <p class="size">{$info.size}M</p>
+                 <p class="anquan"><i class="aq_icon"></i>人工亲测 · 安全 · 无广告</p>
+             </div>
+        </div>
+        <div class="xzy_con flexbox wrap spacebetween">
+            <div>
+                <p>
+                    <span>{$info.score}</span>
+                    <span>
+                        <if condition="$score_arr[0] gt 0">
+                            <for start="0" end="$score_arr[0]">
+                                <img src="/Public/mobile/image/st1.png" class="qx" alt="">
+                            </for>
+                        </if>
+                        <if condition="$score_arr[1] gt 0">
+                             <img src="/Public/mobile/image/st2.png" class="bx" alt="">
+                        </if>
+                    </span>
+                </p>
+                <p>{$info.person_num}{$info.person_num_unit} 人评分</p>
+            </div>
+            <div>
+                <p>{$info.install_num}{$info.install_num_unit}</p>
+                <p>次安装</p>
+            </div>
+            <div>
+                <p>18+</p>
+                <p>年满18周岁</p>
+            </div>
+        </div>
+        <div class="xzy_scroll">
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide"><img src="/Public/mobile/image/xzy1.png" alt=""></div>
+                    <div class="swiper-slide"><img src="/Public/mobile/image/xzy2.jpg" alt=""></div>
+                    <div class="swiper-slide"><img src="/Public/mobile/image/xzy1.png" alt=""></div>
+                </div>
+                <div class="swiper-pagination"></div>
+            </div>
+        </div>
+        <div class="xzy_xq">
+            {$info.content}
+        </div>
+        <div class="xzy_btn">
+            <p>
+                <a href="{$info.android_url}" target="_blank">安卓下载</a>
+            </p>
+            <p>
+                <a href="{$info.ios_url}"  target="_blank">苹果下载</a>
+            </p>
+        </div>
+    </div>
+</body>
+<include file="Public:footer"/>
+<script>
+    var mySwiper = new Swiper('.swiper-container',{
+        slidesPerView : 2,
+        spaceBetween : 15,
+            pagination: {
+                el: '.swiper-pagination',
+            }
+        }
+    )
+</script>
+
+</html>
+

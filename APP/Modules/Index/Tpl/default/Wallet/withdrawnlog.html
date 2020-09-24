@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>提现记录</title>
+		<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="expires" content="0">
+    <link rel="stylesheet" type="text/css" href="/Public/dianyun/css/guoshu.css"/>
+	</head>
+	<body>
+		
+		<div class="tixian-log-top">
+			<p>提现记录<span></span></p>
+		</div>
+		<div class="buluoba-hr"></div>
+		
+		<div class="tixian-lot-center">
+			<ul>
+				<foreach name="list" item="v">
+				<li>
+					<p class="tixian-log-p">
+						<img src="/Public/dianyun/img/zfb.png"/>
+						<span>提现到支付宝</span>
+						<a href="#">{$v.payment}</a>
+					</p>
+					<p class="tixian-log-pp tixian-log-ppp">提现状态：<if condition="$v.status eq 0">未审核<elseif condition="$v.status eq 1"/>已成功<else/>已拒绝</if></p>
+					<p class="tixian-log-pp">提现账户：{$v.username|yc_phone=###}</p>
+				</li>
+				</foreach>
+			</ul>
+		</div>
+		
+		
+	</body>
+</html>

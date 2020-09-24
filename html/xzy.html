@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!--申明当前页面的编码集-->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <!--网页标题-->
+    <title></title>
+    <script type="text/javascript" src="js/fontSize.js"></script>
+    <!--网页关键词-->
+    <meta name="keywords" content="" />
+    <!--网页描述-->
+    <meta name="description" content="" />
+    <!--适配当前屏幕-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <!--禁止自动识别电话号码-->
+    <meta name="format-detection" content="telephone=no" />
+    <!--禁止自动识别邮箱-->
+    <meta content="email=no" name="format-detection" />
+    <!--iphone中safari私有meta标签,
+        允许全屏模式浏览,隐藏浏览器导航栏-->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <!--iphone中safari顶端的状态条的样式black(黑色)-->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <!--如果用户装了谷歌浏览器，用ie浏览时使用谷歌内核-->
+    <!--<meta http-equiv=”X-UA-Compatible” content=”IE=edge,chrome=1″/>-->
+    <!--css文件-->
+    <link type="text/css" rel="stylesheet" href="css/style.css" />
+    <link type="text/css" rel="stylesheet" href="css/reset.css" />
+    <link type="text/css" rel="stylesheet" href="css/swiper-4.2.0.min.css" />
+    <script src="js/jquery1.10.2.min.js"></script>
+    <script src="js/swiper-4.2.0.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="header_bt">
+            <div class="header_f"><a href="javascript:history.back()" class="header_fh"></a></div>
+            <div class="header_c"></div>
+        </div>
+        <div style="height: .74rem;clear: both;"></div>
+    </header>
+    <div class="xzy_page">
+        <div class="xzy_top flexbox wrap">
+            <img src="image/logo_xzy.png" alt="">
+             <div class="xzy_top_con">
+                 <p><span class="title">528联盟</span><i class="gf_icon"></i></p>
+                 <p class="size">88.7M</p>
+                 <p class="anquan"><i class="aq_icon"></i>人工亲测 · 安全 · 无广告</p>
+             </div>
+        </div>
+        <div class="xzy_con flexbox wrap spacebetween">
+            <div>
+                <p>
+                    <span>4.9</span>
+                    <span>
+                        <img src="image/st1.png" class="qx" alt="">
+                        <img src="image/st1.png" class="bx" alt="">
+                        <img src="image/st1.png" class="bx" alt="">
+                        <img src="image/st1.png" class="bx" alt="">
+                        <img src="image/st2.png" class="bx" alt="">
+                    </span>
+                </p>
+                <p>2.6万 人评分</p>
+            </div>
+            <div>
+                <p>10亿</p>
+                <p>次安装</p>
+            </div>
+            <div>
+                <p>18+</p>
+                <p>年满18周岁</p>
+            </div>
+        </div>
+        <div class="xzy_scroll">
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide"><img src="image/xzy1.png" alt=""></div>
+                    <div class="swiper-slide"><img src="image/xzy2.jpg" alt=""></div>
+                    <div class="swiper-slide"><img src="image/xzy1.png" alt=""></div>
+                </div>
+                <div class="swiper-pagination"></div>
+            </div>
+        </div>
+        <div class="xzy_xq">
+            热门咨询，交易所，项目。权重越多就优先置顶在首页，点击查看更多也是权重越高排序越在前面。也可以在线编辑详情
+        </div>
+        <div class="xzy_btn">
+            <p>
+                <a href="">安卓下载</a>
+            </p>
+            <p>
+                <a href="">苹果下载</a>
+            </p>
+        </div>
+    </div>
+</body>
+<script>
+    var mySwiper = new Swiper('.swiper-container',{
+        slidesPerView : 2,
+        spaceBetween : 15,
+            pagination: {
+                el: '.swiper-pagination',
+            }
+//spaceBetween : '10%',按container的百分比
+    }
+    )
+</script>
+</html>
+

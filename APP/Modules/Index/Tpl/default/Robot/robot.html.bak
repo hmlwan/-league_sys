@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html class="pixel-ratio-3 retina android android-5 android-5-0 watch-active-state">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta http-equiv="pragma" content="no-cache">
+  <meta http-equiv="cache-control" content="no-cache">
+  <meta http-equiv="expires" content="0">
+
+  <title>我的树林</title>
+  <link rel="stylesheet" href="/Public/dianyun/css/iconfont.css">
+
+
+  <link rel="stylesheet" type="text/css" href="/public/css/common.css">
+  <link rel="stylesheet" type="text/css" href="/public/css/style1.css">
+  <link rel="stylesheet" type="text/css" href="/public/dianyun/css/85917441.css">
+  <link rel="stylesheet" type="text/css" href="/public/css/normalize.css"/>
+
+  <script src="/public/js/jquery-1.8.3.min.js" type="text/javascript"></script>
+  <script src="/public/js/circleChart.min.js"></script>
+
+</head>
+<body style="background: #f6f8fa;">
+
+
+<div class="robot-index-center">
+  <ul>
+    <foreach name="orders" item="v">
+      <li>
+        <img src="{$v.imagepath}" style="position: absolute; z-index: -1;margin:1.5%;width: 97.5%;">
+        <p class="robot-index-center-title" style="margin-top: 5%;margin-left:4%">{$v.project}</p>
+        <div class="robot-index-center-left">
+          <!-- <p>生态周期寿命{$v.yxzq}小时</p> -->
+          <p data-expire="{$v.expire}" style="width:30em;margin-top:0%;margin-left:8%">生态周期寿命
+            <if condition="$v['zt'] eq 1">{$v.expire}
+              <else/>
+              --
+            </if>
+          </p>
+          <p style="margin-top: 0%;margin-left:8%"></br><nobr>已产生态收益：{$v.already_profit|four_number=###}Usdt</nobr></p>
+        </div>
+        <div class="robot-index-center-right" data-isActive="{$v.isActive}" data-getTime="{$v.getTime}" data-time="{$v.jiesuantime}" style="position: absolute;
+		right: 0;margin-top: -3.5%;">
+          <!-- <div class="circleChart" id="0"></div> -->
+          <if condition="$v.zt eq 1">
+            <if condition="$v.is_jiesuan eq 1">
+              <a href="{:U('Robot/jiesuan',array('id'=>$v['id']))}">
+                <div class="circleChart"></div>
+              </a>
+              <else/>
+              <a href="javascript:alert(&#39;树木周期正在运转中，每24小时领取一次生态收益。&#39;);">
+                <div class="circleChart"></div>
+              </a>
+            </if>
+            <else/>
+          </if>
+        </div>
+      </li>
+    </foreach>
+  </ul>
+</div>
+
+
+<footer class="new-index-footer">
+  <ul>
+    <a href="{:U('Index/New/index')}">
+      <li>
+        <img src="/public/dianyun/img/i-shouye.png"/>
+        <p class="">首页</p>
+      </li>
+      <a href="{:U('Index/Robot/robot')}">
+        <li>
+          <img src="/public/dianyun/img/i-julebu-s.png"/>
+          <p class="new-index-footer-ac">果树</p>
+        </li>
+        <a href="{:U('Index/Wallet/index')}">
+          <li>
+            <img src="/public/dianyun/img/i-wode.png"/>
+            <p class="">我的</p>
+          </li>
+        </a>
+  </ul>
+</footer>
+
+
+</body>
+</html>
+<script>
+ let times = $(".robot-index-center-right")
+  times.each((index,el)=>{
+      let num =  $(el).attr('data-getTime')
+      $(el).find(".circleChart").circleChart({
+		      size: 100,
+		       value: num,
+		       text: 0,
+		       onDraw: function (el, circle) {
+		         circle.text("运转中");
+		    }
+	});
+  })
+</script>
+<script>
+  function dateCount(expire){
+    // 获取现在的时间
+    var date = new Date();
+    var until = new Date(expire);
+    // 计算时会发生隐式转换，调用valueOf()方法，转化成时间戳的形式
+    var days = (until - date)/1000/3600/24;
+    // 下面都是简单的数学计算
+    var day = Math.floor(days);
+    var hours = (days - day)*24;
+    var hour = Math.floor(hours);
+    var minutes = (hours - hour)*60;
+    var minute = Math.floor(minutes);
+    var seconds = (minutes - minute)*60;
+    var second = Math.floor(seconds);
+    var back = '生态周期寿命：</br>'+day+'天'+hour+'小时'+minute+'分钟'+second+'秒';
+    return back;
+  }
+  let p = $("p[data-expire]");
+  p.each((index,el)=>{
+    setInterval(function(){
+      $(el).html(dateCount($(el).data('expire')))
+    },1000)
+  })
+</script>

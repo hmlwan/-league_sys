@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>在线帮助</title>
+    <include file="Public:header"/>
+</head>
+<body class="zxbz_body" style="background-color: #f4f3fb">
+<input type="hidden" name="mui-tab-item" value="4">
+    <header>
+        <div class="header_bt"  >
+            <div class="header_f"><a href="javascript:history.back()" class="header_fh"></a></div>
+            <div class="header_c">在线帮助</div>
+        </div>
+        <div style="height: .74rem;clear: both;"></div>
+    </header>
+    <div class="zxbz_page">
+        <div class="zxbz_top">
+            <i class="zxkf"></i>
+            <p class="bzzx">
+                <span>帮助中心</span>
+                <span class="kf">在线客服</span>
+            </p>
+            <p class="jdzx">常见问题解答中心</p>
+        </div>
+        <div class="zxbz_mid">
+            <div class="zxbz_con">
+                <p class="title">
+                    <i></i> <span>常见问题</span>
+                </p>
+                <div class="zxbz_item">
+                    <div class="zxbz_jl flexbox wrap">
+                        <div class="flexbox column text_center" style="margin-right: .3rem; margin-top: .4rem;">
+                            <img src="/Public/mobile/image/df.png" alt="">
+                            <span class="title">借贷相关</span>
+                        </div>
+                        <i class="line"></i>
+                        <div class="con">
+                            <div>
+                                <p class="name"><span><em>></em>1.我为什么要借贷我为什么要借贷我为什么要借贷我为什么要借贷</span> </p>
+                                <p class="content">我为什么要借贷我为什么要借贷我为什么要借贷我为什么要借贷</p>
+                            </div>
+                            <div>
+                                <p class="name"><span><em>></em>2.我为什么要借贷我为什</span> </p>
+                                <p class="content"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="zxbz_item">
+                    <div class="zxbz_jl flexbox wrap">
+                        <div class="flexbox column text_center" style="margin-right: .3rem; margin-top: .4rem;">
+                            <img src="/Public/mobile/image/cx.png" alt="">
+                            <span class="title">出借相关</span>
+                        </div>
+                        <i class="line"></i>
+                        <div class="con">
+                            <div>
+                                <p class="name"><span><em>></em>1.我为什么要借贷我为什么要借贷我为什么要借贷我为什么要借贷</span> </p>
+                                <p class="content">我为什么要借贷我为什么要借贷我为什么要借贷我为什么要借贷</p>
+                            </div>
+                            <div>
+                                <p class="name"><span><em>></em>2.我为什么要借贷我为什</span> </p>
+                                <p class="content"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<include file="Public:nav"/>
+<include file="Public:footer"/>
+<script>
+    $(".zxbz_item .con .name").click(function () {
+        var self = $(this);
+        var em = self.find('em');
+        if(em.attr('active') == 1){
+            em.text('>');
+            em.attr('active','0')
+            self.next('.content').css('display','none');
+        }else{
+            em.text('∨');
+            em.attr('active','1')
+            self.next('.content').css('display','inline-block');
+
+        }
+
+
+    })
+
+</script>
+</html>
+

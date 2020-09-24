@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>应用</title>
+    <include file="Public:header"/>
+</head>
+<body>
+<input type="hidden" name="mui-tab-item" value="3">
+    <div class="yy_page">
+        <div class="yy_top">
+            <img src="/Public/mobile/image/yy_top.png" alt="">
+        </div>
+        <if condition="$list">
+            <volist name="list" id="vo">
+                <div class="yy_item">
+                    <div class="top">
+                        <a href="{:U('/index/app/get_more',array('type_id'=>$vo['id']))}">
+                            <p class="more_title flexbox spacebetween">
+                                <span>{$vo.name}</span>
+                                <span class="more">点击查看更多></span>
+                            </p>
+                        </a>
+                    </div>
+                    <div class="yy_con flexbox wrap">
+                        <volist name="vo['app_list']" id="v">
+                            <p onclick="window.location.href='{$v.jump_url}'">
+                                <span><img src="{$v.logo_url}" alt=""></span>
+                                <span>{$v.name}</span>
+                            </p>
+                        </volist>
+                    </div>
+                </div>
+            </volist>
+        <else />
+            <div class="show_on_content">
+                <p><img src="/Public/mobile/image/no_data_icon.png" alt=""></p>
+                <p class="show_text">暂无内容</p>
+            </div>
+        </if>
+    </div>
+
+<include file="Public:nav"/>
+</body>
+<include file="Public:footer"/>
+</html>
+

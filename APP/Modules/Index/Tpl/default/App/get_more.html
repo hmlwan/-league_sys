@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>应用</title>
+    <include file="Public:header"/>
+</head>
+<body>
+<input type="hidden" name="mui-tab-item" value="3">
+
+    <header>
+        <div class="header_bt">
+            <div class="header_f"><a href="javascript:history.back()" class="header_fh"></a></div>
+            <div class="header_c">{$type_name}</div>
+        </div>
+        <div style="height: .74rem;clear: both;"></div>
+    </header>
+<if condition="$list">
+    <div class="yyxq_page yy_page">
+        <div class="yy_item">
+            <div class="yy_con flexbox wrap">
+                <volist name="list" id="v">
+                    <p onclick="window.location.href='{$v.jump_url}'">
+                        <span><img src="{$v.logo_url}" alt=""></span>
+                        <span>{$v.name}</span>
+                    </p>
+                </volist>
+            </div>
+        </div>
+    </div>
+<else />
+    <div class="show_on_content">
+        <p><img src="/Public/mobile/image/no_data_icon.png" alt=""></p>
+        <p class="show_text">暂无内容</p>
+    </div>
+</if>
+<include file="Public:nav"/>
+</body>
+<include file="Public:footer"/>
+</html>
+

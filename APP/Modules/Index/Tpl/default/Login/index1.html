@@ -1,0 +1,97 @@
+﻿<!doctype html>
+<html lang="zh">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <title>登录</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="wap-font-scale" content="no">
+    <link rel="stylesheet" href="/Public/dianyun/css/app.css">
+    <link rel="stylesheet" href="/Public/dianyun/css/iconfont.css">
+    <link rel="stylesheet" href="/Public/dianyun/css/85917441.css">
+	<style>
+	.wrapper{
+	min-height:auto;
+	}
+	html,body{
+		height: 100%;
+	}
+	body{
+		background-size: auto;
+	}
+	*{
+		margin: 0;
+		padding: 0;
+		text-decoration: none;
+		list-style: none;
+	}
+	</style>
+</head>
+
+  <body class="login_body">
+  	
+  	<div class="login_body_logo">
+  	</div>
+  	
+  	<div class="login_body_form">
+  		<form name="form" method="post" id="form">
+  		<input type="text" name="username" id="txtUid" placeholder="请输入您的用户名"  maxlength="11"/>
+  		<input type="password" name="password" id="password" placeholder="请输入您的密码" />
+  		<a class="login_body_form_a btn_submit_my" href="javascript:tryLogin();">立即登录</a>
+  		</form>
+  	</div>
+  	    <style>
+        input::-webkit-input-placeholder{
+            color:#000;
+        }
+        input::-moz-placeholder{   /* Mozilla Firefox 19+ */
+            color:#000;
+        }
+        input:-moz-placeholder{    /* Mozilla Firefox 4 to 18 */
+            color:#000;
+        }
+        input:-ms-input-placeholder{  /* Internet Explorer 10-11 */ 
+            color:#000;
+        }
+    </style>
+  	<p class="login_body_form_p">
+  		<a href="{:U('Index/Login/reg')}" class="fl" style="color:#fff">立即注册</a>
+  		<!--<a href="{:U('Index/Login/editpwd')}" class="fr">忘记密码</a>-->
+  	</p>
+  	
+  	
+  	
+  	
+
+<script src="/Public/js/jquery-1.11.3.min.js"></script>
+
+<script type="text/javascript">
+	$(".btn_submit_my").click(function(){
+			$.ajax({
+				url:'{:U("Index/Login/index")}',
+				type:'POST',
+				data:$("#form").serialize(),
+				dataType:'json',
+				success:function(json){
+						alert(json.info);
+						if(json.result ==1){
+							window.location.href=json.url;
+						}
+				},
+				error:function(){
+						alert("网络故障");
+				}
+			})
+
+	})
+
+
+</script>
+
+<script type="text/javascript" src="https://js.users.51.la/19447899.js"></script>
+
+	</body>
+</html>
