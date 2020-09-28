@@ -91,7 +91,7 @@ function four_number($number)
 function set_number($number, $num)
 {
 
-  return number_format($number, $num);
+  return number_format($number, $num,'.','');
 
 }
 
@@ -1260,4 +1260,18 @@ function getSMSTemplate($type){
     );
     return $send_sms_template[$type];
 }
+function getConf($key){
+    if($key){
+        $path = './App/Conf/system.php';
+        $config = include $path;
+        return $config[$key];
+    }
+}
+function randomFloat($min = 0, $max = 10)
+{
+    $num = $min + mt_rand() / mt_getrandmax() * ($max - $min);
+    return sprintf("%.2f", $num);
+
+}
+
 ?>

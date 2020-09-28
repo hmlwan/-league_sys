@@ -2,8 +2,6 @@
 
 Class IndexAction extends CommonAction
 {
-
-
   /**
    * 生成验证码
    */
@@ -14,10 +12,39 @@ Class IndexAction extends CommonAction
     Image::buildImageVerify(4, 1, 'png', 55, 25);
   }
 
-
   //首页
   public function index()
   {
+      $member = D('Member');
+      $user_id = session('id');
+      $info = $member->getByUserId($user_id);
+      $jifen_arr = explode('.',$info['jifen']);
+      $lmjifen_arr = explode('.',$info['lmjifen']);
+      $this->assign('jifen_arr',$jifen_arr);
+      $this->assign('lmjifen_arr',$lmjifen_arr);
+
+      //分红
+      $mineral_num = 0;
+      if($info['jifen'] > 0){
+          $bonus_m = D('Bonus');
+          $last_record_where = array(
+              'user_id' => $user_id
+          );
+          $last_record = $bonus_m->getLastRecord($last_record_where);
+
+          /*间隔时间*/
+          $bonus_wait_minute_product_mineral = getConf('bonus_wait_minute_product_mineral');
+          $bonus_wait_minute_product_mineral = $bonus_wait_minute_product_mineral * 60;
+          if($last_record){
+              $interval_second = time() - $last_record['add_time'];
+          }else{
+              $interval_second = time() - $info['regdate'];
+          }
+          //矿石数量
+          $mineral_num = floor($interval_second / $bonus_wait_minute_product_mineral);
+      }
+
+      $this->assign('mineral_num',$mineral_num);
 
       $counsel_db = M('counsel');
       /*热门咨询*/
@@ -40,6 +67,67 @@ Class IndexAction extends CommonAction
       );
       $this->assign($data);
       $this->display();
+  }
+
+  //领取分红
+  public function bonus_op(){
+      $member = D('Member');
+
+      $user_id = session('id');
+      $info = $member->getByUserId($user_id);
+      //分红
+      $bonus_m = D('Bonus');
+      $last_record_where = array(
+          'user_id' => $user_id
+      );
+      $last_record = $bonus_m->getLastRecord($last_record_where);
+
+      $bonus_start_receive = getConf('bonus_start_receive');
+      $bonus_end_receive = getConf('bonus_end_receive');
+      if(time()< strtotime($bonus_start_receive) || time() > strtotime($bonus_end_receive) ){
+          $this->ajaxReturn(array('info' => "领取时间为{$bonus_start_receive}-{$bonus_end_receive}"));
+      }
+      if($info['jifen'] <= 0){
+          $this->ajaxReturn(array('info' => "有效积分不足"));
+      }
+
+      $bonus_wait_minute_receive = getConf('bonus_wait_minute_receive');
+      $bonus_wait_minute = $bonus_wait_minute_receive * 60;
+      if($last_record){
+          $interval_second = time() - $last_record['add_time'];
+          $next_receive_time = $last_record['add_time'] + $bonus_wait_minute;
+      }else{
+          $interval_second = time() - $info['regdate'];
+          $next_receive_time = $info['regdate'] + $bonus_wait_minute;
+      }
+      if($interval_second < $bonus_wait_minute){
+          $next_receive_time = date("H:i",$next_receive_time);
+          $this->ajaxReturn(array('info' => "下次领取时间{$next_receive_time}"));
+      }
+
+      $during_minute = floor($interval_second / 60);
+      $bonus_product_lmjf = getConf('bonus_product_lmjf');
+      $receive_lmjf = $bonus_product_lmjf * $during_minute * $info['jifen'];
+      $receive_lmjf = set_number($receive_lmjf,4);
+
+      $record_r = $bonus_m->saveProductRecord(array(
+          'user_id' => $user_id,
+          'num' => $receive_lmjf,
+          'accumulate_minute' => $during_minute,
+          'add_time' => time(),
+          'sf_jifen' => $info['jifen'],
+          'next_receive_time' => time() + $bonus_wait_minute,
+      ));
+      if(!$record_r){
+          $this->ajaxReturn(array('info' => "领取失败"));
+      }
+      //明细
+      D('UserLeagueLog')->changeUserNum($user_id,array(
+          'num' => $receive_lmjf,
+          'remark' => '生态分红'.$receive_lmjf.'联盟积分',
+          'type'=> 1,
+      ));
+      $this->ajaxReturn(array('info' => "获得{$receive_lmjf}联盟积分", 'result' => 1, 'toUrl' => U('/index/index/index')));
   }
   public function get_more(){
       $type_id = I('get.type_id');
@@ -169,7 +257,7 @@ Class IndexAction extends CommonAction
         }
       }
     }
-  }
+}
 
   //支付宝
   public function zhifu()

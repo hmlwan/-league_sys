@@ -1,0 +1,20 @@
+<volist name="list" id="vo">
+    <li>
+        <div>
+            <p>
+                <span class="jl"><i></i>{$vo.type_name}</span>
+                <span class="time">{$vo.create_time|date="Y-m-d H:i:s",###}</span>
+            </p>
+            <p>
+                <span  class="num">SCOIN <em>{$vo.num}</em></span>
+                <span  class="yxq">有效期：
+                    <if condition="($vo['valid_period'] eq 9999) OR ($vo['valid_period'] eq '0')">
+                        永久
+                     <else />
+                        {$vo.valid_period}
+                    </if>
+                </span>
+            </p>
+        </div>
+    </li>
+</volist>

@@ -25,10 +25,13 @@
 //  $_SESSION['refresh_times'] = 0;
 //  $_SESSION['last_time'] = $cur_time;
 //}
+
 define('APP_NAME', 'APP');
 define('APP_PATH', './APP/');
 define('ROOT_PATH', dirname(__FILE__));
 define('PUBLIC_PATH', ROOT_PATH . '/Public');
 define('APP_DEBUG', true);
+
 define('RUNTIME_PATH', APP_PATH . 'Runtime/');
+
 include './ThinkPHP/ThinkPHP.php';

@@ -14,7 +14,7 @@
         </div>
         <div style="height: .74rem;clear: both;"></div>
     </header>
-    <form id="editpwd-form" action="{:U('member/edit_pwd')}" method="post" onsubmit="return false">
+    <form id="editpwd-form" action="{:U('/index/member/edit_pwd')}" method="post" onsubmit="return false">
         <input type="hidden" id="mobile" name="username" value="{$mobile}">
         <input type="hidden" name="type" value="1">
         <div class="smrz_page dlogin_page zcreg_page mmgl_page">
@@ -47,8 +47,6 @@
 <include file="Public:nav"/>
 </body>
 <include file="Public:footer"/>
-<script>
 
-</script>
 </html>
 

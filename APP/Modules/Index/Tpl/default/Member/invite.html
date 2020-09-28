@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>邀请好友</title>
+    <include file="Public:header"/>
+</head>
+<body class="lmqb-body">
+    <a class="return_btn" href="javascript:history.back()"></a>
+    <div class="lmqb_page">
+        <img src="{:U('/index/member/qrcodeimg')}" class="qrcode" alt="">
+        <div class="yq_con">
+            <div class="yq_con_top">
+                <p class="yqm">{$inviteCode}</p>
+                <p class="text">截图分享邀请码</p>
+            </div>
+            <span class="line"></span>
+            <div class="yq_con_bottom">
+                <p class="yq_copy_btn flexbox wrap spacebetween">
+                    <span class="copy_btn" data-clipboard-text="{$qrcode_url}">复制链接</span>
+                    <span class="copy_btn" data-clipboard-text="{$inviteCode}">复制邀请码</span>
+                </p>
+                <p class="text"><i></i>
+                    邀请者成功邀请1名新用户注册，邀请者得<em>6元</em>，
+                    受邀请者的<em>8元</em>；
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+<include file="Public:footer"/>
+<script>
+    copy();
+</script>
+</html>
+

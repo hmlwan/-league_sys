@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>我的订单</title>
+    <include file="Public:header"/>
+</head>
+<body style="background-color: #f2f2f2">
+    <header>
+        <div class="header_bt">
+            <div class="header_f"><a href="{:U('/index/member/order')}" class="header_fh"></a></div>
+            <div class="header_c">我的订单</div>
+        </div>
+        <div style="height: .74rem;clear: both;"></div>
+    </header>
+    <input type="hidden" name="mui-tab-item" value="4">
+
+    <div class="qbdd_page wddd_page">
+        <div class="navs">
+            <ul class=" flexbox spacebetween">
+                <li><a href="{:U('/index/member/order')}">绑定订单</a></li>
+                <li <if condition="$_GET['status'] eq ''">class="active"</if>  ><a href="{:U('/index/member/order_detail')}">全部订单</a></li>
+                <li <if condition="$_GET['status'] eq 1">class="active"</if>  ><a href="{:U('/index/member/order_detail',array('status'=>1))}">待结算</a></li>
+                <li <if condition="$_GET['status'] eq 2">class="active"</if> ><a href="{:U('/index/member/order_detail',array('status'=>2))}">已结算</a></li>
+                <li <if condition="$_GET['status'] eq 3">class="active"</if> ><a href="{:U('/index/member/order_detail',array('status'=>3))}">已失效</a></li>
+            </ul>
+        </div>
+        <if condition="$list">
+            <div class="qbdd_con">
+                <ul class="flexbox column flow_load">
+
+                </ul>
+            </div>
+        <else />
+            <div class="show_on_content">
+                <p><img src="/Public/mobile/image/no_data_icon.png" alt=""></p>
+                <p class="show_text">暂无内容</p>
+            </div>
+        </if>
+
+    </div>
+    <include file="Public:nav"/>
+</body>
+<include file="Public:footer"/>
+<script>
+    lazy_loading("/index/member/order_detail?status={$_GET['status']}");
+</script>
+</html>
+
+

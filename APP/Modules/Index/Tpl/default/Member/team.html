@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>我的团队</title>
+    <include file="Public:header"/>
+</head>
+<body style="background-color: #f4f3fb">
+    <header>
+        <div class="header_bt">
+            <div class="header_f"><a href="javascript:history.back()" class="header_fh"></a></div>
+            <div class="header_c">我的团队</div>
+        </div>
+        <div style="height: .74rem;clear: both;"></div>
+    </header>
+    <input type="hidden" name="mui-tab-item" value="4">
+    <div class="wdtd_page">
+        <div class="zt_page">
+           <div class="zt_con">
+               <p class="title"><i></i>直推好友</p>
+               <div class="zt_data flexbox spacebetween">
+                   <p class="flexbox column">
+                       <span class="num">{$info.one_sub_cert_nums|default=0}</span>
+                       <span class="text">实名人数</span>
+                   </p>
+                   <span class="line"></span>
+                   <p class="flexbox column">
+                       <span class="num">{$info.one_sub_nocert_nums|default=0}</span>
+                       <span class="text">未实名人数</span>
+                   </p>
+               </div>
+               <if condition="$list">
+                   <ul class="flexbox column flow_load">
+
+                   </ul>
+               <else />
+                   <div class="show_on_content">
+                       <p><img src="/Public/mobile/image/no_data_icon.png" alt=""></p>
+                       <p class="show_text">暂无内容</p>
+                   </div>
+               </if>
+
+           </div>
+        </div>
+    </div>
+    <include file="Public:nav"/>
+</body>
+<include file="Public:footer"/>
+<script>
+    lazy_loading('/index/member/team');
+</script>
+<style>
+    .show_on_content{
+        top:45%
+    }
+</style>
+</html>
+

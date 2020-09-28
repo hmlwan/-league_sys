@@ -38,6 +38,7 @@
 		public function bonusConf(){
 			$path = './App/Conf/system.php';
 			$config = include $path;
+
 			$config['ONE']      = I('post.ONE',0,'floatval');
 			$config['TWO']      = I('post.TWO',0,'floatval');
 			$config['THREE']      = I('post.THREE',0,'floatval');
@@ -69,8 +70,20 @@
 			$config['open_web_notice']      = I('post.open_web_notice','','trim');
 			$config['jiesuan_time']      = I('post.jiesuan_time',0,'floatval');
 
-            $config['SIGN_RANGE']      = I('post.SIGN_RANGE');
-            $config['SIGN_VALID_PERIOD']      = I('post.SIGN_VALID_PERIOD');
+            $config['sign_range']      = I('post.sign_range');
+            $config['sign_valid_period']      = I('post.sign_valid_period',0,'floatval');
+            $config['cert_reward']      = I('post.cert_reward',0,'floatval');
+
+            $config['bonus_product_lmjf']      = I('post.bonus_product_lmjf');
+            $config['bonus_wait_minute_receive']      = I('post.bonus_wait_minute_receive',0,'floatval');
+            $config['bonus_wait_minute_product_mineral']      = I('post.bonus_wait_minute_product_mineral',0,'floatval');
+            $config['bonus_start_receive']      = I('post.bonus_start_receive');
+            $config['bonus_end_receive']      = I('post.bonus_end_receive');
+
+            $config['rebate_invalid_days']      = I('post.rebate_invalid_days');
+            $config['rebate_rate']      = I('post.rebate_rate');
+            $config['rebate_valid_days']      = I('post.rebate_valid_days');
+
 
  			$data = "<?php\r\nreturn " . var_export($config, true) . ";\r\n?>";
 			if (file_put_contents($path, $data)) {

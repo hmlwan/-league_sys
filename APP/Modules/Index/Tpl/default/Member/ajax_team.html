@@ -1,0 +1,23 @@
+<volist name="list" id="vo">
+    <li>
+        <p class="info">
+            <img src="/Public/mobile/image/logo.png" alt="">
+            <span>{$vo.sub_mobile}</span>
+        </p>
+        <p class="data flexbox spacebetween wrap">
+            <span>
+                注册时间：<em>{$vo.add_time|date="Y-m-d"}</em>
+            </span>
+            <span>
+                TA直推人数：<em>{$vo.one_sub_cert_nums}</em>
+            </span>
+        </p>
+        <if condition="$vo['is_cert'] eq 1">
+            <img  class="is_sm" src="/Public/mobile/image/wsm.png" alt="">
+
+        <else />
+            <img  class="is_sm" src="/Public/mobile/image/ysm.png" alt="">
+
+        </if>
+    </li>
+</volist>

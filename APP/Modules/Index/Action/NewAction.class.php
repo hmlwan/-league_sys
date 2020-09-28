@@ -1,6 +1,6 @@
 <?php
 
-Class NewAction extends Action
+Class NewAction extends CommonAction
 {
 
   //资讯详细页

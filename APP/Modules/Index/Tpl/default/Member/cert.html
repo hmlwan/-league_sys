@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>实名认证</title>
+    <include file="Public:header"/>
+</head>
+<body style="background-color: #f1eff2">
+    <header>
+        <div class="header_bt">
+            <div class="header_f"><a href="javascript:history.back()" class="header_fh"></a></div>
+            <div class="header_c">实名认证</div>
+        </div>
+        <div style="height: .74rem;clear: both;"></div>
+    </header>
+    <form id="cert-form" action="{:U('member/cert_op')}" method="post" onsubmit="return false">
+        <div class="smrz_page dlogin_page zcreg_page">
+        <div class="dlogin_con  smrz_con" >
+            <ul class="dlogin_item">
+                <li>
+                    <label>姓名</label>
+                    <p><input name="truename"  class="input_line" value="{$m_info.truename}" placeholder="请输入姓名" type="text"></p>
+                </li>
+                <li>
+                    <label>身份证</label>
+                    <p><input name="idcard"  class="input_line" value="{$m_info.idcard}" placeholder="请输入身份证" type="text"></p>
+                </li>
+            </ul>
+        </div>
+        <div class="dlogin_con smrz_con" >
+            <ul class="dlogin_item">
+                <li>
+                    <label>银行卡号</label>
+                    <p><input  name="card"  class="input_line" value="{$m_info.card}" placeholder="请输入银行卡号" type="text"></p>
+                </li>
+                <li>
+                    <label>手机号</label>
+                    <p><input name="username" id="mobile" readonly value="{$m_info.username}" class="input_line" placeholder="请输入手机号" type="text"></p>
+                </li>
+            </ul>
+        </div>
+        <div class="dlogin_con smrz_con" >
+            <ul class="dlogin_item">
+                <li>
+                    <label>支付密码</label>
+                    <p><input  class="input_line" placeholder="请输入支付密码" name="trade_password" type="password"><i class="eye"  onclick="openeye($(this));" data-active="0"> </i></p>
+                </li>
+                <li>
+                    <label>确认密码</label>
+                    <p><input  class="input_line" placeholder="请输入确认密码" name="trade_repassword" type="password"><i class="eye"  onclick="openeye($(this));" data-active="0"></i></p>
+                </li>
+            </ul>
+        </div>
+        <div class="dlogin_con smrz_con" >
+            <ul class="dlogin_item">
+                <li class="yzm">
+                    <label>短信验证码</label>
+                    <div class="flexbox spacebetween">
+                        <input type="text"  name="code" class="input_line " placeholder="请输入短信验证码">
+                        <button class="get_yzm" data-mobile="mobile" id="send-code" data-url="{:U('sem/send_edit_code',array('token'=>$token))}" onclick="sendCode(this)">获取验证码</button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <button class="dlogin_sub_button" data-form="cert-form" onclick="ajaxPost(this)">确认实名</button>
+    </div>
+    </form>
+</body>
+
+<include file="Public:footer"/>
+</html>
+

@@ -120,27 +120,112 @@
 													</div>
 												</div>
 												<div class="control-group" >
+													<label class="control-label" for="cert_reward">实名奖励</label>
+
+													<div class="controls">
+														<input type="text" id="cert_reward" name="cert_reward" value="{$config.cert_reward}"  class="span3"/>
+													</div>
+												</div>
+												<div class="control-group" >
 													<label class="control-label" for="SIGN_CONF">签到配置</label>
 
 													<div class="controls">
-														奖励数值范围 <input type="text" id="SIGN_RANGE" name="SIGN_RANGE" placeholder="" value="{$config.SIGN_RANGE}" style=" width: 100px;" class="span3"/>&nbsp;&nbsp;
-														有效期 <input type="text" id="SIGN_VALID_PERIOD" name="SIGN_VALID_PERIOD" value="{$config.SIGN_VALID_PERIOD|default=9999}" style=" width: 100px;" class="span3"/>&nbsp;&nbsp;
-														<font color="red">如0.01-10，30天。范围用 - 隔开,有效期为永久默认9999</font>
+														奖励数值范围 <input type="text" id="sign_range" name="sign_range" placeholder="" value="{$config.sign_range}" style=" width: 100px;" class="span3"/>&nbsp;&nbsp;
+														有效期 <input type="text" id="sign_valid_period" name="sign_valid_period" value="{$config.sign_valid_period|default=9999}" style=" width: 100px;" class="span3"/>&nbsp;&nbsp;
+														<font color="red">如0.01-10，30天。范围用 - 隔开,有效期为永久默认9999或空</font>
 													</div>
 												</div>
-
+												<div class="control-group" >
+													<label class="control-label"  for="bonus">分红配置</label>
+													<div style="height: 20px;"></div>
+													<div class="controls">
+														每分钟/每生态积分产生联盟积分 <input type="text" id="bonus_product_lmjf" name="bonus_product_lmjf" value="{$config.bonus_product_lmjf}" style=" width: 100px;" class="span3"/>&nbsp;&nbsp;
+													</div>
+													<div style="height: 20px;"></div>
+													<div class="controls">
+														等待多少分钟才能领取 <input type="text" id="bonus_wait_minute_receive" name="bonus_wait_minute_receive" value="{$config.bonus_wait_minute_receive}" style=" width: 100px;" class="span3"/>分钟&nbsp;&nbsp;
+													</div>
+													<div style="height: 20px;"></div>
+													<div class="controls">
+														多少分钟产生一个矿石 <input type="text" id="bonus_wait_minute_product_mineral" name="bonus_wait_minute_product_mineral" value="{$config.bonus_wait_minute_product_mineral}" style=" width: 100px;" class="span3"/>分钟&nbsp;&nbsp;
+													</div>
+													<div style="height: 20px;"></div>
+													<div class="controls">
+														开始领取时间 <input type="text" id="bonus_start_receive" name="bonus_start_receive" value="{$config.bonus_start_receive}" style=" width: 100px;" class="span3"/>&nbsp;&nbsp;
+														结束领取时间 <input type="text" id="bonus_end_receive" name="bonus_end_receive" value="{$config.bonus_end_receive}" style=" width: 100px;" class="span3"/>&nbsp;&nbsp;
+													</div>
+												</div>
+												<div class="control-group" >
+													<label class="control-label"  for="rebate">订单返利配置</label>
+													<div style="height: 20px;"></div>
+													<div class="controls">
+														订单失效时间<input type="text" id="rebate_invalid_days" name="rebate_invalid_days" value="{$config.rebate_invalid_days}" style=" width: 100px;" class="span3"/>&nbsp;天&nbsp;
+													</div>
+													<div style="height: 20px;"></div>
+													<div class="controls">
+														返利比例 <input type="text" id="rebate_rate" name="rebate_rate" value="{$config.rebate_rate}" style=" width: 100px;" class="span3"/>(小数，比如0.1)&nbsp;&nbsp;
+													</div>
+													<div style="height: 20px;"></div>
+													<div class="controls">
+														返利奖励有效时间 <input type="text" id="rebate_valid_days" name="rebate_valid_days" value="{$config.rebate_valid_days}" style=" width: 100px;" class="span3"/>天&nbsp;&nbsp;
+													</div>
+												</div>
 												<div class="control-group" >
 													<label class="control-label"  for="update">升级配置</label>
 													<div style="height: 20px;"></div>
 													<div class="controls">
-														高级会员：直推人数 <input type="text" id="one" name="ONE" value="{$config.ONE}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
-														团队人数 <input type="text" id="two" name="TWO" value="{$config.TWO}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
-														直推要求 <input type="text" id="two" name="THREE" value="{$config.THREE}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
-														奖励积分 <input type="text" id="two" name="THREE" value="{$config.THREE}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
-														积分有效期 <input type="text" id="two" name="THREE" value="{$config.THREE}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
-														直推返利比例 <input type="text" id="two" name="THREE" value="{$config.THREE}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
-														间推返利比例 <input type="text" id="two" name="THREE" value="{$config.THREE}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
-														返利有效周期 <input type="text" id="two" name="THREE" value="{$config.THREE}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
+														高级会员：直推人数 <input type="text" id="update1_push_num" name="update1_push_num" value="{$config.update1_push_num}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
+														团队人数 <input type="text" id="update1_team_num" name="update1_team_num" value="{$config.update1_team_num}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
+														直推要求 <input type="text" id="update1_ask_num" name="update1_ask_num" value="{$config.update1_ask_num}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
+														奖励积分 <input type="text" id="update1_reward" name="update1_reward" value="{$config.update1_reward}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
+														积分有效期 <input type="text" id="update1_jf_period" name="update1_jf_period" value="{$config.update1_jf_period}" placeholder="天"  style="width: 60px;" class="span3"/>&nbsp;&nbsp;
+														直推返利比例 <input type="text" id="update1_fl_1" name="update1_fl_1" value="{$config.update1_fl_1}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
+														间推返利比例 <input type="text" id="update1_fl_2" name="update1_f2" value="{$config.update1_f2}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
+														返利有效周期 <input type="text" id="update1_fl_period" name="update1_fl_period" value="{$config.update1_fl_period}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
+													</div>
+													<div style="height: 10px;"></div>
+													<div class="controls">
+														初级大使：直推人数 <input type="text" id="update2_push_num" name="update2_push_num" value="{$config.update2_push_num}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
+														团队人数 <input type="text" id="update2_team_num" name="update2_team_num" value="{$config.update2_team_num}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
+														直推要求 <input type="text" id="update2_ask_num" name="update2_ask_num" value="{$config.update2_ask_num}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
+														奖励积分 <input type="text" id="update2_reward" name="update2_reward" value="{$config.update2_reward}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
+														积分有效期 <input type="text" id="update2_jf_period" name="update2_jf_period" value="{$config.update2_jf_period}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
+														直推返利比例 <input type="text" id="update2_fl_1" name="update2_fl_1" value="{$config.update2_fl_1}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
+														间推返利比例 <input type="text" id="update2_fl_2" name="update2_fl_2" value="{$config.update2_fl_2}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
+														返利有效周期 <input type="text" id="update2_fl_period" name="update2_fl_period" value="{$config.update2_fl_period}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
+													</div>
+													<div style="height: 10px;"></div>
+													<div class="controls">
+														中级大使：直推人数 <input type="text" id="update3_push_num" name="update3_push_num" value="{$config.update3_push_num}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
+														团队人数 <input type="text" id="update3_team_num" name="update3_team_num" value="{$config.update3_team_num}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
+														直推要求 <input type="text" id="update3_ask_num" name="update3_ask_num" value="{$config.update3_ask_num}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
+														奖励积分 <input type="text" id="update3_reward" name="update3_reward" value="{$config.update3_reward}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
+														积分有效期 <input type="text" id="update3_jf_period" name="update3_jf_period" value="{$config.update3_jf_period}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
+														直推返利比例 <input type="text" id="update3_fl_1" name="update3_fl_1" value="{$config.update3_fl_1}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
+														间推返利比例 <input type="text" id="update3_fl_2" name="update3_fl_2" value="{$config.update3_fl_2}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
+														返利有效周期 <input type="text" id="update3_fl_period" name="update3_fl_period" value="{$config.update3_fl_period}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
+													</div>
+													<div style="height: 10px;"></div>
+													<div class="controls">
+														高级大使：直推人数 <input type="text" id="update4_push_num" name="update4_push_num" value="{$config.update4_push_num}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
+														团队人数 <input type="text" id="update4_team_num" name="update4_team_num" value="{$config.update4_team_num}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
+														直推要求 <input type="text" id="update4_ask_num" name="update4_ask_num" value="{$config.update4_ask_num}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
+														奖励积分 <input type="text" id="update4_reward" name="update4_reward" value="{$config.update4_reward}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
+														积分有效期 <input type="text" id="update4_jf_period" name="update4_jf_period" value="{$config.update4_jf_period}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
+														直推返利比例 <input type="text" id="update4_fl_1" name="update4_fl_1" value="{$config.update4_fl_1}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
+														间推返利比例 <input type="text" id="update4_fl_2" name="update4_fl_2" value="{$config.update4_fl_2}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
+														返利有效周期 <input type="text" id="update4_fl_period" name="update4_fl_period" value="{$config.update4_fl_period}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
+													</div>
+													<div style="height: 10px;"></div>
+													<div class="controls">
+														黄金大使：直推人数 <input type="text" id="update5_push_num" name="update5_push_num" value="{$config.update5_push_num}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
+														团队人数 <input type="text" id="update5_team_num" name="update5_team_num" value="{$config.update5_team_num}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
+														直推要求 <input type="text" id="update5_ask_num" name="update5_ask_num" value="{$config.update5_ask_num}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
+														奖励积分 <input type="text" id="update5_reward" name="update5_reward" value="{$config.update5_reward}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
+														积分有效期 <input type="text" id="update5_jf_period" name="update5_jf_period" value="{$config.update5_jf_period}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
+														直推返利比例 <input type="text" id="update5_fl_1" name="update5_fl_1" value="{$config.update5_fl_1}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
+														间推返利比例 <input type="text" id="update5_fl_2" name="update5_fl_2" value="{$config.update5_fl_2}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
+														返利有效周期 <input type="text" id="update5_fl_period" name="update5_fl_period" value="{$config.update5_fl_period}" style=" width: 60px;" class="span3"/>&nbsp;&nbsp;
 													</div>
 												</div>
 

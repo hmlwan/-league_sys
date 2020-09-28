@@ -38,12 +38,14 @@ Class LoginAction extends Action
 
       $model_m = M('member');
       //验证用户名和密码
-      $member = $model_m->where(array('username' => I('username'), 'password' => I('password', '', 'md5')))->find();
+      $member = $model_m
+          ->where(array(
+              'username' => I('username'),
+              'password' => I('password', '', 'md5')))
+          ->find();
       if (!$member) {
         $this->ajaxReturn(array('result' => '0', 'info' => '用户名或密码错误!'));
       }
-
-
       //禁止锁定会员登录
       if ($member['lock']) {
         $this->ajaxReturn(array('result' => '0', 'info' => '您的账号已经被锁定!联系客服'));
@@ -85,11 +87,14 @@ Class LoginAction extends Action
         setcookie('rememberpassword', null, time() - 3600 * 24 * 30);
 
       }
-
-      //添加日志操作
-      //$desc = '会员['.session('username').']登录';
-      //write_log(session('username'),'member',$desc);
-      $this->ajaxReturn(array('result' => '1', 'info' => '登陆成功！', 'toUrl' => U('Index/Member/index')));
+      if($member['is_cert'] == 1){ //已实名
+          $toUrl = U('Index/Member/index');
+          $info = '登陆成功！';
+      }else{ //未实名
+          $toUrl = U('Index/Member/cert');
+          $info = '登录成功，请先去实名认证！';
+      }
+      $this->ajaxReturn(array('result' => '1', 'info' => $info, 'toUrl' => $toUrl));
 
     } else {
 
@@ -153,7 +158,9 @@ Class LoginAction extends Action
 
   public function reg()
   {
-    $this->display();
+      $invite_code = I('get.invite_code');
+      $this->assign('invite_code',$invite_code);
+      $this->display();
   }
 
   //前台注册
@@ -165,20 +172,19 @@ Class LoginAction extends Action
       $Ip = new IpLocation(); // 实例化类
       $location = $Ip->getlocation(get_client_ip()); // 获取某个IP地址所在的位置
 
+      $invite_code = I('post.invite_code', '', 'strval');
 
-      $parent = I('post.parent', '', 'strval');
-
-      if (empty($parent)) {
+      if (empty($invite_code)) {
         $this->ajaxReturn(array('result' => 0, 'info' => '推荐人不能为空!'));
       }
-      $parent = M('member')->where(array('inviteCode' => $parent))->getField('username');
+      $parent = M('member')->where(array('inviteCode' => $invite_code))->getField('username');
       $data['parent_id'] = M('member')->where(array('username' => $parent))->getField('id');
       $data['parent'] = $parent;
 
       $data['username'] =  I('post.username', '', 'strval');
       $code = I('post.code', '');
 
-      $data['truename'] = I('post.truename');
+      $data['name'] = I('post.name');
       $password = I('post.password', '', 'strval');
 	  $repassword = I('post.repassword', '', 'strval');
 	  if($password != $repassword){
@@ -226,11 +232,49 @@ Class LoginAction extends Action
       $data['regdate'] = time();
       $inviteCode = $this->checkInviteCode($this->makeCode());
       $data['inviteCode'] = $inviteCode;
-      M('member')->add($data);
-
+      $r = M('member')->add($data);
+      //统计
+      if($r > 0){
+          $member = D('member');
+          $user_statistics_m = D('UserStatistics');
+          $invite_record_m = D('InviteRecord');
+          $info = $member->getByUserMobile($data['username']);
+          if($info['parent_id'] >0 ){
+              $info_1 = $member->getByUserId($info['parent_id']);
+              if($info_1 && $info_1['is_cert'] == 1){
+                  $user_statistics_m->setFieldInc($info_1['id'],'one_sub_nocert_nums',1);
+                  $invite_record_1 = $invite_record_m->addRecord(array(
+                      'user_id' => $info_1['id'],
+                      'sub_user_id' => $info['id'],
+                      'add_time' => time(),
+                      'is_cert' => 1,
+                      'sub_mobile' => $info['mobile'],
+                      'level' => 1,
+                      'content' => '一级下线实名',
+                      'types' => 1
+                  ));
+                  if($info_1['parent_id'] >0){
+                      $info_2 = $member->getByUserId($info_1['parent_id']);
+                      if($info_2 && $info_2['is_cert'] == 1){
+                          $user_statistics_m->setFieldInc($info_2['id'],'two_sub_nocert_nums',1);
+                          $invite_record_2 = $invite_record_m->editRecord(array(
+                              'user_id' => $info_2['id'],
+                              'sub_user_id' => $info['id'],
+                              'add_time' => time(),
+                              'is_cert' => 1,
+                              'sub_mobile' => $info['mobile'],
+                              'level' => 2,
+                              'types' => 1,
+                              'content' => '二级下线实名',
+                          ));
+                      }
+                  }
+              }
+          }
+      }
       //我的上级直推加一
-      M('member')->where(array('username' => $data['parent']))->setInc('parentcount', 1);
-      mmtjrennumadd($data['parent_id']);//  所有上级加一人
+//      M('member')->where(array('username' => $data['parent']))->setInc('parentcount', 1);
+//      mmtjrennumadd($data['parent_id']);//  所有上级加一人
       $this->ajaxReturn(array('result' => 1, 'info' => '注册成功！','toUrl'=>U('index')));
     }
   }

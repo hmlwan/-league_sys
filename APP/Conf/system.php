@@ -58,10 +58,16 @@ return array (
   'THREE' => 1,
   'THREES' => 0,
   'shou3' => 0.0050000000000000001,
-  'SIGN_RANGE' => '0.1-10', //签到奖励范围
-  'SIGN_VALID_PERIOD' => 30,
-//  'UPDATE_ONE'  =>
-
-
+  'sign_range' => '0.01-10',
+  'sign_valid_period' => 30,
+  'cert_reward' => 100,
+  'bonus_product_lmjf' => '0.01',
+  'bonus_wait_minute_product_mineral' => 600,
+  'bonus_wait_minute_receive' => 600,
+  'bonus_start_receive' => '7:00',
+  'bonus_end_receive' => '21:00',
+  'rebate_invalid_days' => '3',
+  'rebate_rate' => '0.1',
+  'rebate_valid_days' => '30',
 );
 ?>

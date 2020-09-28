@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>我的订单</title>
+    <include file="Public:header"/>
+</head>
+<body>
+    <input type="hidden" name="mui-tab-item" value="4">
+    <header>
+        <div class="header_bt">
+            <div class="header_f"><a href="javascript:history.back()" class="header_fh"></a></div>
+            <div class="header_c">我的订单</div>
+        </div>
+        <div style="height: .74rem;clear: both;"></div>
+    </header>
+    <div class="wddd_page">
+        <ul class="flexbox spacebetween">
+            <li class="active"><a href="javascript:;">绑定订单</a></li>
+            <li><a href="{:U('/index/member/order_detail')}">全部订单</a></li>
+            <li><a href="{:U('/index/member/order_detail',array('status'=>1))}">待结算</a></li>
+            <li><a href="{:U('/index/member/order_detail',array('status'=>2))}">已结算</a></li>
+            <li><a href="{:U('/index/member/order_detail',array('status'=>3))}">已失效</a></li>
+
+        </ul>
+        <div class="wd_line"></div>
+        <form id="rebate-form" action="{:U('/index/member/order_op')}" method="post" onsubmit="return false">
+            <div class="wddd_con">
+                <img src="/Public/mobile/image/c2.png" alt="">
+                <p>订单绑定支持所有平台</p>
+                <p class="input_btn">
+                    <select name="scene" class="scene" id="scene">
+                        <option value="">选择平台</option>
+                        <option value="1">淘宝</option>
+                        <option value="2">京东</option>
+                        <option value="3">拼多多</option>
+                        <option value="4">苏宁</option>
+                        <option value="5">唯品会</option>
+                    </select>
+                </p>
+                <p class="input_btn">
+                    <input type="text" name="order_no" class="input_line" placeholder="请输入消费订单号"><span data-form="rebate-form" onclick="ajaxPost(this)">绑定</span>
+                </p>
+            </div>
+        </form>
+        <div class="wddd_xq">
+            <img src="/Public/mobile/image/rhhqdd.png" alt="">
+        </div>
+    </div>
+    <include file="Public:nav"/>
+</body>
+<include file="Public:footer"/>
+</html>
+

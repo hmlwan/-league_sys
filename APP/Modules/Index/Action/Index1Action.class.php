@@ -18,7 +18,7 @@ Class IndexAction extends CommonAction
   //首页
   public function index()
   {
-    $this->redirect("New/index");
+//    $this->redirect("New/index");
   }
 
 

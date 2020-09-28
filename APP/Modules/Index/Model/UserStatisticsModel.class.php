@@ -1,0 +1,48 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: v_huizzeng
+ * Date: 2020/4/26
+ * Time: 17:38
+ */
+
+class UserStatisticsModel extends Model
+{
+
+    public function getByUserId($user_id){
+        return $this->where(array('user_id'=>$user_id))->find();
+
+    }
+
+    public function setFieldInc($user_id,$field,$num){
+
+        if(!$user_id){
+            return false;
+        }
+        if($this->getByUserId($user_id)){
+            $r = $this->where(array('user_id'=>$user_id))->setInc($field,$num);
+            if($field == 'one_sub_cert_nums' ){
+                $r = $this->where(array('user_id'=>$user_id))->setDec('one_sub_nocert_nums',$num);
+            }
+            if( $field == 'two_sub_cert_nums'){
+                $r = $this->where(array('user_id'=>$user_id))->setDec('two_sub_nocert_nums',$num);
+            }
+            if($field == 'one_sub_nocert_nums' || $field == 'two_sub_nocert_nums'){
+                $this->where(array('user_id'=>$user_id))->setInc("total_sub_nums",$num);
+            }
+        }else{
+            $r = $this->add(array(
+                'user_id' =>  $user_id,
+                'one_sub_cert_nums' => $field == 'one_sub_cert_nums' ? $num : 0,
+                'one_sub_nocert_nums' => $field == 'one_sub_nocert_nums' ? $num : 0,
+                'two_sub_cert_nums' => $field = 'two_sub_cert_nums' ? $num : 0,
+                'two_sub_nocert_nums' => $field = 'two_sub_nocert_nums' ? $num : 0,
+                'total_sub_nums' =>  $num ,
+            ));
+        }
+        if(false !== $r){
+            return true;
+        }
+        return false;
+    }
+}

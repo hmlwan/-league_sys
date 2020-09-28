@@ -3,6 +3,7 @@ return array(
 	//'配置项'=>'配置值'
 	'APP_GROUP_LIST'           =>  'Index,systemlogined',
 	'DEFAULT_GROUP'            =>  'Index',
+	'DEFAULT_MODULE'           => 'Index',
 	'TMPL_VAR_IDENTIFY'        =>  'array',
     //URL设置
     'COOKIE_PREFIX' => 'odr',
@@ -49,6 +50,18 @@ return array(
     'COMPANY_NAME'          =>  'FC',
     //加载扩展配置
     'LOAD_EXT_CONFIG'       => 'system,tuopu,tuopuq,tuopu1,tuopu2',
-    'API_URL'               => "http://".$_SERVER['HTTP_HOST']    //$_SERVER['HTTP_HOST']
+    'API_URL'               => "http://".$_SERVER['HTTP_HOST'] ,   //$_SERVER['HTTP_HOST']
+
+    'DB_REBATE_ORDER' => array(
+        // 数据库类型
+        'DB_TYPE'               =>  'mysql',        // 数据库类型
+        'DB_HOST'               =>  '127.0.0.1',    // 服务器地址
+        'DB_NAME'               =>  'test',   // 数据库名
+        'DB_USER'               =>  'root',         // 用户名
+        'DB_PWD'                =>  'root',             // 密码
+        'DB_PORT'               =>  '3306',         // 端口
+        'DB_PREFIX'             =>  ' ',
+    ),
+
 );
 ?>
