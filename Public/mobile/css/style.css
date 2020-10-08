@@ -141,15 +141,16 @@
     display: inline-block;
 }
 .dlogin_sub_button{
-    background:url("../image/dlogin_btn.png") center;
+    background: url(../image/dlogin_btn.png) center;
     background-size: 100%;
     height: .8rem;
     line-height: .8rem;
     text-align: center;
-    font-size: .25rem;
+    font-size: .3rem;
     display: inline-block;
     width: 94%;
     margin: 0 auto;
+    font-weight: bold;
     color: #fff;
     border-radius: 50px;
 }
@@ -268,16 +269,16 @@
 }
 .wd_page .wd_top .yqm{
     color:#8c91a7;
-    font-size: .25rem;
+    font-size: .24rem;
     line-height: .8rem;
 }
 .copy{
     margin-left: .1rem;
-    width: .35rem;
+    width: .3rem;
     display: inline-block;
     background: url(../image/fuzhi.png) no-repeat center;
-    background-size: 95%;
-    vertical-align: text-bottom;
+    background-size: 100%;
+    vertical-align: sub;
     height: .35rem;
 }
 .wd_nav ul{
@@ -303,7 +304,7 @@
 }
 .wd_page .wd_ad img{
     width: 100%;
-    height: 2.8rem;
+    height: 2.6rem;
 }
 .wd_page .wd_item{
     margin-bottom: .5rem;
@@ -945,13 +946,14 @@
 .sy_page .sy_top_con{
     width: 86%;
     margin: .45rem auto .35rem;
-    font-size: .28rem;
+    font-size: .3rem;
     color: #fff;
     text-align: center;
 }
 .sy_page .sy_top_con p{
     display: flex;
     flex-direction:column;
+    font-weight: bold;
 }
 .sy_page .sy_top_con .st_num{
     color:#73f286;
@@ -1020,7 +1022,7 @@
     font-weight: bold;
 }
 .sy_page .sy_box .more{
-    font-size: .23rem;
+    font-size: .22rem;
     color:#808080;
     font-weight: normal;
 }
@@ -1168,7 +1170,7 @@
 }
 .yy_page .yy_top img{
     width: 100%;
-    height: 2rem;
+    height: 2.4rem;
 }
 .yy_page .yy_item{
     width: 94%;
@@ -1423,7 +1425,7 @@
 }
 .zxbz_con .zxbz_item .con p.name span{
     width: 100%;
-    font-size: .24rem;
+    font-size: .23rem;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
