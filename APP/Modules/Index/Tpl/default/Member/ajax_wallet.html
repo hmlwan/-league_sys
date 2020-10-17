@@ -1,0 +1,13 @@
+<volist name="list" id="vo">
+    <li>
+        <div>
+            <p>
+                <span class="jl"><i></i>{$vo.type_name}</span>
+                <span class="time">{$vo.create_time|date="Y-m-d H:i:s",###}</span>
+            </p>
+            <p>
+                <span  class="num">ANE <em>{$vo.num|default=0.0000}</em></span>
+            </p>
+        </div>
+    </li>
+</volist>

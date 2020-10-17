@@ -121,9 +121,6 @@
 		//ajax 图片上传
 
 		public function uploads(){
-
-
-
 			if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
 
 
@@ -168,7 +165,6 @@
 				exit;
 			}
 			exit;
-
 		}
 
 		public function extend($file_name){

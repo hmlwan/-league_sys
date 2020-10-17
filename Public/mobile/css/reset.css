@@ -76,6 +76,9 @@ button{
 .wrap {
     flex-wrap:wrap
 }
+.column{
+    flex-direction:column;
+}
 .float_l{
     float: left;
 }
@@ -94,9 +97,7 @@ button{
 .text_right{
     text-align: right;
 }
-.column{
-    flex-direction:column;
-}
+
 .default-bor-bottom{
     border-bottom: 1px solid #f6f7f9;
 }

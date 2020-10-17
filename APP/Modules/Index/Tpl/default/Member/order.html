@@ -6,10 +6,10 @@
     <include file="Public:header"/>
 </head>
 <body>
-    <input type="hidden" name="mui-tab-item" value="4">
+    <input type="hidden" name="mui-tab-item" value="5">
     <header>
         <div class="header_bt">
-            <div class="header_f"><a href="javascript:history.back()" class="header_fh"></a></div>
+            <div class="header_f"><a href="{:U('/index/member/index')}" class="header_fh"></a></div>
             <div class="header_c">我的订单</div>
         </div>
         <div style="height: .74rem;clear: both;"></div>
@@ -21,7 +21,6 @@
             <li><a href="{:U('/index/member/order_detail',array('status'=>1))}">待结算</a></li>
             <li><a href="{:U('/index/member/order_detail',array('status'=>2))}">已结算</a></li>
             <li><a href="{:U('/index/member/order_detail',array('status'=>3))}">已失效</a></li>
-
         </ul>
         <div class="wd_line"></div>
         <form id="rebate-form" action="{:U('/index/member/order_op')}" method="post" onsubmit="return false">
@@ -50,5 +49,10 @@
     <include file="Public:nav"/>
 </body>
 <include file="Public:footer"/>
+<style>
+    .wddd_page ul li a:hover{
+        color:#b1b1b1 !important;
+    }
+</style>
 </html>
 

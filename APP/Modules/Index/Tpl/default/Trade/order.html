@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>我的订单</title>
+    <include file="Public:header"/>
+</head>
+<body class="qgzx_body" style="background-color: #f7f7f9">
+    <header>
+        <div class="header_bt">
+            <div class="header_f"><a href="javascript:history.back()" class="header_fwh"></a></div>
+            <div class="header_c">我的订单</div>
+        </div>
+        <div style="height: .74rem;clear: both;"></div>
+    </header>
+    <input type="hidden" name="mui-tab-item" value="4">
+    <if condition="$list">
+        <div class="qgzx_page">
+            <ul class="flexbox column flow_load">
+
+            </ul>
+        </div>
+     <else />
+        <div class="show_on_content">
+            <p><img src="/Public/mobile/image/no_data_icon.png" alt=""></p>
+            <p class="show_text">暂无内容</p>
+        </div>
+    </if>
+<include file="Public:nav"/>
+</body>
+<include file="Public:footer"/>
+<script>
+    lazy_loading("/index/trade/order");
+</script>
+<style>
+    .layui-layer-msg{
+        left: 50px;
+    }
+</style>
+</html>
+

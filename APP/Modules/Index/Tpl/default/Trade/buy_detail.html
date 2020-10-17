@@ -1,0 +1,360 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>订单详情</title>
+    <include file="Public:header"/>
+</head>
+<body style="background-color: #f7f7f5">
+<header>
+    <div class="header_bt">
+        <div class="header_f"><a href="javascript:history.back()" class="header_fh"></a></div>
+        <div class="header_c">订单详情</div>
+    </div>
+    <div style="height: .74rem;clear: both;"></div>
+</header>
+<style>
+    .ddxq-page .times {
+        display: flex;
+        line-height: 16px;
+        height: 16px;
+        overflow: hidden;
+        margin-top: 3px;
+        font-size: .26rem;
+    }
+</style>
+<div class="ddxq-page">
+    <input type="hidden" name="mui-tab-item" value="4">
+    <input type="hidden" name="order_id" value="{$info.id}">
+    <input type="hidden" name="left_time" value="{$left_time}">
+
+    <ul class="flexbox column">
+        <li class="item">
+            <span>类型</span>
+            <span>买单</span>
+        </li>
+        <li  class="item">
+            <span>单号</span>
+            <span>{$info.order_number}</span>
+        </li>
+        <li  class="item">
+            <span>数量</span>
+            <span>{$info.number} ANE</span>
+        </li>
+        <li  class="item">
+            <span>单价</span>
+            <span>{$info.price} CNY</span>
+        </li>
+        <li  class="item">
+            <span>总价</span>
+            <span>{$info.total_price} CNY</span>
+        </li>
+        <li  class="item">
+            <span>合计人民币</span>
+            <span>{$info.total_price}元</span>
+        </li>
+        <li  class="item">
+            <span>卖家姓名</span>
+            <span>{$sale_info.truename}</span>
+        </li>
+        <li  class="item">
+            <span>卖家支付宝</span>
+            <!--<span>{$sale_info.zfb}<i class="dhp_icon copy_r" data-clipboard-text="{$sale_info.zfb}"></i></span>-->
+            <span>{$sale_info.zfb} <a href="javascript:;" class="copy_r" data-clipboard-text="{$sale_info.zfb}" style="margin-right: .1rem">复制</a><a href="javascript:;" class="fk_img" data-qrcode="{$sale_info.zfb_img}">二维码</a></span>
+        </li>
+        <li  class="item">
+            <span>卖家微信</span>
+            <!--<span>{$sale_info.wx}<i class="dhp_icon copy_r" data-clipboard-text="{$sale_info.wx}"></i></span>-->
+            <span>{$sale_info.wx} <a href="javascript:;" class="copy_r" data-clipboard-text="{$sale_info.wx}" style="margin-right: .1rem">复制</a><a href="javascript:;" class="fk_img" data-qrcode="{$sale_info.wx_img}">二维码</a></span>
+        </li>
+        <if condition="$info['status'] eq '6'">
+            <li class="item">
+                <span>卖家已投诉</span>
+                <span style="color: #ff5400">等待官方审核</span>
+            </li>
+        </if>
+        <li  class="item">
+            <span>卖家手机</span>
+            <span>
+              <a href="tel:{$sale_info.username}">联系卖家</a>
+            </span>
+        </li>
+        <if condition="$info['status'] eq '2'">
+            <li  class="item">
+                <span>买家付款倒计时</span>
+                <span class="times">00小时00分钟00秒</span>
+            </li>
+        <elseif condition="$info['status'] eq '3'" />
+            <li  class="item">
+                <span>卖家确认倒计时</span>
+                <span class="times">00小时00分钟00秒</span>
+            </li>
+        <elseif condition="$info['status'] eq '6'" />
+            <li  class="item">
+                <span>双方举证倒计时</span>
+                <span class="times">00小时00分钟00秒</span>
+            </li>
+        </if>
+    </ul>
+    <div class="fd_img sc_img" style="display: none">
+        <p><img src="{$info.image|default=''}" alt=""></p>
+        <i class="gb_icon"></i>
+    </div>
+    <div class="fd_img qrcode_img" style="display: none">
+        <p><img src="" alt=""></p>
+        <i class="gb_icon"></i>
+    </div>
+    <div class="order_tips_pop" style="display: none">
+        <div class="order_tips_pop_view">
+            <p class="title">温馨提示</p>
+            <p>确定我已经付款(恶意确定将会冻结账号)</p>
+            <p class="btn">
+                <span class="confirm float_l">确定已付款</span>
+                <span class="cancel float_r">我还未付款</span>
+            </p>
+        </div>
+    </div>
+
+    <div class="zhezhao_h"></div>
+    <input type="hidden" name="status" value="{$info.status}">
+    <if condition="$info['status'] eq '2'"> <!--等待付款-->
+        <p class="tips wx_tips">请及时付款,连续3次匹配成功未付款将冻结账号</p>
+        <div class="upload_page flexbox wrap spacearound">
+            <div class="upload_show pay no_pay_l" >
+                <input type="file"  id="file" class="input_line over_times">
+                <div class="file_text">
+                    <i></i>
+                    <p>上传截图</p>
+                </div>
+                <a href="javascript:;" class="upload_img" style="display: none">
+                    <img src="{$info.image|default=''}" alt="">
+                </a>
+                <em class="fd_icon"></em>
+            </div>
+            <div class="upload_show no_pay_r pay" >
+                请先付款
+            </div>
+        </div>
+    <elseif condition="$info['status'] eq '3'" />
+        <p class="tips wx_tips">等待卖家处理，如若卖家未及时处理请联系对方。</p>
+        <div class="upload_page flexbox wrap spacearound">
+            <div class="upload_show pay no_pay_l" id="img">
+                <!--<input type="file" id="file" class="input_line">-->
+                <a href="javascript:;" class="upload_img"><img src="{$info.image|default=''}" alt=""></a>
+                <em class="fd_icon" style="display: inline-block"></em>
+            </div>
+            <div class="upload_show pay_r pay">
+                已付款
+            </div>
+        </div>
+   <elseif condition="$info['status'] eq '6'" />
+        <p class="tips wx_tips">请耐心等待官方审核结果</p>
+        <div class="upload_page flexbox wrap spacearound">
+            <div class="upload_show pay no_pay_l" id="img">
+                <!--<input type="file" id="file" class="input_line">-->
+                <a href="javascript:;" class="upload_img"><img src="{$info.image|default=''}" alt=""></a>
+                <em class="fd_icon" style="display: inline-block"></em>
+            </div>
+            <div class="upload_show pay_r pay">
+                卖家已投诉
+            </div>
+        </div>
+     <else />
+        <p class="tips wx_tips">交易完成</p>
+        <div class="upload_page flexbox wrap spacearound">
+            <div class="upload_show pay no_pay_l" id="img">
+                <!--<input type="file" id="file" class="input_line">-->
+                <a href="javascript:;" class="upload_img"><img src="{$info.image|default=''}" alt=""></a>
+                <em class="fd_icon" style="display: inline-block"></em>
+            </div>
+            <div class="upload_show pay_r pay">
+                交易完成
+            </div>
+        </div>
+    </if>
+</div>
+<include file="Public:nav"/>
+</body>
+<include file="Public:footer"/>
+<script>
+    $(".fd_icon").click(function () {
+        $(".zhezhao_h").addClass('zhezhao');
+        $(".sc_img").show();
+    });
+    $(".fd_img .gb_icon").click(function () {
+        $(".zhezhao_h").removeClass('zhezhao');
+        $(".fd_img").hide();
+    });
+    $(".fk_img").click(function () {
+        var qrcode_img = $(this).attr('data-qrcode');
+        if(qrcode_img){
+            $(".qrcode_img").find('img').attr('src',qrcode_img)
+            $(".zhezhao_h").addClass('zhezhao');
+            $(".qrcode_img").show();
+        }
+    })
+
+    $(".order_tips_pop .cancel").click(function () {
+        $(".order_tips_pop").hide();
+        $(".zhezhao_h").removeClass('zhezhao');
+    });
+    $(".ddxq-page").on('click','.pay_btn',function () {
+
+        $(".order_tips_pop").show();
+        $(".zhezhao_h").addClass('zhezhao');
+    });
+    $(".order_tips_pop .confirm").click(function () {
+        var order_id = $("input[name='order_id']").val();
+        var image = $(".sc_img img").attr('src');
+        loading(true)
+        $.ajax({
+            url:"/index/trade/pay",
+            type:"post",
+            data:{
+                'order_id' : order_id,
+                'image' : image,
+            },
+            dataType:'json',
+            success:function(data){
+                loading(false)
+                if(data.result == 1)
+                {
+                    layer.msg(data.info, '', function () {
+                        window.location.reload();
+                    })
+                }else{
+                    layer.msg(data.info);
+                    return false;
+                }
+            }
+        })
+    });
+
+    var clipboard = new Clipboard('.copy_r');
+    clipboard.on('success', function(e) {
+        console.log(e);
+        layer.msg('复制成功', '');
+        e.clearSelection();
+    });
+    $("#img").click(function(){
+        $("#file").click();
+    });
+    $("#file").change(function(){
+        var $this = $(this);
+        var file = this.files[0];
+        if(file.length == 0)
+        {
+            layer.msg("请选择要上传的图片");
+            return false;
+        }
+        var data = new FormData();
+        data.append('image',file);
+        data.append('dir_name','trade');
+        // console.log(data);return false;
+        loading(true)
+        $.ajax({
+            url:"/index/common/ajax_upload",
+            type:"post",
+            data:data,
+            processData:false,
+            contentType:false,
+            dataType:'json',
+            success:function(data){
+                loading(false)
+                if(data.result != 0)
+                {
+                    var url = data.url;
+                    layer.msg("上传成功！");
+                    $(".upload_img img").attr('src',url);
+                    $(".fd_img img").attr('src',url);
+                    $(".file_text").hide();
+                    $(".upload_img").show();
+                    $(".fd_icon").show();
+                    $(".no_pay_l").removeClass('no_pay').addClass('pay');
+                    $(".no_pay_r").text("确认提交");
+                    $(".no_pay_r").removeClass('no_pay').addClass('pay').addClass('pay_btn');
+//                    $(".no_pay_r").css('background-color','#d2d2d2');
+                }else
+                {
+                    layer.msg(data.msg);
+                    return false;
+                }
+            }
+        })
+    });
+
+    function scrollTime($time, time) {
+        var left_time = $("input[name='left_time']").val();
+        var baseArr = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+        var baseLiStr = ''
+        baseArr.forEach(function(ele) {
+            baseLiStr += '<li>' + ele + '</li>'
+        })
+        var lineHeight = $time.height();
+        var domStr = '';
+        for (var i = 0; i < time.length; i++) {
+            if (+time[i] !== +time[i]) {
+                domStr += '<ul>'+ time[i] +'</ul>';
+                continue
+            }
+            var scrollHeight = baseArr.indexOf(time[i]) * lineHeight;
+            domStr += '<ul style="transition: transform .3s ease-in;transform: translate3d(0, -'+ scrollHeight +'px, 0)">' + baseLiStr + '</ul>'
+        }
+        $time.html(domStr)
+
+        let timeArr = time.split(/\D/g).filter(item => item !== '')
+        var hour = +timeArr[0]
+        var minute = +timeArr [1]
+        var second = +timeArr[2]
+        console.log(hour, minute, second)
+        var timer = setInterval(function() {
+            if(second<=0){
+                clearInterval(timer);
+                var status = $("input[name='status']").val();
+                if(status == 2){
+                    $("#file").attr('disabled',true);
+                }
+                return;
+            }
+            if (second - 1 <= 0) {
+                second = 60
+                if (minute - 1 <= 0) {
+                    minute = 60;
+                    hour--
+                }
+                minute--
+            }
+            second--
+            var timeStr = addZero(hour) + '小时' + addZero(minute) + '分钟' + addZero(second)+'秒';
+            if (timeStr.length > time.length) {
+                $time.prepend('<ul style="transition: transform .3s ease-in;transform: translate3d(0, 0, 0)">' + baseLiStr + '</ul>')
+            }
+            for(var j = timeStr.length - 1; j >= 0; j--) {
+                if (timeStr[j] !== time[j]) {
+                    var scrollHeight = baseArr.indexOf(timeStr[j]) * lineHeight;
+                    $time.find('ul').eq(j)[0].style.transform = 'translate3d(0, -' + scrollHeight + 'px , 0)'
+                }
+            }
+            time = timeStr;
+            left_time--;
+        }, 1000)
+    }
+    var $time = $('.ddxq-page .times');
+
+    scrollTime($time, {$show_left_time_str});
+    //时间滚动
+    function addZero(num) {
+        return num < 10 ? ('0' + +num) : +num;
+    }
+</script>
+
+<style>
+    .item span a:hover{
+        color: #fff !important;
+    }
+    .layui-layer-msg{
+        left: 50px;
+    }
+</style>
+</body>
+</html>

@@ -5,7 +5,7 @@
 	*/
 	class ShopAction extends CommonAction{
 		
-		//商品列表
+		//列表
 		public function lists(){
 			$product = M("product");
 			$map['title'] = array("LIKE","%{$_GET['title']}%");
@@ -13,16 +13,10 @@
 			$count = $product -> where($map)->count();
 			$Page       = new Page($count,10);
 			$show = $Page -> show();
-			$products = $product -> where($map) -> limit($Page ->firstRow.','.$Page -> listRows)->order('id desc') -> select();
-			foreach($products as $k=>$v){
-				 $products[$k]['sell'] = M("order")->where(array("sid"=>$v['id']))->count();
-			}
+			$products = $product -> where($map) -> limit($Page ->firstRow.','.$Page -> listRows)->order('sort asc') -> select();
             $this -> assign("page",$show);
-
 			$this -> assign("products",$products);
 			$this -> display(); 			
-				
-			
 		}
 		public function banner(){
 			$user = M("banner");
@@ -64,16 +58,14 @@
 			$this -> display(); 			
 				
 		}
-
+        public function product(){
+            $this->display();
+        }
 		
-		//添加商品
+
 		public function add_product(){
-			$type = M('type');
-			$types = $type ->select();
-			$this->assign('types',$types);			
 			$this->display();
 		}
-
 		//添加广告
 		public function addbanner(){
 
@@ -92,32 +84,23 @@
 		//添加商品表单处理
 		public function addProductHandle(){
 			$product = M('product');
-			$type = M('type');
-			$data['id']=$_POST['tid'];
-			
-			$d = $type->where($data)->field("pid")->find();
-			$_POST['pid']= $d['pid'];
-			$_POST['inputtime']= NOW_TIME;
-			$_POST['thumb'] = $this -> upload();
-				if($product ->create()){
-					if($product -> add()){
-					    $this->success('添加成功',U(GROUP_NAME .'/Shop/lists'));
-					}else{
-						$this -> error('添加失败');
-					}
-				}			
 
+			$_POST['logo_url'] = $this -> upload();
+            if($product ->create()){
+                if($product -> add()){
+                    $this->success('添加成功',U(GROUP_NAME .'/Shop/lists'));
+                }else{
+                    $this -> error('添加失败');
+                }
+            }
 		}
 		
 			//修改商品
-		public function editProduct(){
-			$type = M('type');
+		public function edit_product(){
 			$product = M("product");
-			$types = $type ->select();
 	        $id = $_GET['id'];
 			$data = $product -> find($id);		
 			$this -> assign('product',$data);			
-			$this->assign('types',$types);			
 			$this->display();
 		}
 		
@@ -134,18 +117,12 @@
 		public function editProductHandle(){
 			
 			$product = M("product");
-			$type = M('type');
 			$id = I('id',0,'intval');
 			unset($_POST['id']);
 			$data['id']=$_POST['tid'];
-			
-			$d = $type->where($data)->field("pid")->find();
-			$_POST['pid']= $d['pid'];	
-            if(!empty($_FILES['thumb']['tmp_name'])){
-                   $_POST['thumb'] = $this -> upload();
+            if(!empty($_FILES['logo_url']['tmp_name'])){
+                   $_POST['logo_url'] = $this -> upload();
             }			
-			 
-		
 			$product->where(array('id'=>$id))->save($_POST);
 			$this->success('修改成功!',U(GROUP_NAME .'/Shop/lists'));			
 		
@@ -313,23 +290,67 @@
 				$this -> error($upload -> getError());
 			}
       }	
-      //订单管理
+
       public function orderlist(){
 		  
-			$order = M("order");
-			
-		    import("@.ORG.Util.Page");
-			$count = $order ->count();
+          $m = M("product_record");
+          $product_m = M("product");
+          import("@.ORG.Util.Page");
+          $mobile = I('get.mobile');
+          $w = array();
+          if($mobile){
+             $w['m.username'] = $mobile;
+          }
+			$count = $m->alias('p')
+                ->where($w)
+                ->count();
 			$Page       = new Page($count,20);
 			$show = $Page -> show();
-			$orders = $order -> limit($Page ->firstRow.','.$Page -> listRows)->order('id desc') -> select();
-            $this -> assign("page",$show);
+			$orders = $m->alias('p')
+                ->where($w)
+                ->join("LEFT JOIN ds_member as m ON p.user_id=m.id")
+                ->field('p.*,m.username as mobile')
+                -> limit($Page ->firstRow.','.$Page -> listRows)
+                ->order('id desc')
+                -> select();
+			if($orders){
+                foreach ($orders as &$value){
+                    $product_name = $product_m->where(array('id'=>$value['product_id']))->getField('product_name');
+                    $value["product_name"] = $product_name ?$product_name :'';
+                }
+            }
 
-			$this -> assign("orders",$orders);
+            $this -> assign("page",$show);
+			$this -> assign("list",$orders);
 			$this -> display(); 		  
-		  
-		
+
 	  }
+
+        public function order_record(){
+
+            $m = M("product_receive_record");
+
+            import("@.ORG.Util.Page");
+            $mobile = I('get.mobile');
+            $w = array();
+            if($mobile){
+                $w['mobile'] = $mobile;
+            }
+            $count = $m
+                ->where($w)
+                ->count();
+            $Page       = new Page($count,20);
+            $show = $Page -> show();
+            $orders = $m
+                ->where($w)
+                -> limit($Page ->firstRow.','.$Page -> listRows)
+                ->order('id desc')
+                -> select();
+            $this -> assign("page",$show);
+            $this -> assign("list",$orders);
+            $this -> display();
+
+        }
         public function editshouyi(){
             $product=M('product')->select();
             $this->assign('product',$product);
@@ -447,8 +468,109 @@
 		   
 	   }
 
+        //联盟奖励配置列表
+        public function league(){
+            $league_cfg_m = M("league_conf");
+            $product_m = M('product');
 
-	   
+            $map['name'] = array("LIKE","%{$_GET['name']}%");
+            import("@.ORG.Util.Page");
+            $count = $league_cfg_m -> where($map)->count();
+            $Page       = new Page($count,10);
+            $show = $Page -> show();
+            $products = $league_cfg_m -> where($map) -> limit($Page ->firstRow.','.$Page -> listRows)->order('sort asc') -> select();
+            foreach ($products as &$value){
+                if($value['reward_product_id'] > 0){
+                    $value['reward_product_name'] = $product_m->where(array('id'=>$value['reward_product_id']))->getField('product_name');
+                }
+                if($value['team_buy_ask']){
+                    $team_buy_ask = explode("|",$value['team_buy_ask']);
+                    $value['team_buy_ask_desc'] = $team_buy_ask[0]."次 （{$team_buy_ask[1]}代）";
+                }
+                if($value['push_level_one_ask']){
+                    $sort = $value['sort'] - 1;
+                    $push_level_one_ask_desc = $league_cfg_m->where(array('sort' => $sort))->getField('name');
+                    $value['push_level_one_ask_desc'] = $push_level_one_ask_desc;
+                }
+
+
+            }
+            $this -> assign("page",$show);
+            $this -> assign("products",$products);
+            $this -> display();
+        }
+        public function edit_league(){
+            $league_cfg_m = M("league_conf");
+            $product_m = M('product');
+
+            if(IS_POST){
+                $id = I("post.id");
+                $data = I('post.');
+                if($id){
+                    $r = $league_cfg_m->where(array('id'=>$id))->save($data);
+                }else{
+                   unset( $data['id']);
+                    $r = $league_cfg_m->add($data);
+                }
+                if(false === $r){
+                    $this -> error('操作失败');
+                }
+                $this->success('操作成功',U(GROUP_NAME .'/Shop/league'));
+            } else{
+                $id = I("get.id");
+                $data = $league_cfg_m -> find($id);
+                $this -> assign('info',$data);
+
+                $product = $product_m->where(array('status'=>1))->order('sort asc')->select();
+                $this -> assign('product',$product);
+                $this->display();
+            }
+        }
+
+        public function del_league(){
+            $id = I('id');
+            if(!$id){
+                $this -> error("删除失败");
+            }
+            $league_cfg_m = M("league_conf");
+            $map['id'] = $id;
+            if($league_cfg_m -> where($map) -> delete($id)){
+                $this->success('删除成功',U(GROUP_NAME .'/Shop/league'));
+            }else{
+                $this -> error("删除失败");
+            }
+        }
+        //升级记录
+        public function league_record(){
+
+            $mobile = I('get.mobile');
+            $order = M("member_league_receive");
+            $product_m = M('product');
+            $league_conf_m = M('league_conf');
+            import("@.ORG.Util.Page");
+            $w = array();
+            if($mobile){
+                $w['mobile'] = $mobile;
+            }
+            $count = $order->where($w) ->count();
+            $Page       = new Page($count,20);
+            $show = $Page -> show();
+            $list = $order->where($w)  -> limit($Page ->firstRow.','.$Page -> listRows)->order('add_time desc') -> select();
+            foreach ($list as &$value){
+                if($value['last_key']){
+                    $value['last_level_name'] = $league_conf_m->where(array('sort'=>$value['last_key']))->getField('name');
+                }
+                $value['cur_level_name'] = $league_conf_m->where(array('sort'=>$value['key']))->getField('name');
+                $value['product_name'] = $product_m->where(array('id'=>$value['reward_product_id']))->getField('product_name');
+            }
+
+            $this -> assign("page",$show);
+
+            $this -> assign("list",$list);
+            $this -> display();
+
+        }
+
 	}
 
 ?>

@@ -899,6 +899,22 @@ function get_ip_address($ip)
   return $ip;
 }
 
+function file_get_content($url) {
+    if (function_exists('file_get_contents')) {
+        $file_contents = @file_get_contents($url);
+    }
+    if ($file_contents == '') {
+        $ch = curl_init();
+        $timeout = 30;
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+        $file_contents = curl_exec($ch);
+        curl_close($ch);
+    }
+    return $file_contents;
+}
+
 function randStr($len = 6, $format = 'ALL')
 {
   switch ($format) {
@@ -1273,5 +1289,70 @@ function randomFloat($min = 0, $max = 10)
     return sprintf("%.2f", $num);
 
 }
+/*2要素实名*/
+function cert_api($data){
+    return true;
+    $idcard = $data['idcard'];
+    $name = $data['name'];
+    list($usec, $sec) = explode(" ", microtime());
+    $timestamp = (float)$usec + (float)$sec;
+    $timestamp = intval($timestamp);
+    $host = "https://api.shumaidata.com/v4/id_card/check";
 
+    $method = "GET";
+    $appid = "5fcad04d9d6742d693a400b791608b8c";
+    $querys = "appid={$appid}&timestamp={$timestamp}&idcard={$idcard}&name={$name}";
+    $sign = md5($querys);
+    $querys = $querys.'&sign='.$sign;
+    $headers = array();
+    $bodys = "";
+    $url = $host . "?" . $querys;
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($curl, CURLOPT_FAILONERROR, false);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+//    curl_setopt($curl, CURLOPT_HEADER, true);
+    if (1 == strpos("$".$host, "https://"))
+    {
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+    }
+    $out_put = curl_exec($curl);
+    $rsp = json_decode($out_put,true);
+    if(!$out_put || $rsp['code'] != 200){
+        return false;
+    }
+    return true;
+}
+function transToSecond($str) {
+    $arr = array();
+    if($str){
+        if($str >= 60*60){
+            $a = intval($str / 3600);
+            if(($str - 3600*$a-60) >= 0){
+                $b = intval(($str - 3600 *$a)/60);
+                $c = $str - 3600 *$a - $b * 60;
+            }else{
+                $b = "00";
+                $c = $str -3600 *$a;
+            }
+        }else if($str >= 60){
+
+            $a = "00";
+            $b = intval($str / 60) ;
+            $c = $str - 60 * $b;
+
+        }else{
+            $a = "00";
+            $b = "00";
+            $c = $str;
+        }
+        $arr['a'] =  sprintf('%02s', $a);
+        $arr['b'] =  sprintf('%02s',$b);
+        $arr['c'] =  sprintf('%02s',$c);
+    }
+    return $arr;
+}
 ?>

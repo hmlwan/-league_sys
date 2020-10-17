@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>ANE钱包</title>
+    <include file="Public:header"/>
+</head>
+<body>
+    <header>
+        <div class="header_bt">
+            <div class="header_f"><a href="{:U('/index/member/index')}" class="header_fh"></a></div>
+            <div class="header_c">ANE钱包</div>
+        </div>
+        <div style="height: .74rem;clear: both;"></div>
+    </header>
+    <input type="hidden" name="mui-tab-item" value="5">
+    <div class="stjf_page">
+        <div class="stjf_top">
+            <img src="/Public/mobile/image/logo.png" class="logo" alt="">
+            <p class="num">{$info.ane|default=0.0000}</p>
+            <p class="des">ANE说明</p>
+        </div>
+        <div class="stjf_con">
+            <div class="is_vaild flexbox spacearound">
+                <a href="{:U('/index/member/wallet')}" <if condition="$_GET['type'] eq ''">class="active"</if> >全部<em></em></a>
+                <a href="{:U('/index/member/wallet',array('type'=>1))}" <if condition="$_GET['type'] eq '1'">class="active"</if>>收入 <em></em></a>
+                <a href="{:U('/index/member/wallet',array('type'=>2))}" <if condition="$_GET['type'] eq '2'">class="active"</if>>支出 <em></em></a>
+            </div>
+            <if condition="$list">
+                <ul class="flexbox column flow_load">
+
+                </ul>
+            <else />
+                <div class="show_on_content">
+                    <p><img src="/Public/mobile/image/no_data_icon.png" alt=""></p>
+                    <p class="show_text">暂无内容</p>
+                </div>
+            </if>
+
+        </div>
+    </div>
+    <include file="Public:nav"/>
+</body>
+<include file="Public:footer"/>
+<script>
+    lazy_loading("/index/member/wallet?type={$_GET['type']}");
+</script>
+<style>
+    .show_on_content{
+        top:45%
+    }
+</style>
+</html>
+

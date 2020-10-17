@@ -6,7 +6,7 @@
     <include file="Public:header"/>
 </head>
 <body style="background-color: #f4f3fb">
-<input type="hidden" name="mui-tab-item" value="4">
+<input type="hidden" name="mui-tab-item" value="5">
 <div class="wd_page">
     <div class="wd_box wd_top flexbox wrap">
         <img class="logo" src="/Public/mobile/image/logo.png" alt="">
@@ -35,37 +35,47 @@
                 </a>
             </li>
             <li>
-                <a href="{:U('/index/member/invite')}">
+                <a href="{:U('/index/member/wallet')}">
                     <img src="/Public/mobile/image/yqhy.png" alt="">
-                    <span>邀请好友</span>
+                    <span>ANE钱包</span>
                 </a>
             </li>
             <li>
-                <a href="{:U('/index/member/team')}">
+                <a href="{:U('/index/member/invite')}">
                     <img src="/Public/mobile/image/wdtu.png" alt="">
-                    <span>我的团队</span>
+                    <span>邀请好友</span>
                 </a>
             </li>
         </ul>
     </div>
-    <div class="wd_ad">
-        <a href="lmjl.html"><img src="/Public/mobile/image/lmjl.png" alt=""></a>
+    <div class="wd_ad" onclick="senior_cert({$is_senior_cert})">
+        <img src="/Public/mobile/image/lmjl.png" alt="">
     </div>
     <div class="wd_box wd_item">
         <ul class="flexbox column">
+            <li>
+                <a href="{:U('/index/member/team')}">
+                    <span>我的团队</span><i></i>
+                </a>
+            </li>
             <li>
                 <a href="{:U('/index/member/order')}">
                     <span>消费订单</span><i></i>
                 </a>
             </li>
             <li>
-                <a href="javascript:;" onclick="is_cert({$m_info.is_cert})">
+                <a href="{:U('/index/member/senior_cert')}" >
                     <span>实名认证</span><i></i>
                 </a>
             </li>
             <li>
                 <a href="{:U('/index/member/edit_pwd')}">
                     <span>密码管理</span><i></i>
+                </a>
+            </li>
+            <li>
+                <a href="{:U('/index/member/payment')}">
+                    <span>收款管理</span><i></i>
                 </a>
             </li>
             <li>
@@ -122,14 +132,16 @@
             }
         }, 'json')
     }
-    function is_cert(is_cert) {
-
-        if(is_cert == '1'){
-            layer.msg( '已经完成了实名');
+    function senior_cert($is_senior_cert) {
+        if($is_senior_cert == '1'){
+            window.location.href = "/index/League/index"
         }else{
-            window.location.href = "{:U('/index/index/logout')}";
+            layer.msg("请先去高级认证", '', function () {
+                window.location.href = "/index/member/senior_cert"
+            })
         }
     }
+
 </script>
 <style>
     .layui-layer-btn a:hover {
@@ -137,7 +149,7 @@
         text-decoration: none;
         color:#fff !important;
     }
-    #layui-layer2{
+    .layui-layer-msg{
         left: 50px;
     }
 </style>

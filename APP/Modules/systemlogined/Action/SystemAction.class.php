@@ -84,6 +84,26 @@
             $config['rebate_rate']      = I('post.rebate_rate');
             $config['rebate_valid_days']      = I('post.rebate_valid_days');
 
+            $config['rebate_rate_1']      = I('post.rebate_rate_1');
+            $config['rebate_day_1']      = I('post.rebate_day_1');
+            $config['rebate_rate_2']      = I('post.rebate_rate_2');
+            $config['rebate_day_2']      = I('post.rebate_day_2');
+            $config['league_start_receive']      = I('post.league_start_receive');
+            $config['league_end_receive']      = I('post.league_end_receive');
+
+            $config['trade_start_receive']      = I('post.trade_start_receive');
+            $config['trade_end_receive']      = I('post.trade_end_receive');
+            $config['trade_price']      = I('post.trade_price');
+            $config['trade_pay_overtime']      = I('post.trade_pay_overtime');
+            $config['trade_sk_overtime']      = I('post.trade_sk_overtime');
+            $config['trade_is_sort']      = I('post.trade_is_sort');
+            $config['trade_buy_limit']      = I('post.trade_buy_limit');
+            $config['trade_refuse_pay_times']      = I('post.trade_refuse_pay_times');
+            $config['trade_pending_order_num']      = I('post.trade_pending_order_num');
+            $config['trade_valid_period']      = I('post.trade_valid_period');
+            $config['trade_running_num']      = I('post.trade_running_num');
+            $config['trade_whitelist']      = I('post.trade_whitelist');
+            $config['trade_complain_saler_deal_hours']      = I('post.trade_complain_saler_deal_hours');
 
  			$data = "<?php\r\nreturn " . var_export($config, true) . ";\r\n?>";
 			if (file_put_contents($path, $data)) {

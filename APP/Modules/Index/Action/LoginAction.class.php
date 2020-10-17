@@ -55,19 +55,20 @@ Class LoginAction extends Action
       $prologin['preloginip'] = $member['loginip'];
       $prologin['preloginaddress'] = '';
       $prologin['prelogintime'] = $member['logintime'];
+      $prologin['logintime'] = time();
 
       $model_m->where(array('id' => $member['id']))->save($prologin);
       //更新最后一次登录的IP和登录时间
       //$area = $Ip->getlocation(get_client_ip());
       //$area = get_ip_address(get_client_ip());
 
-      $data = array(
-        'id' => $member['id'],
-        'logintime' => time(),
-        'loginip' => '',
-        'loginaddress' => ''
-      );
-      $model_m->save($data);
+//      $data = array(
+//        'id' => $member['id'],
+//        'logintime' => time(),
+//        'loginip' => '',
+//        'loginaddress' => ''
+//      );
+//      $model_m->save($data);
 
       //添加登录总次数
       $model_m->where(array('username' => I('username')))->setInc('logincount');
@@ -91,7 +92,7 @@ Class LoginAction extends Action
           $toUrl = U('Index/Member/index');
           $info = '登陆成功！';
       }else{ //未实名
-          $toUrl = U('Index/Member/cert');
+          $toUrl = U('Index/Login/cert');
           $info = '登录成功，请先去实名认证！';
       }
       $this->ajaxReturn(array('result' => '1', 'info' => $info, 'toUrl' => $toUrl));
@@ -187,6 +188,9 @@ Class LoginAction extends Action
       $data['name'] = I('post.name');
       $password = I('post.password', '', 'strval');
 	  $repassword = I('post.repassword', '', 'strval');
+      if (empty($password)) {
+         $this->ajaxReturn(array('result' => 0, 'info' => '登陆密码不能为空'));
+      }
 	  if($password != $repassword){
 	  	   $this->ajaxReturn(array('result' => 0, 'info' => '密码不一致'));
 	  }
@@ -216,9 +220,7 @@ Class LoginAction extends Action
         $this->ajaxReturn(array('result' => 0, 'info' => $check_code['msg']));
       }
 
-      if (empty($password)) {
-        $this->ajaxReturn(array('result' => 0, 'info' => '登陆密码不能为空'));
-      }
+
 
       $hongbao = C('hongbao');
       $data['regaddress'] = $location['country'] . $location['area']; // 所在国家或者地区
@@ -235,7 +237,7 @@ Class LoginAction extends Action
       $r = M('member')->add($data);
       //统计
       if($r > 0){
-          $member = D('member');
+          $member = D('Member');
           $user_statistics_m = D('UserStatistics');
           $invite_record_m = D('InviteRecord');
           $info = $member->getByUserMobile($data['username']);
@@ -243,12 +245,13 @@ Class LoginAction extends Action
               $info_1 = $member->getByUserId($info['parent_id']);
               if($info_1 && $info_1['is_cert'] == 1){
                   $user_statistics_m->setFieldInc($info_1['id'],'one_sub_nocert_nums',1);
+
                   $invite_record_1 = $invite_record_m->addRecord(array(
                       'user_id' => $info_1['id'],
                       'sub_user_id' => $info['id'],
                       'add_time' => time(),
                       'is_cert' => 1,
-                      'sub_mobile' => $info['mobile'],
+                      'sub_mobile' => $info['username'],
                       'level' => 1,
                       'content' => '一级下线实名',
                       'types' => 1
@@ -257,12 +260,13 @@ Class LoginAction extends Action
                       $info_2 = $member->getByUserId($info_1['parent_id']);
                       if($info_2 && $info_2['is_cert'] == 1){
                           $user_statistics_m->setFieldInc($info_2['id'],'two_sub_nocert_nums',1);
-                          $invite_record_2 = $invite_record_m->editRecord(array(
+
+                          $invite_record_2 = $invite_record_m->addRecord(array(
                               'user_id' => $info_2['id'],
                               'sub_user_id' => $info['id'],
                               'add_time' => time(),
                               'is_cert' => 1,
-                              'sub_mobile' => $info['mobile'],
+                              'sub_mobile' => $info['username'],
                               'level' => 2,
                               'types' => 1,
                               'content' => '二级下线实名',
@@ -279,6 +283,118 @@ Class LoginAction extends Action
     }
   }
 
+    /*实名页面*/
+    public function cert(){
+        $member = M('member');
+        $username = session('username');
+        $m_info = $member->where(array('username' => $username))->find();
+        if($m_info['is_cert'] == 1){
+            $this->redirect('index/member/index');
+        }
+        $this->assign('m_info',$m_info);
+        $this->display();
+    }
+
+    /*实名处理*/
+    public function cert_op(){
+        $member = D('Member');
+        $username = session('username');
+        $info = $member->getByUserMobile($username);
+
+        $truename = I('truename','');
+        $idcard = I('idcard','');
+        if(!$truename || !$idcard){
+            $this->ajaxReturn(array('info' => '姓名和身份证必填！', 'result' => -1));
+        }
+
+        $password = I('post.trade_password', '', 'strval');
+        $repassword = I('post.trade_repassword', '', 'strval');
+        if (empty($password)) {
+            $this->ajaxReturn(array('result' => 0, 'info' => '交易密码不能为空'));
+        }
+        if($password != $repassword){
+            $this->ajaxReturn(array('result' => 0, 'info' => '密码不一致'));
+        }
+        $code = I('post.code', '');
+
+        if (!$code) {
+            $this->ajaxReturn(array('result' => 0, 'info' => '请输入短信验证码!'));
+        }
+        $check_code = sms_code_verify($info['username'], $code, session_id());
+        if ($check_code['status'] != 1) {
+            $this->ajaxReturn(array('result' => 0, 'info' => $check_code['msg']));
+        }
+        $cert_api_r = cert_api(array('idcard'=>$idcard,'name'=>$truename));
+        if(!$cert_api_r){
+            $member->where(array('username'=>$username))->save(array('is_cert' => 2));
+            $this->ajaxReturn(array('info' => '实名失败！', 'result' => -1));
+        }
+        $member->where(array('username'=>$username))->save(array(
+             'is_cert' => 1,
+             'truename' => $truename,
+             'idcard' => $idcard,
+             'card' => I('card'),
+             'trade_password' => md5(I('trade_password')),
+            )
+        );
+        $user_statistics_m = D('UserStatistics');
+        $invite_record_m = D('InviteRecord');
+        if($info['parent_id'] >0 ){
+            $info_1 = $member->getByUserId($info['parent_id']);
+            if($info_1 && $info_1['is_cert'] == 1){
+                $user_statistics_m->setFieldInc($info_1['id'],'one_sub_cert_nums',1);
+                $invite_record_1 = $invite_record_m->editRecord(array(
+                    'user_id' => $info_1['id'],
+                    'sub_user_id' => $info['id'],
+                    'level' => 1,
+                    'types' => 1
+                ),array(
+                    'user_id' => $info_1['id'],
+                    'sub_user_id' => $info['id'],
+                    'add_time' => time(),
+                    'is_cert' => 2,
+                    'sub_mobile' => $info['username'],
+                    'level' => 1,
+                    'content' => '一级下线实名',
+                    'types' => 1
+                ));
+                if($info_1['parent_id'] >0){
+                    $info_2 = $member->getByUserId($info_1['parent_id']);
+                    if($info_2 && $info_2['is_cert'] == 1){
+                        $user_statistics_m->setFieldInc($info_2['id'],'two_sub_cert_nums',1);
+                        $invite_record_2 = $invite_record_m->editRecord(array(
+                            'user_id' => $info_2['id'],
+                            'sub_user_id' => $info['id'],
+                            'level' => 2,
+                            'types' => 1,
+                        ),array(
+                            'user_id' => $info_2['id'],
+                            'sub_user_id' => $info['id'],
+                            'add_time' => time(),
+                            'is_cert' => 2,
+                            'sub_mobile' => $info['username'],
+                            'level' => 2,
+                            'types' => 1,
+                            'content' => '二级下线实名',
+                        ));
+                    }
+                }
+            }
+        }
+        /*实名奖励*/
+        $cert_reward = getConf('cert_reward');
+        if($cert_reward > 0){
+            /*明细*/
+            D('UserEcoLog')->changeUserNum($info['id'],array(
+                'num' => $cert_reward,
+                'remark' => '实名奖励'.$cert_reward.'生态积分',
+                'type'=> 1,
+                'valid_period' => 9999
+            ));
+        }
+        $this->ajaxReturn(array('info' => '实名成功！', 'result' => 1, 'toUrl' => U('/index/member/index')));
+
+    }
   public function checkInviteCode($code)
   {
     $tmp = M('member')->where(array('inviteCode' => $code))->find();

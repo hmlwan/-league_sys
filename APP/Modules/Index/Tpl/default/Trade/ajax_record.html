@@ -1,0 +1,56 @@
+<volist name="list" id="item">
+    <div class="fbdd-f wym_cx">
+        <ul class="flexbox column">
+            <li>
+                <span class="title">正在交易中</span>
+                <span>{$item.create_time|date="m-d H:i",###}</span>
+            </li>
+            <li>
+                <span>数量：{$item.number} ANE</span>
+                <span class="red_color">
+                    <if condition="$item['types'] eq '1'">
+                        买
+                    <else />
+                        卖
+                    </if>单
+                </span>
+            </li>
+            <li>
+                <span>单价：1 CNY</span>
+                <span class="red_color">{$item.number}  CNY</span>
+            </li>
+            <li class="zfb_li">
+                <span>
+                    <if condition="$item['sk_way_arr']">
+                        <volist name="item['sk_way_arr']" id="v">
+                            <i class="{$v}_icon"></i>
+                        </volist>
+                    </if>
+                </span>
+                <if condition="$item['order_status'] eq '1'">
+                    <span>
+                        <if condition="$item['types'] eq '1'">
+                            <a href="{:U('/index/trade/buy_detail',array('order_id'=>$item['id']))}" class="m2_bgk">详情</a>
+                        <else />
+                            <a href="{:U('/index/trade/sale_detail',array('order_id'=>$item['id']))}" class="m1_bgk">详情</a>
+                        </if>
+                    </span>
+                <else />
+                    <span class="is_order_status">
+                       <if condition="$item['types'] eq '1'">
+                            <em  class="m2_bgk">详情</em>
+                        <else />
+                            <em  class="m1_bgk">详情</em>
+                        </if>
+                    </span>
+                </if>
+            </li>
+        </ul>
+    </div>
+</volist>
+
+<style>
+    .zfb_li a:hover{
+        color:#fff !important;
+    }
+</style>

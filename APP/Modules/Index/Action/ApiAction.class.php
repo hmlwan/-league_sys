@@ -27,4 +27,162 @@ class ApiAction extends Action
       echo "fail";
     }
   }
+    /*订单自动返利*/
+    public function auto_rebate_order(){
+
+        $MemberRebateOrder = D('MemberRebateOrder');
+        //失效时间
+        $rebate_invalid_days = getConf('rebate_invalid_days');
+        //积分有效期
+        $rebate_valid_days = getConf('rebate_valid_days');
+        //一级返利
+        $rebate_rate_1 = getConf('rebate_rate_1');
+        $rebate_day_1 = getConf('rebate_day_1');
+        //二级返利
+        $rebate_rate_2 = getConf('rebate_rate_2');
+        $rebate_day_2 = getConf('rebate_day_2');
+
+        $rebate_all = $MemberRebateOrder->getAllOrder(array(
+            'status' => array('in',array(0,1,2)),
+            'is_receive' => 0
+        ));
+        $RebateOnlineOrder = D('RebateOnlineOrder');
+        $rebate_invalid_second = $rebate_invalid_days * 24*3600;
+        if($rebate_all){
+            foreach ($rebate_all as $rebate){
+                $x = time() - $rebate['add_time'];
+                if( $x > $rebate_invalid_second){ //失效
+                    $MemberRebateOrder
+                        ->where(array('id'=>$rebate['id']))
+                        ->save(array('status'=>3));
+                }else{
+                    //更新内容
+                    $online_info =  $RebateOnlineOrder->get_info($rebate['scene'],$rebate['order_no']);
+                    if($online_info){
+                        $add_data['img'] = $online_info['img'];
+                        $add_data['title'] = $online_info['title'];
+                        $add_data['order_time'] = $online_info['order_time'];
+                        $add_data['commission'] = $online_info['commission'];
+                        $add_data['price'] = $online_info['price'];
+                        $add_data['status'] = $online_info['status'];
+                        $add_data['num'] = $online_info['num'];
+
+                        $MemberRebateOrder->saveInfo(array('id'=>$rebate['id']),$add_data);
+                        if($add_data['status'] == 2){ //已结算
+                            //订单返利 明细
+                            D('UserEcoLog')->changeUserNum($rebate['user_id'],array(
+                                'num' => $rebate['num'],
+                                'remark' => '订单奖励'.$rebate['num'].'生态积分',
+                                'type'=> 5,
+                                'valid_period' => $rebate_valid_days
+                            ));
+                            $MemberRebateOrder->saveInfo(
+                                array('id' => $rebate['id']),
+                                array('is_receive' => 1,'receive_time'=>time()));
+                            //一级返利
+                            $member = D('Member');
+                            $invite_record_m = D('InviteRecord');
+                            $info = $member->getByUserId($rebate['user_id']);
+                            if($info['parent_id'] >0 ){
+                                $info_1 = $member->getByUserId($info['parent_id']);
+                                if($info_1 && $info_1['is_cert'] == 1){
+                                    $cert_reward_1 = $rebate_rate_1 * $rebate['num'];
+                                    $invite_record_1 = $invite_record_m->addRecord(array(
+                                        'user_id' => $info_1['id'],
+                                        'num' => $cert_reward_1,
+                                        'sub_user_id' => $info['id'],
+                                        'add_time' => time(),
+                                        'is_cert' => 2,
+                                        'sub_mobile' => $info['mobile'],
+                                        'level' => 1,
+                                        'content' => "一级下线订单返利{$cert_reward_1}生态积分",
+                                        'types' => 2
+                                    ));
+                                    if($cert_reward_1 > 0){
+                                        /*明细*/
+                                        D('UserEcoLog')->changeUserNum($info_1['id'],array(
+                                            'num' => $cert_reward_1,
+                                            'remark' => '一级下线订单返利'.$cert_reward_1.'生态积分',
+                                            'type'=> 6,
+                                            'valid_period' => $rebate_day_1?$rebate_day_1:9999
+                                        ));
+                                    }
+
+                                    if($info_1['parent_id'] >0){
+                                        $info_2 = $member->getByUserId($info_1['parent_id']);
+                                        if($info_2 && $info_2['is_cert'] == 1){
+                                            $cert_reward_2 = $rebate_rate_2 * $rebate['num'];
+                                            $invite_record_2 = $invite_record_m->addRecord(array(
+                                                'user_id' => $info_2['id'],
+                                                'num' => $cert_reward_2,
+                                                'sub_user_id' => $info['id'],
+                                                'add_time' => time(),
+                                                'is_cert' => 2,
+                                                'sub_mobile' => $info['mobile'],
+                                                'level' => 2,
+                                                'content' => "二级下线订单返利{$cert_reward_2}生态积分",
+                                                'types' => 2
+                                            ));
+                                            if($cert_reward_2 > 0){
+                                                /*明细*/
+                                                D('UserEcoLog')->changeUserNum($info_2['id'],array(
+                                                    'num' => $cert_reward_2,
+                                                    'remark' => '二级下线订单返利'.$cert_reward_2.'生态积分',
+                                                    'type'=> 6,
+                                                    'valid_period' => $rebate_day_2 ? $rebate_day_2:9999
+                                                ));
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+    /*积分自动失效*/
+    public function auto_jifen_invalid(){
+        $UserEcoLog = D('UserEcoLog');
+        $jifen_data = $UserEcoLog
+            ->where(array(
+                    'types'=> array('in',array(2,3,5,6)),
+                    'valid_period' => array('neq',9999) //永久
+                )
+            )
+            ->select();
+        if($jifen_data){
+            foreach ($jifen_data as $jifen){
+                if( $jifen['valid_period'] != 0 &&
+                    (time() - $jifen['create_time'])>($jifen['valid_period'] * 3600 * 24)){ //非永久。到时间自动过期
+                    //积分过期 明细
+                    D('UserEcoLog')->changeUserNum($jifen['user_id'],array(
+                        'num' => $jifen['num'],
+                        'remark' => '积分过期'.$jifen['num'].'生态积分',
+                        'type'=> 4,
+                        'valid_period' => 9999
+                    ),-1);
+                }
+            }
+        }
+        //退租
+        $re_where['is_run'] = 0;
+        $list = D('Product')->getProductRecord($re_where);
+        $compute_m = D("Compute");
+        if($list){
+            foreach ($list as $k=>$value){
+                $period = $value['period'] * 24 * 3600;
+                $left_day = ($period + $value['add_time']) - time() ;
+                if ($left_day > 0) {
+                } else {//可退租
+                    $compute_m->do_rehire($value);
+
+                }
+            }
+        }
+    }
 }

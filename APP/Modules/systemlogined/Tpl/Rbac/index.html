@@ -109,13 +109,14 @@
 
 												<td class="hidden-480">
 													<if condition='$v["username"] eq C("RBAC_SUPERADMIN")'>
-						<span class="label label-large label-pink arrowed-right">超级管理员</span>
-					<else/>
-							<foreach name="v.role" item="value">
-								<span class="label label-info arrowed-in-right arrowed">{$value.remark} &nbsp;</span>
-							</foreach>
-
-					</if>
+														<span class="label label-large label-pink arrowed-right">超级管理员</span>
+													<else/>
+														<foreach name="role" item="value">
+															<if condition="$v['role_id'] eq $value['id']">
+																<span class="label label-info arrowed-in-right arrowed">{$value.remark} &nbsp;</span>
+															</if>
+														</foreach>
+													</if>
 												</td>
 
 												<td>

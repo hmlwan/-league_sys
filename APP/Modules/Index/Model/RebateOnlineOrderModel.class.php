@@ -108,7 +108,12 @@ class RebateOnlineOrderModel extends Model
         $info = M($table,' ',C('DB_REBATE_ORDER'))->where(array($order_no =>$no))->find();
         if($info){
             $data['order_no'] =  $info[$conf['order_no']];
-            $data['img'] =  $info[$conf['img']];
+            $img = $info[$conf['img']];
+            if($scene == '2' && $no){
+                $url = "http://fl.dayuli.cn/app/index.php?i=1&c=entry&do=jdview&m=tuike_jd&jdlm=1&itemid={$no}";
+                $img = 'https://p.ssl.qhimg.com/t0154c1e1a23e9b81a4.jpg';
+            }
+            $data['img'] =  $img;
             $data['title'] =  $info[$conf['title']];
             $data['order_time'] =  $info[$conf['order_time']];
             $data['commission'] =  $info[$conf['commission']];

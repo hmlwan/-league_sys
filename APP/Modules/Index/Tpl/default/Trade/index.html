@@ -1,0 +1,158 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>交易大厅</title>
+    <include file="Public:header"/>
+</head>
+<body class="trade_body">
+    <input type="hidden" name="mui-tab-item" value="4">
+    <header>
+        <div class="header_bt">
+            <div class="header_f"></div>
+            <div class="header_c">交易大厅</div>
+        </div>
+        <div style="height: .74rem;clear: both;"></div>
+    </header>
+    <div class="trade_page">
+        <div class="trade_top">
+            <p class="cur_time">当前价格(2020-09-29)</p>
+            <p class="price">35.00<em>￥</em></p>
+            <p class="btn">
+                <span>价格</span>
+            </p>
+            <div class="info flexbox spacebetween">
+                <span>昨日价：<em>34.56</em></span>
+                <span>卖手续费：<em>25%</em></span>
+            </div>
+        </div>
+        <div class="trade_con" style="height:4.5rem">
+            <div id="main" style="height:100%;"></div>
+        </div>
+        <div class="trade_bottom">
+            <ul class="flexbox wrap spacearound">
+                <a href="{:U('/index/trade/buy')}">
+                    <li>
+                        <i class="jq"></i><span>求购中心</span>
+                    </li>
+                </a>
+                <a href="{:U('/index/trade/publish')}">
+                    <li>
+                        <i class="fabu"></i><span>发布求购</span>
+                    </li>
+                </a>
+                <a href="{:U('/index/trade/order')}">
+                    <li>
+                        <i class="dingdan"></i><span>我的订单</span>
+                    </li>
+                </a>
+                <a href="{:U('/index/trade/record')}">
+                    <li>
+                        <i class="jilu"></i><span>交易记录</span>
+                    </li>
+                </a>
+            </ul>
+        </div>
+    </div>
+<include file="Public:nav"/>
+</body>
+<include file="Public:footer"/>
+<script>
+    var dom = document.getElementById("main");
+    var myChart = echarts.init(dom);
+    window.onresize = myChart.resize;  // 适应屏幕放大缩小
+    var app = {};
+    option = null;
+    option = {
+        baseOption: {
+            title: {
+                text: '',
+                subtext: ''
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data:['ANE']
+            },
+            itemStyle: {
+                // 点的颜色。
+                color: '#0080ff'
+            },
+            toolbox: {
+                show: true,
+                feature: {
+                    /* magicType: {show: true, type: ['stack', 'tiled']},*/
+                    saveAsImage: {show: false}   //可下载图片
+                }
+            },
+            grid: {
+                left: '15%',     //设置canvas图距左的距离
+                top: '20%',
+                right: '10%',
+                bottom: '10%'
+            },
+            xAxis: {
+                splitLine :{    //网格线
+                    lineStyle:{
+                        type:'dashed'    //设置网格线类型 dotted：虚线   solid:实线
+                    },
+                    show:true //隐藏或显示
+                },
+                type: 'category',
+                axisTick:{
+                    lineStyle:{
+                        type:'dashed'
+                    },
+                    show:true
+                },
+                boundaryGap: false,
+                data: ['周一','周二','周三','周四','周五','周六','周日']
+            },
+            yAxis: {
+                type: 'value',
+                axisTick:{
+                    lineStyle:{
+                        type:'dashed'
+                    },
+                    show:true
+                },
+                splitLine :{    //网格线
+                    lineStyle:{
+                        type:'dashed'    //设置网格线类型 dotted：虚线   solid:实线
+                    },
+                    show:true //隐藏或显示
+                },
+//                min:"0",
+//                max:1000,
+            },
+            emphasis: {
+                itemStyle: {
+                    // 高亮时点的颜色。
+                    color: '#0080ff'
+                },
+            },
+            series: [
+                {
+                    areaStyle: {
+                        normal: {
+                            color: '#d0e9ff' //改变区域颜色
+                        }
+                    },
+                    symbol:'circle',
+                    symbolSize:8,
+                    name: 'ANE',
+                    type: 'line',
+                    smooth: false,
+                    data: [10, 12, 21, 54, 260, 830]
+                }
+            ]
+        }
+    };
+    if (option && typeof option === "object") {
+        myChart.setOption(option, true);
+    }
+
+</script>
+</html>
+

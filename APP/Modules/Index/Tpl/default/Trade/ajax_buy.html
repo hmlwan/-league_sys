@@ -1,0 +1,28 @@
+<volist name="list" key="key" id="vo">
+    <form id="buy-form{$key}" action="{:U('/index/trade/do_sale')}" method="post" onsubmit="return false">
+        <input type="hidden" name="order_id" value="{$vo.id}">
+        <li class="flexbox wrap">
+            <div class="qgzx_item">
+                <div class="qgzx_item_l">
+                    <p class="num">
+                        <span>数量：{$vo.number|default='0'} ANE</span>
+                        <span>总价：<em>{$vo.total_price|default='0.00'} CNY</em></span>
+                    </p>
+                    <p>
+                        <span>单价：{$vo.price|default='0.00'} CNY</span>
+                        <span>支持：<if condition="$vo['sk_way_arr']">
+                                <volist name="vo['sk_way_arr']" id="v">
+                                    <i class="{$v}_icon"></i>
+                                </volist>
+                            </if>
+                        </span>
+                            <!--<i class="zfb_icon"></i><i class="wx_icon"></i>-->
+                    </p>
+                </div>
+                <div class="qgzx_item_r">
+                    <span data-form="buy-form{$key}" onclick="ajaxPost(this)">卖出</span>
+                </div>
+            </div>
+        </li>
+    </form>
+</volist>

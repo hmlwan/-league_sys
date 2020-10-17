@@ -71,54 +71,75 @@
 
 		public function gaward(){
 
-				$product=M('product')->where("is_on=0")->select();
-				$this->assign('product',$product);
-				$this->display();
+            $league_conf = M('league_conf')->where("status=1")->order('sort asc')->select();
+            $this->assign('league',$league_conf);
+            $this->display();
 			
 	    }
 		public function gawardpost(){
 			
-				$username=I('post.username');
-				$num=I('post.num',0,'intval');
-				
-			
-				if(empty($username)){
-					$this->error('请输入会员账号');	
-				}
-				if(empty($num)){
-						$this->error('请选择果树');
-					}	
-				
-				$userinfo=M('member')->where(array('username'=>$username))->find();
-				$product = M("product");
-				//查询果树信息
-				$data = $product ->where(array('id'=>$num))-> find();
-				if(empty($userinfo)){
-					$this->error('没有该会员,请正确输入');	
-				}else{
-			$map = array();
-			$map['kjbh'] = 'Z' . date('d') . substr(time(), -5) . sprintf('%02d', rand(0, 99));
-			$map['user'] = $userinfo['username'];
-			$map['user_id'] = $userinfo['id'];
-			$map['project']= $data['title'];
-			$map['sid'] = $data['id'];
-			$map['yxzq'] = $data['yxzq'];		
-			$map['sumprice'] = $data['price'];
-			$map['addtime'] = date('Y-m-d H:i:s');	
-			$map['imagepath'] = $data['thumb'];
-			$map['lixi']	= $data['gonglv'];
-			$map['kjsl'] =  $data['shouyi'];
-			$map['zt'] =  1;	
-			$map['UG_getTime'] =  time();		  
-			M('order')->add($map);
-			M("member")->where(array("id"=>$userinfo['id']))->setInc("mygonglv",$map['lixi']);		
-			//$product->where(array("id"=>$id))->setDec("stock");
-			//$parentpath = M("member")->where(array("username"=>$userinfo['username']))->getField("parentpath");
-			add_award_log($userinfo['id'],1,0,1,$num);
+            $level = I('post.level');
+            $num = I('post.num');
 
-				$this->success("执行成功！");
-				}
-			
+            if(empty($level)){
+                $this->error('请选择联盟等级');
+            }
+            if(empty($num)){
+                $this->error('请输入AME数量');
+            }
+            $league_bonus_m = M('league_bonus');
+            $league_bonus = $league_bonus_m
+                ->where(array(
+                    'level' => $level,
+                    'add_time' => array('between',array(
+                        strtotime(date("Y-m-d 0:0:0",time())),
+                        strtotime(date("Y-m-d 23:59:59",time())))
+                    ),
+                ))->find();
+            if($league_bonus){
+                $this->error('该等级今日已分红');
+            }
+
+            $member_league_m = M('member_league');
+            $member_league = $member_league_m->alias('l')
+                ->join(" LEFT JOIN ds_member as m ON l.user_id=m.id")
+                ->where(array('l.key'=>$level))
+                ->field('l.*,m.username as mobile')
+                ->select();
+            if(empty($member_league)){
+                $this->error('该等级暂时没有用户会员');
+            }
+            $member_league_count = count($member_league);
+            $bonus_id = $league_bonus_m->add(array(
+                'level' => $level,
+                'num' => $num,
+                'add_time' => time(),
+                'member_num' => $member_league_count,
+            ));
+            if(!$bonus_id){
+                $this->error('分红失败');
+            }
+            $league_bonus_detail_m = M('league_bonus_detail');
+
+            foreach ($member_league as $value){
+
+                $league_bonus_detail_m->add(array(
+                    'bonus_id' => $bonus_id,
+                    'user_id' => $value['user_id'],
+                    'mobile' => $value['mobile'],
+                    'level' => $level,
+                    'num' => $num,
+                    'add_time' => time(),
+                ));
+                /*明细*/
+                D("UserAneLog")->changeUserNum($value['user_id'],array(
+                    'num' => $num,
+                    'remark' => '联盟分红'.$num.'联盟积分',
+                    'type'=> 6,
+                ));
+            }
+            $this->success("分红成功！",U(GROUP_NAME.'/Member/awardlist'));
+
 	    }
 
 		//封号解封处理
@@ -262,27 +283,20 @@
 
 		public function awardlist(){
 
-
-			$Data = M('member_award_log'); // 实例化Data数据对象
+			$Data = M('league_bonus'); // 实例化Data数据对象
 			import("@.ORG.Util.Page");// 导入分页类
 			$map = array();
-			if (isset($_POST['id']) && $_POST['id']!='') {
-				$map['user_id'] = array("eq",$_POST['id']);
+			if (isset($_GET['level']) && $_GET['level']!='') {
+				$map['level'] = $_GET['level'];
 			}
 
 			$count      = $Data->where($map)->count();// 查询满足要求的总记录数
 			$Page       = new Page($count,30);// 实例化分页类 传入总记录数
 
-
 			$list = $Data->where($map)->order('add_time desc')->limit($Page ->firstRow.','.$Page -> listRows)->select();
-			foreach($list as $k=>$v){
-				$list[$k]['username'] = M('member')->where("id ={$v['user_id']}")->getField('username');
-				if($v['send_style']==1){
-					$list[$k]['as_name']=M('product')->where("id ={$v['num']}")->getField('title');
-				}else{
-					$list[$k]['as_name']=$v['num'];
-				}
-
+			foreach($list as $k => $v){
+			    $level_name = M('league_conf')->where(array('sort'=>$v['level']))->getField('name');
+				$list[$k]['level_name'] = $level_name ? $level_name : "";
 			}
 			$show       = $Page->show();// 分页显示输出
 			$this->assign('page',$show);// 赋值分页输出
@@ -290,6 +304,40 @@
 			$this->display(); // 输出模板
 
 		}
+        public function awarddetail(){
+
+            $bonus_id = I('get.bonus_id');
+            if(!$bonus_id){
+                $this->redirect(U(GROUP_NAME.'/Member/awardlist'));
+
+            }
+            $Data = M('league_bonus_detail'); // 实例化Data数据对象
+            import("@.ORG.Util.Page");// 导入分页类
+            $map = array(
+                'bonus_id' => $bonus_id
+            );
+            if (isset($_POST['mobile']) && $_POST['mobile']!='') {
+                $map['mobile'] = array("eq",$_POST['mobile']);
+            }
+
+            $count      = $Data->where($map)->count();// 查询满足要求的总记录数
+            $Page       = new Page($count,30);// 实例化分页类 传入总记录数
+
+
+            $list = $Data->where($map)->order('add_time desc')->limit($Page ->firstRow.','.$Page -> listRows)->select();
+            if($list){
+                foreach($list as $k => $v){
+                    $level_name = M('league_conf')->where(array('sort'=>$v['level']))->getField('name');
+                    $list[$k]['level_name'] = $level_name ? $level_name : "";
+                }
+            }
+
+            $show       = $Page->show();// 分页显示输出
+            $this->assign('page',$show);// 赋值分页输出
+            $this->assign('list',$list);// 赋值数据集
+            $this->display(); // 输出模板
+
+        }
         public function shuadan(){
 
             $this->display();

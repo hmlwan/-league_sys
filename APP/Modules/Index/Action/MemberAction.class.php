@@ -20,8 +20,14 @@ Class MemberAction extends CommonAction
             )
         );
         $sign_info = M('member_sign_in')->where($sign_w)->find();
-
+        $is_senior_cert = 0;
+        $user_id = session('mid');
+        $member_senior_info = M('member_senior_cert')->where(array('user_id'=>$user_id))->find();
+        if($member_senior_info && $member_senior_info['is_senior_cert'] == 1){
+            $is_senior_cert = 1;
+        }
         $this->assign('sign_info',$sign_info);
+        $this->assign('is_senior_cert',$is_senior_cert);
         $this->display();
     }
 
@@ -63,90 +69,66 @@ Class MemberAction extends CommonAction
             'num' => $sign_reward,
             'remark' => '签到奖励'.$sign_reward.'生态积分',
             'type'=> 1,
-            'valid_period' => 9999
+            'valid_period' => $sign_valid_period
         ));
         $this->ajaxReturn(array('info' => "恭喜签到成功,获得{$sign_reward}生态积分({$sign_valid_period})", 'result' => 1));
     }
 
-    /*实名页面*/
-    public function cert(){
-        $member = M('member');
-        $username = session('username');
-        $m_info = $member->where(array('username' => $username))->find();
-        $this->assign('m_info',$m_info);
+
+    /*高级实名认证*/
+    public function senior_cert(){
+
+        $member = D('Member');
+        $user_id = session('mid');
+        $info = $member->getByUserId($user_id);
+
+        $cert_info = M('member_senior_cert')->where(array('user_id'=>$user_id))->find();
+        $this->assign('info',$info);
+        $this->assign('cert_info',$cert_info);
         $this->display();
     }
-    /*实名处理*/
-    public function cert_op(){
-        $member = D('Member');
-        $username = session('username');
-        $r = $member
-            ->where(array(
-                'username'=>$username
-            ))
-            ->save(array('is_cert'=>1));
-        if(false === $r){
-            $this->ajaxReturn(array('info' => '实名失败！', 'result' => -1));
+    /*高级实名操作*/
+    public function senior_cert_op(){
+        $member_cert = M('member_senior_cert');
+        $user_id = session('mid');
+        $cert_info = $member_cert->where(array('user_id'=>$user_id))->find();
+
+        $id_card_reverse = I('id_card_reverse','');
+
+        if($cert_info['is_senior_cert' == '1']){
+            $this->ajaxReturn(array('info' => '已认证成功!'));
         }
-        $user_statistics_m = D('UserStatistics');
-        $invite_record_m = D('InviteRecord');
-        $info = $member->getByUserMobile($username);
-        if($info['parent_id'] >0 ){
-            $info_1 = $member->getByUserId($info['parent_id']);
-            if($info_1 && $info_1['is_cert'] == 1){
-                $user_statistics_m->setFieldInc($info_1['id'],'one_sub_cert_nums',1);
-                $invite_record_1 = $invite_record_m->editRecord(array(
-                    'user_id' => $info_1['id'],
-                    'sub_user_id' => $info['id'],
-                    'level' => 1,
-                    'types' => 1
-                ),array(
-                    'user_id' => $info_1['id'],
-                    'sub_user_id' => $info['id'],
-                    'add_time' => time(),
-                    'is_cert' => 2,
-                    'sub_mobile' => $info['mobile'],
-                    'level' => 1,
-                    'content' => '一级下线实名',
-                    'types' => 1
-                ));
-                if($info_1['parent_id'] >0){
-                    $info_2 = $member->getByUserId($info_1['parent_id']);
-                    if($info_2 && $info_2['is_cert'] == 1){
-                        $user_statistics_m->setFieldInc($info_2['id'],'two_sub_cert_nums',1);
-                        $invite_record_2 = $invite_record_m->editRecord(array(
-                            'user_id' => $info_2['id'],
-                            'sub_user_id' => $info['id'],
-                            'level' => 2,
-                            'types' => 1,
-                        ),array(
-                            'user_id' => $info_2['id'],
-                            'sub_user_id' => $info['id'],
-                            'add_time' => time(),
-                            'is_cert' => 2,
-                            'sub_mobile' => $info['mobile'],
-                            'level' => 2,
-                            'types' => 1,
-                            'content' => '二级下线实名',
-                        ));
-                    }
-                }
-            }
+        if($cert_info['is_senior_cert' == '2']){
+            $this->ajaxReturn(array('info' => '已在认证中!'));
         }
-        /*实名奖励*/
-        $cert_reward = getConf('cert_reward');
-        if($cert_reward > 0){
-            /*明细*/
-            D('UserEcoLog')->changeUserNum($info['id'],array(
-                'num' => $cert_reward,
-                'remark' => '实名奖励'.$cert_reward.'生态积分',
-                'type'=> 1,
-                'valid_period' => 9999
+        if(!$id_card_reverse){
+            $this->ajaxReturn(array('info' => '请上传身份证反面证件!'));
+        }
+        if($cert_info){
+            $r = $member_cert->where(array('user_id'=>$user_id))->save(array(
+                'id_card_reverse' =>  $id_card_reverse,
+                'cert_fail_reason' =>  '',
+                'is_senior_cert' =>  2,
+            ));
+        }else{
+            $r = $member_cert->add(array(
+                'user_id' => $user_id,
+                'id_card_reverse' =>  $id_card_reverse,
+                'is_senior_cert' =>  2,
+                'add_time' =>  time(),
             ));
         }
-        $this->ajaxReturn(array('info' => '实名成功！', 'result' => 1, 'toUrl' => U('/index/member/index')));
 
+        if(false === $r){
+            $this->ajaxReturn(array('info' => '提交认证失败!'));
+        }
+        $this->ajaxReturn(array('info' => '提交认证成功！', 'result' => 1, 'toUrl' => U('/index/member/senior_cert')));
     }
+    /*认证说明*/
+    public function senior_cert_intro(){
+        $this->display();
+    }
+
     /*修改登录密码*/
     public function edit_pwd(){
         header("Content-type:text/html;charset=utf-8");
@@ -253,9 +235,11 @@ Class MemberAction extends CommonAction
     }
     /*我的团队*/
     public function team(){
-        $user_id = session('id');
-        $UserStatistic = D('UserStatistic');
-        $info = $UserStatistic->getByUserId($user_id);
+        $user_id = session('mid');
+
+        $UserStatistics = D('UserStatistics');
+        $info = $UserStatistics->getByUserId($user_id);
+
         $this->assign('info', $info);
         $invite_record_m = M('invite_record');
         $invite_record_w = array(
@@ -290,7 +274,8 @@ Class MemberAction extends CommonAction
     /*生态积分*/
     public function jifen(){
         $member = D('Member');
-        $user_id = session('id');
+        $user_id = session('mid');
+
         $types = I('get.type','');
         $info = $member->getByUserId($user_id);
 
@@ -310,7 +295,7 @@ Class MemberAction extends CommonAction
             ->select();
         foreach ($list as &$value){
             if($value['num'] > 0){
-                $value['num'] = "+ ".$value['num'];
+                $value['num'] = "+".$value['num'];
             }
             $value['type_name'] =  $UserEcoLog_m->getType($value['types']);
         }
@@ -329,7 +314,7 @@ Class MemberAction extends CommonAction
     /*联盟积分*/
     public function league(){
         $member = D('Member');
-        $user_id = session('id');
+        $user_id = session('mid');
         $types = I('get.type','');
         $info = $member->getByUserId($user_id);
 
@@ -351,7 +336,7 @@ Class MemberAction extends CommonAction
             ->select();
         foreach ($list as &$value){
             if($value['num'] > 0){
-                $value['num'] = "+ ".$value['num'];
+                $value['num'] = "+".$value['num'];
             }
             $value['type_name'] =  $UserLeagueLog_m->getType($value['types']);
         }
@@ -367,6 +352,7 @@ Class MemberAction extends CommonAction
             $this->display();
         }
     }
+
     /*消费订单*/
     public function order(){
         $this->display();
@@ -391,7 +377,7 @@ Class MemberAction extends CommonAction
                 $this->ajaxReturn(array('info' => '该订单已存在！'));
             }
             $RebateOnlineOrder = D('RebateOnlineOrder');
-            $user_id = session('id');
+            $user_id = session('mid');
             $online_info =  $RebateOnlineOrder->get_info($scene,$order_no);
             $add_data = array(
                 'user_id' => $user_id,
@@ -421,7 +407,7 @@ Class MemberAction extends CommonAction
     }
     /*全部订单*/
     public function order_detail(){
-        $user_id = session('id');
+        $user_id = session('mid');
         $status = I('status');
         $w = array(
             'user_id' => $user_id
@@ -451,7 +437,85 @@ Class MemberAction extends CommonAction
             $this->display();
         }
     }
+    //ANE钱包
+    public function wallet(){
+        $member = D('Member');
+        $user_id = session('mid');
 
+        $types = I('get.type','');
+        $info = $member->getByUserId($user_id);
+
+        $this->assign('info', $info);
+        $UserAneLog_m = D('UserAneLog');
+        $w = array();
+        if($types == 1){ //收入
+            $w['num'] = array('gt',0);
+        }elseif($types == 2){ //支出
+            $w['num'] = array('lt',0);
+        }
+        $count = $UserAneLog_m->where($w)->count();
+        $Page  = new Page($count,6);
+        $list = $UserAneLog_m->where($w)
+            ->limit ( $Page->firstRow . ',' . $Page->listRows )
+            ->order('create_time desc')
+            ->select();
+        foreach ($list as &$value){
+            if($value['num'] > 0){
+                $value['num'] = "+".$value['num'];
+            }
+            $value['type_name'] =  $UserAneLog_m->getType($value['types']);
+        }
+        $this->assign('list', $list);
+        if(IS_AJAX){
+            $data['content'] = $this->fetch('ajax_wallet');
+            $data['count'] = array(
+                'totalRows'=> $count,
+                'listRows'=> 6,
+            );
+            $this->ajaxReturn($data);
+        }else{
+            $this->display();
+        }
+    }
+    //收款管理
+    public function payment(){
+
+        $member = D('Member');
+        $user_id = session('mid');
+        $type = I('get.type');
+        $info = $member->getByUserId($user_id);
+        $this->assign('info',$info);
+        $this->assign('type',$type);
+        $this->display();
+    }
+    public function payment_op(){
+        $member = D('Member');
+        $user_id = session('mid');
+        $type = I('type');
+        $account = I('account');
+        $upload_img = I('upload_img');
+        if(!$account){
+            $this->ajaxReturn(array('info' => '请输入账号！'));
+        }
+        if(!$upload_img){
+            $this->ajaxReturn(array('info' => '请上传收款码！'));
+        }
+        $save_data = array(
+            'zfb' => $account,
+            'zfb_img' => $upload_img,
+        );
+        if($type == 'wx'){
+            $save_data = array(
+                'wx' => $account,
+                'wx_img' => $upload_img,
+            );
+        }
+        $r = $member->saveInfo($user_id,$save_data);
+        if(!$r){
+            $this->ajaxReturn(array('info' => '修改失败！'));
+        }
+        $this->ajaxReturn(array('info' => "修改成功！", 'result' => 1, 'toUrl' => U('/index/member/payment',array('type'=>$type))));
+    }
 
 }
 

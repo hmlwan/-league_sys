@@ -16,8 +16,13 @@
 
 	  		if (C('USER_AUTH_ON') && !$noAuth) {
 	  			import('ORG.Util.RBAC');
-	  			//如果是单入口对应一个项目的话，下面的GROUP_NAME不用填写
-	  			RBAC::AccessDecision(GROUP_NAME) || $this->error('没有权限');
+	  			if(session("KEFU_ROLE_ID")){
+
+                }else{
+                    //如果是单入口对应一个项目的话，下面的GROUP_NAME不用填写
+                    RBAC::AccessDecision(GROUP_NAME) || $this->error('没有权限');
+                }
+
 	  		}
 	  	}
 

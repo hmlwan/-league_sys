@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<title>果树管理</title>
+		<title>矿机管理</title>
 
 		<meta name="description" content="Static &amp; Dynamic Tables" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -62,14 +62,14 @@
 								<i class="icon-angle-right"></i>
 							</span>
 						</li>
-						<li class="active">果树列表</li>
+						<li class="active">工厂列表</li>
 					</ul><!--.breadcrumb-->
 				</div>
 
 				<div id="page-content" class="clearfix">
                        <div class="page-header position-relative">
 						   <div style="text-align:left;width:100%;">
-						    <a type="button" href="{:U(GROUP_NAME.'/Shop/add_product')}" class="btn btn-info btn-small no-border"> <i class="icon-plus icon-white"></i>添加果树</a>
+						    <a type="button" href="{:U(GROUP_NAME.'/Shop/add_product')}" class="btn btn-info btn-small no-border"> <i class="icon-plus icon-white"></i>添加工厂</a>
 						    </div>
 					   </div>
 					<div class="row-fluid">
@@ -81,12 +81,16 @@
 									<tr>
 								
                                             <th>编号</th>
-                                            <th>名称</th>
-                                            <th>封页图片</th>
-											<th>单价</th>
-                                            <th>收益</th>
-											<th>购买总数</th>
-                                            <th>限购数量</th>
+                                            <th>矿机名称</th>
+                                            <th>排序</th>
+											<th>空间logo</th>
+                                            <th>价格</th>
+											<th>产量</th>
+                                            <th>总收益</th>
+											<th>背景色</th>
+                                            <th>最大可持有数量</th>
+                                            <th>运行周期</th>
+                                            <th>状态</th>
 											<th>操作</th>
 									</tr>
 								</thead>
@@ -94,26 +98,31 @@
                                     <foreach name='products' item='v'>
 									<tbody> 
 										<tr>
-										
-
                                             <td>{$v.id}</td>
-
-                                            <td>{$v.title}</td>
-                                         
+                                            <td>{$v.product_name}</td>
+                                            <td>{$v.sort}</td>
                                             <td class="hidden-480">
 											
-												<img src="{$v.thumb}" width="40" height="40">
+												<img src="{$v.logo_url}" width="80" height="50">
 											</td>
-                                            <td class="hidden-480">{$v.price}</td>
-                                            <td class="hidden-480">{$v.shouyi}/每小时</td>
-                                             <td class="hidden-480">{$v.sell}</td>
-                                             <td class="hidden-480">{$v.xiangou}</td>
-            
+                                            <td class="hidden-480">{$v.num}</td>
+                                            <td class="hidden-480">{$v.energy_num}/每天</td>
+                                             <td class="hidden-480">{$v.return_num}</td>
+                                             <td class="hidden-480">{$v.bg_color}</td>
+                                             <td class="hidden-480">{$v.hold_num}</td>
+                                             <td class="hidden-480">{$v.period}</td>
+                                             <td class="hidden-480">
+												 <if condition="$v['status'] eq 1">
+													 开启
+												<else />
+													 关闭
+												 </if>
+											 </td>
                                             <td>
 											<div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">
 														
 
-																<a class="green" href="{:U(GROUP_NAME .'/Shop/editProduct',array('id'=>$v['id']))}">
+																<a class="green" href="{:U(GROUP_NAME .'/Shop/edit_product',array('id'=>$v['id']))}">
 																	<i class="icon-pencil bigger-130">修改</i>
 																	
 																</a>

@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>求购中心</title>
+    <include file="Public:header"/>
+</head>
+<body style="background-color: #f5f5f5">
+<header class="qgzx_body">
+    <div class="header_bt">
+        <div class="header_f"><a href="javascript:history.back()" class="header_fwh"></a></div>
+        <div class="header_c">交易中订单</div>
+    </div>
+    <div style="height: .74rem;clear: both;"></div>
+</header>
+<div class="fbdd-page">
+    <input type="hidden" name="mui-tab-item" value="4">
+    <div class="fbdd-qhzt flexbox spacebetween">
+        <a href=""  class="active"><span>进行中</span></a>
+        <a href="" style="margin-right: 8%"><span >已完成</span></a>
+    </div>
+    <if condition="$list">
+        <div class="flow_load">
+
+        </div>
+     <else />
+        <div class="show_on_content">
+            <p><img src="/static/img/newimg/no_data_icon.png" alt=""></p>
+            <p class="show_text">暂无内容</p>
+        </div>
+    </if>
+</div>
+<div class="zhezhao_h"></div>
+
+<include file="Public:nav"/>
+</body>
+<include file="Public:footer"/>
+<script>
+    lazy_loading('/index/trade/record');
+</script>
+</html>
+

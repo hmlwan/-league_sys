@@ -1,0 +1,125 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>发布求购</title>
+    <include file="Public:header"/>
+</head>
+<body class="qgzx_body">
+    <header>
+        <div class="header_bt">
+            <div class="header_f"><a href="javascript:history.back()" class="header_fwh"></a></div>
+            <div class="header_c">发布求购</div>
+        </div>
+        <div style="height: .74rem;clear: both;"></div>
+    </header>
+    <input type="hidden" name="mui-tab-item" value="4">
+    <div class="fbqg_page">
+        <form id="trade-form" action="{:U('/index/trade/do_publish')}" method="post" onsubmit="return false">
+            <input type="hidden" name="sk_way" value="zfb,wx">
+            <input type="hidden" name="is_read">
+            <ul class="flexbox column">
+                <li>
+                    <p>输入求购数量(AOT)</p>
+                    <p class="flexbox spacebetween relative">
+                        <!--<select name="number" id="number">-->
+                            <!--<option value="">请选择求购数量</option>-->
+                            <!--<volist name="trade_buy_limit_arr" id="vo">-->
+                                <!--<option value="{$vo}">{$vo}</option>-->
+                            <!--</volist>-->
+                        <!--</select>-->
+                        <!--<i class="down_icon"></i>-->
+                        <input type="text" class="number" value=""  name="number" placeholder="">
+                    </p>
+                </li>
+                <li>
+                    <p>今日指导价</p>
+                    <p class="flexbox spacebetween">
+                        <input type="text" class="input_line" value="{$trade_price}" readonly name="price" placeholder=""><em>￥</em>
+                    </p>
+                </li>
+                <li>
+                    <p>总价</p>
+                    <p class="flexbox spacebetween">
+                        <input type="text" readonly value="" class="total_price input_line" name="total_price" placeholder=""><em>￥</em>
+                    </p>
+                </li>
+                <li>
+                    <p>收款方式</p>
+                    <div class="pay_way">
+                        <span class="zfb">
+                            <i class="sel_icon active"></i><i class="zfb_icon"></i>支付宝
+                        </span>
+                        <span class="wx">
+                            <i class="sel_icon active"></i><i class="wx_icon"></i>微信
+                        </span>
+                    </div>
+                </li>
+                <li>
+                    <div class="xieyi"><i class="sel_icon"></i>我已阅读并接受<em>《交易协议》</em></div>
+                </li>
+            </ul>
+            <div class="public_btn">
+                <button data-form="trade-form" onclick="ajaxPost(this)"> 发布</button>
+            </div>
+        </form>
+    </div>
+    <include file="Public:nav"/>
+</body>
+<include file="Public:footer"/>
+<script>
+    $("input[name='number']").on('input',function () {
+        var num = $(this).val();
+
+        if(isNaN(parseInt(num))   || isNaN(Number(num))){
+            $("input[name='total_price']").val('');
+            layer.msg('数量格式不对');
+            return false
+        }
+        var price = $("input[name='price']").val();
+        price = parseFloat(price);
+        var total_price = num * price;
+        total_price = total_price.toFixed(2);
+        $("input[name='total_price']").val(total_price);
+    });
+    $(".pay_way span").click(function () {
+        var way = $(this).attr("class");
+        var class_obj = $(this).find("i.sel_icon");
+        if(class_obj.attr('class') == 'sel_icon active'){
+            layer.msg('建议2种付款方式都选中以便提供匹配率');
+            class_obj.attr('class','sel_icon')
+        }else{
+            class_obj.attr('class','sel_icon active')
+        }
+        var sk_way_arr = [];
+        var sk_way_str = '';
+        $(".pay_way").find(".sel_icon").each(function () {
+            if($(this).attr('class') == 'sel_icon active'){
+                var sk_way = $(this).parent('span').attr('class');
+                sk_way_arr.push(sk_way);
+            }
+        });
+        if(sk_way_arr){
+            sk_way_str = sk_way_arr.join(',');
+        }
+        console.log(sk_way_str);
+        $("input[name='sk_way']").val(sk_way_str);
+    });
+    $(".xieyi").click(function () {
+        var is_read = $("input[name='is_read']").val();
+        if(!is_read){
+            $(this).find('i').attr('class','sel_icon active');
+            $("input[name='is_read']").val(1);
+        }else{
+            $(this).find('i').attr('class','sel_icon');
+            $("input[name='is_read']").val('');
+        }
+    });
+</script>
+<style>
+    .layui-layer-msg{
+        left: 50px;
+    }
+</style>
+</html>
+

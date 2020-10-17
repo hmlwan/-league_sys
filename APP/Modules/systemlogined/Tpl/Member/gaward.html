@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<title>矿机果树</title>
+		<title>全网分红</title>
 
 		<meta name="description" content="Minimal empty page" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -56,7 +56,7 @@
 						</li>
 
 						<li>
-							赠送果树
+							全网分红
 
 							<span class="divider">
 								<i class="icon-angle-right"></i>
@@ -68,7 +68,7 @@
 				<div id="page-content" class="clearfix">
 					<div class="page-header position-relative">
 						<h1>
-							赠送果树
+							全网分红
 						</h1>
 					</div><!--/.page-header-->
 
@@ -76,30 +76,27 @@
 						<!--PAGE CONTENT BEGINS HERE-->
 							<form name="editAnnounceType" class="form-horizontal"  action="{:U(GROUP_NAME.'/Member/gawardpost')}" method="post">
 								<div class="control-group">
-									<label class="control-label" for="username"> 会员编号</label>
-
+									<label class="control-label" for="level">
+										联盟等级：</label>
 									<div class="controls">
-										<input type="text" name="username" id="username" />
+										<select name="level" id="level" >
+											<volist name="league" id="vo">
+												<option value="{$vo.sort}">{$vo.name}</option>
+											</volist>
+										</select>
 									</div>
 								</div>
 								<div class="control-group">
-									<label class="control-label" for="jifen">
-										果树类型：</label>
+									<label class="control-label" for="num"> 分红AME：</label>
+
 									<div class="controls">
-										 <select name="num" id="num" onChange="getpnum();">
-                                        	
-                                            <volist name="product" id="vo">
-                                           	 	<option value="{$vo.id}">{$vo.title}</option>
-                                            </volist>
-                                        </select>
+										<input type="text" name="num" id="num" />
 									</div>
 								</div>
-
-								<input type="hidden" name="id" value="{$member.id}" />
 								<div class="form-actions">
 									<button class="btn btn-info no-border" type="submit">
 										<i class="icon-ok bigger-110"></i>
-										赠送
+										分红
 									</button>
 									<button onclick="window.history.back();" class="btn btn-info no-border" type="button">
 										<i class="icon-ok bigger-110"></i>
@@ -168,13 +165,13 @@
 					},
 
 					rules:{
-						name:{
+                        num:{
 							required : true
 						}
 					},
 					messages:{
-						name:{
-							required:'请填写类别名称'
+                        num:{
+							required:'请填写分红数量'
 						}
 					}
 

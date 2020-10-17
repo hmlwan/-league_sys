@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50553
 File Encoding         : 65001
 
-Date: 2020-09-28 21:22:15
+Date: 2020-10-16 17:51:30
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -349,12 +349,14 @@ CREATE TABLE `ds_bonus` (
   `next_receive_time` int(11) DEFAULT NULL,
   `sf_jifen` decimal(20,2) DEFAULT NULL COMMENT '生态积分',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of ds_bonus
 -- ----------------------------
 INSERT INTO `ds_bonus` VALUES ('1', '1', '19016.8244', '284683', '1601111595', '1601115195', '6.68');
+INSERT INTO `ds_bonus` VALUES ('2', '1', '2291.8560', '17232', '1602145543', '1602181543', '13.30');
+INSERT INTO `ds_bonus` VALUES ('3', '2', '310812.0000', '310812', '1602680466', '1602716466', '100.00');
 
 -- ----------------------------
 -- Table structure for `ds_complete`
@@ -469,15 +471,20 @@ CREATE TABLE `ds_invite_record` (
   `content` varchar(400) DEFAULT NULL,
   `add_time` int(11) DEFAULT NULL,
   `level` tinyint(4) DEFAULT NULL COMMENT '等级 1:一级 2:二级',
-  `types` tinyint(5) DEFAULT '1' COMMENT '类型 1:下线实名 2:联盟奖励',
+  `types` tinyint(5) DEFAULT '1' COMMENT '类型 1:下线实名 2:下线订单返利',
   `is_cert` tinyint(4) NOT NULL DEFAULT '1' COMMENT '是否实名 1:否 2:是',
   `sub_mobile` varchar(50) DEFAULT NULL COMMENT '下级手机号码',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of ds_invite_record
 -- ----------------------------
+INSERT INTO `ds_invite_record` VALUES ('1', '1', '0.00', '2', '一级下线实名', '1602645348', '1', '1', '2', '15888888888');
+INSERT INTO `ds_invite_record` VALUES ('2', '1', '0.00', '28', '一级下线实名', '1602830796', '1', '1', '2', '15179811533');
+INSERT INTO `ds_invite_record` VALUES ('3', '1', '0.00', '29', '一级下线实名', '1602833496', '1', '1', '2', '15179811534');
+INSERT INTO `ds_invite_record` VALUES ('4', '2', '0.00', '30', '一级下线实名', '1602839699', '1', '1', '2', '15179811535');
+INSERT INTO `ds_invite_record` VALUES ('5', '1', '0.00', '30', '二级下线实名', '1602839699', '2', '1', '2', '15179811535');
 
 -- ----------------------------
 -- Table structure for `ds_jinbidetail`
@@ -525,6 +532,71 @@ INSERT INTO `ds_jinbidetail` VALUES ('15', '0', '2', '13888888888', '1550000000'
 INSERT INTO `ds_jinbidetail` VALUES ('16', '0', '0', null, '18888888888', '50000.00000', '0.00000', '50000.00000', '1592668110', '', '0', '平台充值', '1');
 
 -- ----------------------------
+-- Table structure for `ds_league_bonus`
+-- ----------------------------
+DROP TABLE IF EXISTS `ds_league_bonus`;
+CREATE TABLE `ds_league_bonus` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `level` tinyint(10) DEFAULT NULL COMMENT '等级',
+  `num` decimal(20,2) DEFAULT '0.00' COMMENT '数量',
+  `add_time` int(11) DEFAULT NULL,
+  `member_num` int(11) DEFAULT '0' COMMENT '用户会员数',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of ds_league_bonus
+-- ----------------------------
+INSERT INTO `ds_league_bonus` VALUES ('1', '1', '2.00', '1602819000', '2');
+
+-- ----------------------------
+-- Table structure for `ds_league_bonus_detail`
+-- ----------------------------
+DROP TABLE IF EXISTS `ds_league_bonus_detail`;
+CREATE TABLE `ds_league_bonus_detail` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `bonus_id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `mobile` varchar(50) DEFAULT NULL COMMENT '用户手机号',
+  `level` tinyint(10) DEFAULT NULL COMMENT '联盟等级',
+  `num` decimal(16,2) DEFAULT '0.00' COMMENT '分红奖励金额',
+  `add_time` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of ds_league_bonus_detail
+-- ----------------------------
+INSERT INTO `ds_league_bonus_detail` VALUES ('1', '1', '1', '18888888888', '1', '2.00', '1602819000');
+INSERT INTO `ds_league_bonus_detail` VALUES ('2', '1', '2', '15888888888', '1', '2.00', '1602819000');
+
+-- ----------------------------
+-- Table structure for `ds_league_conf`
+-- ----------------------------
+DROP TABLE IF EXISTS `ds_league_conf`;
+CREATE TABLE `ds_league_conf` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) DEFAULT NULL COMMENT '名称',
+  `push_level_one_num` varchar(50) DEFAULT '0' COMMENT '直推高级认证人数',
+  `team_num` varchar(50) DEFAULT '0' COMMENT '团队高级认证人数',
+  `push_level_one_ask` varchar(128) DEFAULT NULL COMMENT '直推要求',
+  `team_buy_ask` varchar(128) DEFAULT NULL COMMENT '团队购买情况',
+  `reward_product_id` int(11) DEFAULT NULL COMMENT '奖励矿机id',
+  `sort` tinyint(10) DEFAULT NULL COMMENT '权重 越小越在前',
+  `status` tinyint(4) DEFAULT '1' COMMENT '状态 1开启 0关闭',
+  `trade_rate` decimal(10,2) DEFAULT NULL COMMENT '交易手续费',
+  `bonus_rate` decimal(10,2) DEFAULT NULL COMMENT '分红手续费',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of ds_league_conf
+-- ----------------------------
+INSERT INTO `ds_league_conf` VALUES ('1', '体验大使', '', '', '', '', '2', '1', '1', '0.10', '0.20');
+INSERT INTO `ds_league_conf` VALUES ('2', '初级大使', '2', '2', '2', '2|3', '4', '2', '1', '0.20', '0.30');
+INSERT INTO `ds_league_conf` VALUES ('3', '中级大使', '3', '4', '2', '3|4', '5', '3', '1', '0.25', '0.35');
+
+-- ----------------------------
 -- Table structure for `ds_log`
 -- ----------------------------
 DROP TABLE IF EXISTS `ds_log`;
@@ -538,7 +610,7 @@ CREATE TABLE `ds_log` (
   `logiplocal` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `logtype` (`logtype`)
-) ENGINE=MyISAM AUTO_INCREMENT=118 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=68 ROW_FORMAT=DYNAMIC COMMENT='系统操作日志';
+) ENGINE=MyISAM AUTO_INCREMENT=141 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=68 ROW_FORMAT=DYNAMIC COMMENT='系统操作日志';
 
 -- ----------------------------
 -- Records of ds_log
@@ -660,6 +732,29 @@ INSERT INTO `ds_log` VALUES ('114', '1600874274', '18888888888', '127.0.0.1', '�
 INSERT INTO `ds_log` VALUES ('115', '1601017457', 'admin', '127.0.0.1', '管理员[admin]登录', 'admin', '本机地址');
 INSERT INTO `ds_log` VALUES ('116', '1601019833', '', '127.0.0.1', '会员退出', 'member', '本机地址');
 INSERT INTO `ds_log` VALUES ('117', '1601020186', '', '127.0.0.1', '会员退出', 'member', '本机地址');
+INSERT INTO `ds_log` VALUES ('118', '1602146409', 'admin', '127.0.0.1', '管理员[admin]登录', 'admin', '本机地址');
+INSERT INTO `ds_log` VALUES ('119', '1602216168', '18888888888', '127.0.0.1', '添加了一个新用户', 'admin', '本机地址');
+INSERT INTO `ds_log` VALUES ('120', '1602407877', '18888888888', '127.0.0.1', '添加一个新的角色', 'admin', '本机地址');
+INSERT INTO `ds_log` VALUES ('121', '1602408006', '18888888888', '127.0.0.1', '编辑ID为3的管理员', 'admin', '本机地址');
+INSERT INTO `ds_log` VALUES ('122', '1602408029', '18888888888', '127.0.0.1', '添加一个新的角色', 'admin', '本机地址');
+INSERT INTO `ds_log` VALUES ('123', '1602413810', 'admin', '127.0.0.1', '管理员admin登出', 'admin', '本机地址');
+INSERT INTO `ds_log` VALUES ('124', '1602414060', 'admin', '127.0.0.1', '管理员[admin]登录', 'admin', '本机地址');
+INSERT INTO `ds_log` VALUES ('125', '1602414071', '18888888888', '127.0.0.1', '编辑ID为3的管理员', 'admin', '本机地址');
+INSERT INTO `ds_log` VALUES ('126', '1602414190', '18888888888', '127.0.0.1', '编辑ID为3的管理员', 'admin', '本机地址');
+INSERT INTO `ds_log` VALUES ('127', '1602414197', '18888888888', '127.0.0.1', '编辑ID为3的管理员', 'admin', '本机地址');
+INSERT INTO `ds_log` VALUES ('128', '1602414284', '18888888888', '127.0.0.1', '编辑ID为3的管理员', 'admin', '本机地址');
+INSERT INTO `ds_log` VALUES ('129', '1602414457', '18888888888', '127.0.0.1', '编辑ID为3的管理员', 'admin', '本机地址');
+INSERT INTO `ds_log` VALUES ('130', '1602414562', '18888888888', '127.0.0.1', '添加了一个新用户', 'admin', '本机地址');
+INSERT INTO `ds_log` VALUES ('131', '1602414717', '18888888888', '127.0.0.1', '添加了一个新用户', 'admin', '本机地址');
+INSERT INTO `ds_log` VALUES ('132', '1602414837', '18888888888', '127.0.0.1', '添加了一个新用户', 'admin', '本机地址');
+INSERT INTO `ds_log` VALUES ('133', '1602415277', 'admin', '127.0.0.1', '管理员admin登出', 'admin', '本机地址');
+INSERT INTO `ds_log` VALUES ('134', '1602415429', 'kefu2', '127.0.0.1', '管理员[kefu2]登录', 'admin', '本机地址');
+INSERT INTO `ds_log` VALUES ('135', '1602425427', 'kefu2', '127.0.0.1', '管理员kefu2登出', 'admin', '本机地址');
+INSERT INTO `ds_log` VALUES ('136', '1602425453', 'admin', '127.0.0.1', '管理员[admin]登录', 'admin', '本机地址');
+INSERT INTO `ds_log` VALUES ('137', '1602645207', '', '127.0.0.1', '会员退出', 'member', '本机地址');
+INSERT INTO `ds_log` VALUES ('138', '1602820122', '', '127.0.0.1', '会员退出', 'member', '本机地址');
+INSERT INTO `ds_log` VALUES ('139', '1602833229', '', '127.0.0.1', '会员退出', 'member', '本机地址');
+INSERT INTO `ds_log` VALUES ('140', '1602839632', '', '127.0.0.1', '会员退出', 'member', '本机地址');
 
 -- ----------------------------
 -- Table structure for `ds_member`
@@ -698,17 +793,25 @@ CREATE TABLE `ds_member` (
   `trade_password` varchar(32) DEFAULT NULL COMMENT '支付密码',
   `is_cert` tinyint(6) DEFAULT '-1' COMMENT '是否认证 -1 未认证 1 已认证 2认证失败',
   `card` varchar(50) DEFAULT NULL COMMENT '银行卡号',
+  `zfb` varchar(100) DEFAULT NULL COMMENT '支付宝账号',
+  `wx` varchar(100) DEFAULT NULL COMMENT '微信账号',
+  `zfb_img` varchar(100) DEFAULT NULL COMMENT '支付宝收款码',
+  `wx_img` varchar(100) DEFAULT NULL COMMENT '微信收款码',
+  `ane` decimal(20,2) DEFAULT '0.00' COMMENT 'ANE ',
   PRIMARY KEY (`id`,`parentcount`),
   KEY `username` (`username`),
   KEY `parent` (`parent`)
-) ENGINE=MyISAM AUTO_INCREMENT=28 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=278 ROW_FORMAT=DYNAMIC COMMENT='会员';
+) ENGINE=MyISAM AUTO_INCREMENT=31 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=278 ROW_FORMAT=DYNAMIC COMMENT='会员';
 
 -- ----------------------------
 -- Records of ds_member
 -- ----------------------------
-INSERT INTO `ds_member` VALUES ('2', '15888888888', 'e10adc3949ba59abbe56e057f20f883e', '0', 'UGL289', '', '美国', '1584031737', '18888888888', '1', '', '0.00', null, '', '0.00', '1', '会员', '0.0000', '初始账户2', null, '1584096019', '1', '0', '9', '1|1|', '1584118053', null, null, null, null, '-1', null);
-INSERT INTO `ds_member` VALUES ('3', '13888888888', 'e10adc3949ba59abbe56e057f20f883e', '0', 'YKB572', '', '美国', '1584031868', '15888888888', '2', '', '0.00', null, '', '0.00', '0', '会员', '0.0000', '初始账号3', null, '1584123247', '0', '3', '11', '1|1|26|', '1584125648', null, null, null, null, '-1', null);
-INSERT INTO `ds_member` VALUES ('1', '18888888888', '96e79218965eb72c92a549dd5a330112', '0', 'WSB903', '', '美国', '1584030607', '1550000000', '0', '', '6.68', null, '', '0.00', '1', '会员', '69016.8244', '初始账户1', null, '1601020191', '2', '0', '27', '1|', '1601195382', null, null, null, null, '1', null);
+INSERT INTO `ds_member` VALUES ('2', '15888888888', 'e10adc3949ba59abbe56e057f20f883e', '0', 'UGL289', '', '美国', '1584031737', '18888888888', '1', '', '103.85', null, '123123', '0.00', '1', '会员', '310812.0000', '初始账户2', null, '1584096019', '1', '0', '10', '1|1|', '1602820122', null, null, null, 'e10adc3949ba59abbe56e057f20f883e', '1', '123123', null, null, null, null, '6.00');
+INSERT INTO `ds_member` VALUES ('3', '13888888888', 'e10adc3949ba59abbe56e057f20f883e', '0', 'YKB572', '', '美国', '1584031868', '15888888888', '2', '', '0.00', null, '', '0.00', '0', '会员', '0.0000', '初始账号3', null, '1584123247', '0', '3', '11', '1|1|26|', '1584125648', null, null, null, null, '-1', null, null, null, null, null, null);
+INSERT INTO `ds_member` VALUES ('1', '18888888888', 'e10adc3949ba59abbe56e057f20f883e', '0', 'WSB903', '', '美国', '1584030607', '1550000000', '0', '', '13.30', null, '', '0.00', '1', '会员', '71308.6800', '初始账户1', null, '1601020191', '2', '0', '30', '1|', '1602838547', null, null, null, null, '1', null, '13166666666', '15222222223', '/Public/Uploads/cert/1602432304373.jpg', '/Public/Uploads/cert/1602432342894.jpg', '639.20');
+INSERT INTO `ds_member` VALUES ('28', '15179811533', 'e10adc3949ba59abbe56e057f20f883e', '1', 'BAX256', '', '本机地址', '1602830796', '18888888888', '1', '', '100.00', null, '123123123', '0.00', '0', '张三', '0.0000', '张三', null, '0', '0', '0', '1', '1|1|', '1602833229', null, null, null, 'e10adc3949ba59abbe56e057f20f883e', '1', '', null, null, null, null, '0.00');
+INSERT INTO `ds_member` VALUES ('29', '15179811534', 'e10adc3949ba59abbe56e057f20f883e', '1', 'DUS403', '', '本机地址', '1602833496', '18888888888', '1', '', '100.00', null, '123123123123', '0.00', '0', '李四', '0.0000', '王五', null, '0', '0', '0', '1', '1|1|', '1602839632', null, null, null, 'e10adc3949ba59abbe56e057f20f883e', '1', '', null, null, null, null, '68.00');
+INSERT INTO `ds_member` VALUES ('30', '15179811535', 'e10adc3949ba59abbe56e057f20f883e', '1', 'THK710', '', '本机地址', '1602839699', '15888888888', '2', '', '100.00', null, '1231231231231231', '0.00', '0', '赵七', '0.0000', '赵七', null, '0', '0', '0', '1', '1|1|2|', '1602839854', null, null, null, 'e10adc3949ba59abbe56e057f20f883e', '1', '', null, null, null, null, '98.00');
 
 -- ----------------------------
 -- Table structure for `ds_member_award_log`
@@ -728,6 +831,56 @@ CREATE TABLE `ds_member_award_log` (
 -- ----------------------------
 -- Records of ds_member_award_log
 -- ----------------------------
+
+-- ----------------------------
+-- Table structure for `ds_member_league`
+-- ----------------------------
+DROP TABLE IF EXISTS `ds_member_league`;
+CREATE TABLE `ds_member_league` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) DEFAULT NULL,
+  `key` tinyint(10) DEFAULT '1' COMMENT '联盟等级',
+  `push_level_one_num` varchar(50) DEFAULT '0' COMMENT '直推高级认证人数',
+  `team_num` varchar(50) DEFAULT '0' COMMENT '团队高级认证人数',
+  `push_level_one_ask` varchar(50) DEFAULT '0' COMMENT '下个等级的直推要求',
+  `team_buy_ask_3` varchar(50) DEFAULT '0' COMMENT '下个等级团队购买情况(3代内)',
+  `team_buy_ask_4` varchar(50) DEFAULT '0' COMMENT '下个等级团队购买情况(4代内)',
+  `team_buy_ask_5` varchar(50) DEFAULT '0' COMMENT '下个等级团队购买情况(5代内)',
+  `team_buy_ask_6` varchar(50) DEFAULT '0' COMMENT '下个等级团队购买情况(6代内)',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of ds_member_league
+-- ----------------------------
+INSERT INTO `ds_member_league` VALUES ('1', '1', '2', '2', '3', '0', '2', '0', '0', '0');
+INSERT INTO `ds_member_league` VALUES ('2', '2', '1', '1', '1', '1', '2', '0', '0', '0');
+INSERT INTO `ds_member_league` VALUES ('3', '29', '1', '0', '0', '0', '0', '0', '0', '0');
+INSERT INTO `ds_member_league` VALUES ('4', '30', '1', '0', '0', '0', '0', '0', '0', '0');
+
+-- ----------------------------
+-- Table structure for `ds_member_league_receive`
+-- ----------------------------
+DROP TABLE IF EXISTS `ds_member_league_receive`;
+CREATE TABLE `ds_member_league_receive` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) DEFAULT NULL,
+  `mobile` varchar(50) DEFAULT NULL COMMENT '用户手机号',
+  `key` tinyint(10) DEFAULT '1' COMMENT '联盟等级',
+  `last_key` tinyint(10) DEFAULT '0' COMMENT '升级前等级',
+  `reward_product_id` int(11) DEFAULT NULL COMMENT '奖励矿机id',
+  `add_time` int(11) DEFAULT NULL COMMENT '升级时间',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of ds_member_league_receive
+-- ----------------------------
+INSERT INTO `ds_member_league_receive` VALUES ('1', '1', '18888888888', '1', '0', '2', '1602645132');
+INSERT INTO `ds_member_league_receive` VALUES ('2', '2', '15888888888', '1', '0', '2', '1602646094');
+INSERT INTO `ds_member_league_receive` VALUES ('3', '29', '15179811534', '1', '0', '2', '1602834249');
+INSERT INTO `ds_member_league_receive` VALUES ('4', '30', '15179811535', '1', '0', '2', '1602839792');
+INSERT INTO `ds_member_league_receive` VALUES ('5', '1', '18888888888', '2', '1', '4', '1602839792');
 
 -- ----------------------------
 -- Table structure for `ds_member_paylist`
@@ -817,6 +970,29 @@ CREATE TABLE `ds_member_recharge` (
 -- ----------------------------
 
 -- ----------------------------
+-- Table structure for `ds_member_senior_cert`
+-- ----------------------------
+DROP TABLE IF EXISTS `ds_member_senior_cert`;
+CREATE TABLE `ds_member_senior_cert` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) DEFAULT NULL,
+  `id_card_reverse` varchar(128) DEFAULT NULL COMMENT '身份证反面',
+  `cert_fail_reason` varchar(128) DEFAULT NULL COMMENT '认证失败原因',
+  `is_senior_cert` tinyint(6) DEFAULT '0' COMMENT '是否高级认证 0 未认证 1 已认证 2 认证中 3认证失败',
+  `add_time` int(11) DEFAULT NULL,
+  `update_time` int(11) DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of ds_member_senior_cert
+-- ----------------------------
+INSERT INTO `ds_member_senior_cert` VALUES ('2', '1', '/Public/Uploads/cert/1602407356596.jpg', '', '1', '1602407357', '1602645132');
+INSERT INTO `ds_member_senior_cert` VALUES ('3', '2', '/Public/Uploads/cert/1602645487773.jpg', '', '1', '1602645488', '1602645502');
+INSERT INTO `ds_member_senior_cert` VALUES ('4', '29', '/Public/Uploads/cert/1602834040457.png', '', '1', '1602834044', '1602834249');
+INSERT INTO `ds_member_senior_cert` VALUES ('5', '30', '/Public/Uploads/cert/1602839783842.png', '', '1', '1602839784', '1602839792');
+
+-- ----------------------------
 -- Table structure for `ds_member_sign_in`
 -- ----------------------------
 DROP TABLE IF EXISTS `ds_member_sign_in`;
@@ -827,12 +1003,14 @@ CREATE TABLE `ds_member_sign_in` (
   `add_time` int(11) DEFAULT NULL,
   `valid_period` int(11) DEFAULT NULL COMMENT '有效期',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of ds_member_sign_in
 -- ----------------------------
 INSERT INTO `ds_member_sign_in` VALUES ('3', '1', '6.68', '1601054353', '30');
+INSERT INTO `ds_member_sign_in` VALUES ('4', '1', '6.62', '1602145213', '30');
+INSERT INTO `ds_member_sign_in` VALUES ('5', '2', '3.85', '1602819701', '30');
 
 -- ----------------------------
 -- Table structure for `ds_message`
@@ -989,30 +1167,95 @@ CREATE TABLE `ds_paydetail` (
 -- ----------------------------
 DROP TABLE IF EXISTS `ds_product`;
 CREATE TABLE `ds_product` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `tid` int(11) NOT NULL,
-  `title` char(255) NOT NULL,
-  `price` decimal(10,2) NOT NULL DEFAULT '0.00',
-  `stock` mediumint(9) NOT NULL DEFAULT '0',
-  `yxzq` mediumint(8) unsigned NOT NULL DEFAULT '0',
-  `shouyi` decimal(15,3) unsigned NOT NULL DEFAULT '0.000',
-  `thumb` char(255) NOT NULL DEFAULT 'pic.png',
-  `content` varchar(255) NOT NULL,
-  `pid` int(11) NOT NULL,
-  `inputtime` int(11) unsigned NOT NULL,
-  `xiangou` int(11) NOT NULL COMMENT '限购',
-  `is_on` tinyint(1) DEFAULT '0',
+  `id` tinyint(3) unsigned NOT NULL AUTO_INCREMENT,
+  `product_name` varchar(30) NOT NULL COMMENT '工厂名称',
+  `num` decimal(10,0) NOT NULL COMMENT '消耗ANE数量',
+  `period` int(11) NOT NULL COMMENT '锁定周期',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '开启状态1:开启:0:关闭',
+  `logo_url` varchar(255) NOT NULL COMMENT '工厂logo',
+  `energy_num` varchar(50) DEFAULT NULL COMMENT '产量',
+  `hold_num` int(10) DEFAULT '1' COMMENT '最大可持有数量',
+  `return_num` decimal(10,0) DEFAULT NULL COMMENT '总收益',
+  `bg_color` varchar(128) DEFAULT NULL COMMENT '背景色',
+  `level_one_return_candy` decimal(11,0) DEFAULT NULL COMMENT '一级下线租用返还糖果数量',
+  `level_two_return_candy` decimal(11,0) DEFAULT NULL COMMENT '二级下线租用返还糖果数量',
+  `sort` tinyint(5) DEFAULT '1' COMMENT '排序',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of ds_product
 -- ----------------------------
-INSERT INTO `ds_product` VALUES ('1', '1', '树苗', '100.00', '18', '720', '0.168', '/Public/Uploads/20200313/5e6b2e0ca7520.png', '', '0', '1584081321', '1', '0');
-INSERT INTO `ds_product` VALUES ('2', '2', '紫檀', '500.00', '100', '1440', '0.488', '/Public/Uploads/20200313/5e6b3154bccdc.png', '', '0', '1584083284', '3', '0');
-INSERT INTO `ds_product` VALUES ('3', '3', '沉香', '1000.00', '47', '2160', '0.745', '/Public/Uploads/20200313/5e6b31dbc9cb7.png', '', '0', '1584083419', '3', '0');
-INSERT INTO `ds_product` VALUES ('4', '4', '金丝楠', '3000.00', '30', '2160', '2.508', '/Public/Uploads/20200313/5e6b322b9cc1b.png', '', '0', '1584083499', '2', '0');
-INSERT INTO `ds_product` VALUES ('5', '5', '黄花梨', '5000.00', '10', '2160', '4.648', '/Public/Uploads/20200313/5e6b326d4d295.png', '', '0', '1584083565', '1', '0');
+INSERT INTO `ds_product` VALUES ('1', '新手云空间 (赠)', '1', '730', '0', '/Public/Uploads/20201012/5f833ba79d884.png', '0.3', '1', '20', '#5991fe', '0', '0', '1');
+INSERT INTO `ds_product` VALUES ('2', '迷你云空间', '50', '35', '1', '/Public/Uploads/20201012/5f833bb70ed7a.png', '2', '8', '50', '#568bfb', '2', '1', '2');
+INSERT INTO `ds_product` VALUES ('3', '微型云空间', '2', '35', '1', '/Public/Uploads/20201012/5f833b91d4aa3.png', '0.3', '4', '50', '#eeae80', '4', '2', '3');
+INSERT INTO `ds_product` VALUES ('4', '初级云空间', '50', '35', '1', '/Public/Uploads/20201012/5f833b7f85d93.png', '0.6', '2', '20', '#51c8b5', '20', '10', '4');
+INSERT INTO `ds_product` VALUES ('5', '中级云空间', '30', '35', '1', '/Public/Uploads/20201012/5f833b6faad0a.png', '0.2', '2', '15', '#ff79b6', '40', '20', '5');
+INSERT INTO `ds_product` VALUES ('6', '高级云空间', '30', '35', '1', '/Public/Uploads/20201012/5f833b5ce85e8.png', '0.2', '2', '11', '#6277ba', '200', '100', '6');
+INSERT INTO `ds_product` VALUES ('7', '进阶云空间', '100', '35', '1', '/Public/Uploads/20201012/5f833b3ee1c6d.png', '0.4', '2', '12', '#6dc2f9', '400', '200', '7');
+INSERT INTO `ds_product` VALUES ('8', '精英云空间', '50', '35', '1', '/Public/Uploads/20201012/5f833b2d45959.png', '0.5', '2', '0', '#ee73de', '2000', '1000', '8');
+INSERT INTO `ds_product` VALUES ('9', '超级云空间', '100', '35', '1', '/Public/Uploads/20201012/5f833a66e4128.png', '0.4', '2', '12', '#f9c650', '4000', '2000', '9');
+
+-- ----------------------------
+-- Table structure for `ds_product_receive_record`
+-- ----------------------------
+DROP TABLE IF EXISTS `ds_product_receive_record`;
+CREATE TABLE `ds_product_receive_record` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) DEFAULT NULL,
+  `mobile` varchar(50) DEFAULT NULL,
+  `receive_time` int(11) DEFAULT NULL COMMENT '领取时间',
+  `total_num` decimal(16,2) DEFAULT '0.00' COMMENT '实际收益',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of ds_product_receive_record
+-- ----------------------------
+INSERT INTO `ds_product_receive_record` VALUES ('1', '1', '18888888888', '1602581972', '17.20');
+INSERT INTO `ds_product_receive_record` VALUES ('2', '1', '18888888888', '1602582090', '17.00');
+INSERT INTO `ds_product_receive_record` VALUES ('4', '1', '18888888888', '1602611771', '17.00');
+INSERT INTO `ds_product_receive_record` VALUES ('5', '2', '15888888888', '1602745257', '2.00');
+INSERT INTO `ds_product_receive_record` VALUES ('6', '29', '15179811534', '1602838403', '18.00');
+INSERT INTO `ds_product_receive_record` VALUES ('7', '30', '15179811535', '1602839862', '2.00');
+
+-- ----------------------------
+-- Table structure for `ds_product_record`
+-- ----------------------------
+DROP TABLE IF EXISTS `ds_product_record`;
+CREATE TABLE `ds_product_record` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) DEFAULT NULL,
+  `product_id` int(11) DEFAULT NULL COMMENT '工厂id',
+  `period` int(11) DEFAULT NULL COMMENT '锁定天数',
+  `is_run` tinyint(5) DEFAULT '0' COMMENT '是否运行 0未退租 1:已退租 ',
+  `add_time` int(11) DEFAULT NULL COMMENT '创建时间',
+  `last_receive_time` int(11) DEFAULT NULL COMMENT '上次领取时间',
+  `receive_time` int(11) DEFAULT NULL COMMENT '领取时间',
+  `hold_num` int(1) DEFAULT '1' COMMENT '持有数量',
+  `num` decimal(10,0) DEFAULT '0' COMMENT '花费ANE数量',
+  `return_num` decimal(10,0) DEFAULT '0' COMMENT '总收益',
+  `actual_num` decimal(16,2) DEFAULT '0.00' COMMENT '实际收益',
+  `energy_num` decimal(10,1) DEFAULT '0.0' COMMENT '日产量',
+  `types` tinyint(6) DEFAULT '1' COMMENT '来源 1购买奖励 2团队奖励 3高级认证奖励',
+  `receive_times` varchar(50) DEFAULT '0' COMMENT '领取次数',
+  `total_receive_num` decimal(20,2) DEFAULT '0.00' COMMENT '领取总收益',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of ds_product_record
+-- ----------------------------
+INSERT INTO `ds_product_record` VALUES ('1', '1', '2', '35', '0', '1602509073', null, '1602611771', '8', '50', '50', '16.00', '2.0', '1', '1', '16.00');
+INSERT INTO `ds_product_record` VALUES ('2', '1', '3', '35', '0', '1602581584', null, '1602611771', '4', '15', '50', '1.20', '0.3', '1', '1', '1.20');
+INSERT INTO `ds_product_record` VALUES ('3', '1', '2', '35', '0', '1602645132', null, null, '1', '50', '50', '0.00', '2.0', '3', '0', '0.00');
+INSERT INTO `ds_product_record` VALUES ('4', '2', '2', '35', '0', '1602646094', null, '1602745257', '1', '50', '50', '2.00', '2.0', '3', '1', '2.00');
+INSERT INTO `ds_product_record` VALUES ('5', '29', '2', '35', '0', '1602834249', null, '1602838403', '1', '50', '50', '2.00', '2.0', '3', '1', '2.00');
+INSERT INTO `ds_product_record` VALUES ('6', '29', '2', '35', '0', '1602838388', null, '1602838403', '8', '50', '50', '16.00', '2.0', '1', '1', '16.00');
+INSERT INTO `ds_product_record` VALUES ('7', '30', '2', '35', '0', '1602839792', null, '1602839862', '1', '50', '50', '2.00', '2.0', '3', '1', '2.00');
+INSERT INTO `ds_product_record` VALUES ('8', '30', '3', '35', '0', '1602839951', null, null, '4', '2', '50', '0.00', '0.3', '1', '0', '0.00');
+INSERT INTO `ds_product_record` VALUES ('9', '30', '3', '35', '0', '1602841024', null, null, '4', '2', '50', '0.00', '0.3', '1', '0', '0.00');
+INSERT INTO `ds_product_record` VALUES ('10', '1', '4', '35', '0', '1602841308', null, null, '1', '0', '20', '0.00', '0.6', '2', '0', '0.00');
 
 -- ----------------------------
 -- Table structure for `ds_profile_log`
@@ -1056,6 +1299,24 @@ CREATE TABLE `ds_qjinbidetail` (
 -- ----------------------------
 
 -- ----------------------------
+-- Table structure for `ds_role`
+-- ----------------------------
+DROP TABLE IF EXISTS `ds_role`;
+CREATE TABLE `ds_role` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) DEFAULT NULL,
+  `remark` varchar(100) DEFAULT NULL,
+  `status` tinyint(4) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of ds_role
+-- ----------------------------
+INSERT INTO `ds_role` VALUES ('1', '客服', '客服', '1');
+INSERT INTO `ds_role` VALUES ('2', '管理员', '管理员', '1');
+
+-- ----------------------------
 -- Table structure for `ds_session`
 -- ----------------------------
 DROP TABLE IF EXISTS `ds_session`;
@@ -1069,7 +1330,11 @@ CREATE TABLE `ds_session` (
 -- ----------------------------
 -- Records of ds_session
 -- ----------------------------
-INSERT INTO `ds_session` VALUES ('sbkn4tojisi2uu7qe9ddes9944', '1601281782', 0x7665726966797C733A33323A223062333638303935363664633037373363343337313539393063316331656266223B69647C733A313A2231223B61646D696E757365726E616D657C733A353A2261646D696E223B6C6F6774696D657C733A31393A22323032302D30392D32312032313A32333A3435223B6C6F67696E69707C733A393A223132372E302E302E31223B737570657261646D696E7C623A313B6D69647C733A313A2231223B757365726E616D657C733A31313A223138383838383838383838223B6D656D6265727C733A31313A226D656D6265726C6F67696E223B);
+INSERT INTO `ds_session` VALUES ('sbkn4tojisi2uu7qe9ddes9944', '1602928263', 0x7665726966797C733A33323A223538366639623430333565353939376637373633356231336363303439383463223B69647C733A313A2231223B4B4546555F524F4C455F49447C623A313B5F4143434553535F4C4953547C613A303A7B7D39636230383230643666616137333130363235623762356133303231643034367C623A303B61646D696E757365726E616D657C733A353A2261646D696E223B6C6F6774696D657C733A31393A22323032302D31302D31312031393A30313A3030223B6C6F67696E69707C733A393A223132372E302E302E31223B737570657261646D696E7C623A313B6D69647C733A313A2231223B757365726E616D657C733A31313A223138383838383838383838223B6D656D6265727C733A31313A226D656D6265726C6F67696E223B);
+INSERT INTO `ds_session` VALUES ('b9t4c4nco54270b8tgu3mc1an1', '1602917131', '');
+INSERT INTO `ds_session` VALUES ('otqkg9m4hiri7u746nml982g83', '1602917139', '');
+INSERT INTO `ds_session` VALUES ('oufvqi2t4jq16kv9ckai3366h6', '1602917140', '');
+INSERT INTO `ds_session` VALUES ('v68d01rf0up0rabeaqhfov6mn1', '1602927427', 0x6D69647C733A323A223330223B757365726E616D657C733A31313A223135313739383131353335223B6D656D6265727C733A31313A226D656D6265726C6F67696E223B);
 
 -- ----------------------------
 -- Table structure for `ds_sms_log`
@@ -1141,14 +1406,53 @@ CREATE TABLE `ds_user` (
   `logtime` int(10) NOT NULL,
   `loginip` char(30) NOT NULL DEFAULT '',
   `lock` tinyint(1) unsigned NOT NULL,
+  `role_id` int(11) NOT NULL COMMENT '角色id',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=256 ROW_FORMAT=DYNAMIC;
+) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=256 ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
 -- Records of ds_user
 -- ----------------------------
-INSERT INTO `ds_user` VALUES ('1', 'admin', 'e10adc3949ba59abbe56e057f20f883e', '1601017457', '127.0.0.1', '0');
+INSERT INTO `ds_user` VALUES ('1', 'admin', 'e10adc3949ba59abbe56e057f20f883e', '1602425453', '127.0.0.1', '0', '0');
+INSERT INTO `ds_user` VALUES ('3', 'kefu123', 'e10adc3949ba59abbe56e057f20f883e', '1602216168', '127.0.0.1', '0', '1');
+INSERT INTO `ds_user` VALUES ('6', 'kefu2', 'e10adc3949ba59abbe56e057f20f883e', '1602415429', '127.0.0.1', '0', '1');
+
+-- ----------------------------
+-- Table structure for `ds_user_ane_log`
+-- ----------------------------
+DROP TABLE IF EXISTS `ds_user_ane_log`;
+CREATE TABLE `ds_user_ane_log` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `user_id` int(11) NOT NULL COMMENT '用户id',
+  `num` decimal(20,2) NOT NULL COMMENT '变化的数量',
+  `old` decimal(20,2) NOT NULL COMMENT '原来的魔石',
+  `new` decimal(20,2) NOT NULL COMMENT '变化后的魔石',
+  `remark` varchar(255) NOT NULL COMMENT '备注',
+  `types` tinyint(8) NOT NULL DEFAULT '1' COMMENT '1 挖矿奖励 2 买入 3卖出 4 租用空间 5联盟奖励 6联盟分红',
+  `create_time` int(11) NOT NULL COMMENT '创建时间',
+  `valid_period` int(11) DEFAULT '0' COMMENT '有效天数',
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`) USING BTREE,
+  KEY `type` (`types`) USING BTREE
+) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of ds_user_ane_log
+-- ----------------------------
+INSERT INTO `ds_user_ane_log` VALUES ('1', '1', '-15.00', '582.00', '567.00', '租用空间消耗15ANE', '4', '1602581584', '0');
+INSERT INTO `ds_user_ane_log` VALUES ('2', '1', '17.20', '567.00', '584.20', '挖矿奖励17.2ANE', '1', '1602581972', '0');
+INSERT INTO `ds_user_ane_log` VALUES ('3', '1', '17.00', '584.20', '601.20', '挖矿奖励17ANE', '1', '1602582090', '0');
+INSERT INTO `ds_user_ane_log` VALUES ('4', '1', '17.00', '601.20', '618.20', '挖矿奖励17ANE', '1', '1602611677', '0');
+INSERT INTO `ds_user_ane_log` VALUES ('5', '1', '17.00', '618.20', '635.20', '挖矿奖励17ANE', '1', '1602611771', '0');
+INSERT INTO `ds_user_ane_log` VALUES ('6', '2', '2.00', '0.00', '2.00', '挖矿奖励2ANE', '1', '1602745257', '0');
+INSERT INTO `ds_user_ane_log` VALUES ('9', '1', '2.00', '637.20', '639.20', '联盟分红2联盟积分', '6', '1602819000', '0');
+INSERT INTO `ds_user_ane_log` VALUES ('10', '2', '2.00', '4.00', '6.00', '联盟分红2联盟积分', '6', '1602819000', '0');
+INSERT INTO `ds_user_ane_log` VALUES ('11', '29', '-50.00', '100.00', '50.00', '租用空间消耗50.0000ANE', '4', '1602838388', '0');
+INSERT INTO `ds_user_ane_log` VALUES ('12', '29', '18.00', '50.00', '68.00', '挖矿奖励18ANE', '1', '1602838403', '0');
+INSERT INTO `ds_user_ane_log` VALUES ('13', '30', '2.00', '0.00', '2.00', '挖矿奖励2.00ANE', '1', '1602839862', '0');
+INSERT INTO `ds_user_ane_log` VALUES ('14', '30', '-2.00', '2.00', '0.00', '租用空间消耗2.0000ANE', '4', '1602839951', '0');
+INSERT INTO `ds_user_ane_log` VALUES ('15', '30', '-2.00', '100.00', '98.00', '租用空间消耗2.00ANE', '4', '1602841024', '0');
 
 -- ----------------------------
 -- Table structure for `ds_user_eco_log`
@@ -1161,18 +1465,24 @@ CREATE TABLE `ds_user_eco_log` (
   `old` decimal(20,2) NOT NULL COMMENT '原来的魔石',
   `new` decimal(20,2) NOT NULL COMMENT '变化后的魔石',
   `remark` varchar(255) NOT NULL COMMENT '备注',
-  `types` tinyint(8) NOT NULL DEFAULT '1' COMMENT '1实名奖励 2签到奖励 3联盟奖励 4积分过期',
+  `types` tinyint(8) NOT NULL DEFAULT '1' COMMENT '1实名奖励 2签到奖励 3联盟奖励 4积分过期5订单奖励 6订单返利',
   `create_time` int(11) NOT NULL COMMENT '创建时间',
   `valid_period` int(11) DEFAULT '0' COMMENT '有效天数',
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`) USING BTREE,
   KEY `type` (`types`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of ds_user_eco_log
 -- ----------------------------
-INSERT INTO `ds_user_eco_log` VALUES ('3', '1', '6.68', '0.00', '6.68', '签到奖励6.68生态积分', '1', '1601054353', '9999');
+INSERT INTO `ds_user_eco_log` VALUES ('3', '1', '6.68', '0.00', '6.68', '签到奖励6.68生态积分', '1', '1601054353', '30');
+INSERT INTO `ds_user_eco_log` VALUES ('4', '1', '6.62', '6.68', '13.30', '签到奖励6.62生态积分', '1', '1602145213', '30');
+INSERT INTO `ds_user_eco_log` VALUES ('5', '2', '100.00', '0.00', '100.00', '实名奖励100生态积分', '1', '1602645348', '9999');
+INSERT INTO `ds_user_eco_log` VALUES ('6', '2', '3.85', '100.00', '103.85', '签到奖励3.85生态积分', '1', '1602819701', '30');
+INSERT INTO `ds_user_eco_log` VALUES ('7', '28', '100.00', '0.00', '100.00', '实名奖励100生态积分', '1', '1602832414', '9999');
+INSERT INTO `ds_user_eco_log` VALUES ('8', '29', '100.00', '0.00', '100.00', '实名奖励100生态积分', '1', '1602833978', '9999');
+INSERT INTO `ds_user_eco_log` VALUES ('9', '30', '100.00', '0.00', '100.00', '实名奖励100生态积分', '1', '1602839744', '9999');
 
 -- ----------------------------
 -- Table structure for `ds_user_league_log`
@@ -1190,12 +1500,14 @@ CREATE TABLE `ds_user_league_log` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`) USING BTREE,
   KEY `type` (`types`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of ds_user_league_log
 -- ----------------------------
+INSERT INTO `ds_user_league_log` VALUES ('3', '1', '2291.8560', '69016.8244', '71308.6804', '生态分红2291.8560联盟积分', '1', '1602145543');
 INSERT INTO `ds_user_league_log` VALUES ('2', '1', '19016.8244', '50000.0000', '69016.8244', '生态分红19016.8244联盟积分', '1', '1601111595');
+INSERT INTO `ds_user_league_log` VALUES ('4', '2', '310812.0000', '0.0000', '310812.0000', '生态分红310812.0000联盟积分', '1', '1602680466');
 
 -- ----------------------------
 -- Table structure for `ds_user_statistics`
@@ -1209,1123 +1521,17 @@ CREATE TABLE `ds_user_statistics` (
   `two_sub_cert_nums` int(11) DEFAULT '0' COMMENT '二级下线人数',
   `two_sub_nocert_nums` int(11) DEFAULT NULL,
   `total_sub_nums` int(11) DEFAULT '0' COMMENT '全部下线人数',
+  `total_product_receive` decimal(20,4) DEFAULT '0.0000' COMMENT '矿机领取总收益',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=1112 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of ds_user_statistics
 -- ----------------------------
-INSERT INTO `ds_user_statistics` VALUES ('1', '2', '4', null, '0', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('2', '4', '42', null, '1252', null, '1294');
-INSERT INTO `ds_user_statistics` VALUES ('3', '7', '46', null, '525', null, '571');
-INSERT INTO `ds_user_statistics` VALUES ('4', '6', '45', null, '129', null, '174');
-INSERT INTO `ds_user_statistics` VALUES ('5', '13', '17', null, '74', null, '91');
-INSERT INTO `ds_user_statistics` VALUES ('6', '22', '27', null, '84', null, '111');
-INSERT INTO `ds_user_statistics` VALUES ('7', '9', '165', null, '420', null, '585');
-INSERT INTO `ds_user_statistics` VALUES ('8', '31', '9', null, '0', null, '9');
-INSERT INTO `ds_user_statistics` VALUES ('9', '20', '23', null, '44', null, '67');
-INSERT INTO `ds_user_statistics` VALUES ('10', '23', '6', null, '96', null, '102');
-INSERT INTO `ds_user_statistics` VALUES ('11', '36', '10', null, '8', null, '18');
-INSERT INTO `ds_user_statistics` VALUES ('12', '33', '6', null, '4', null, '10');
-INSERT INTO `ds_user_statistics` VALUES ('13', '44', '3', null, '16', null, '19');
-INSERT INTO `ds_user_statistics` VALUES ('14', '19', '11', null, '80', null, '91');
-INSERT INTO `ds_user_statistics` VALUES ('15', '39', '23', null, '24', null, '47');
-INSERT INTO `ds_user_statistics` VALUES ('16', '43', '49', null, '58', null, '107');
-INSERT INTO `ds_user_statistics` VALUES ('17', '40', '159', null, '1', null, '160');
-INSERT INTO `ds_user_statistics` VALUES ('18', '26', '24', null, '234', null, '258');
-INSERT INTO `ds_user_statistics` VALUES ('19', '62', '181', null, '450', null, '631');
-INSERT INTO `ds_user_statistics` VALUES ('20', '25', '21', null, '9', null, '30');
-INSERT INTO `ds_user_statistics` VALUES ('21', '24', '8', null, '196', null, '204');
-INSERT INTO `ds_user_statistics` VALUES ('22', '5', '211', null, '851', null, '1062');
-INSERT INTO `ds_user_statistics` VALUES ('23', '78', '18', null, '131', null, '149');
-INSERT INTO `ds_user_statistics` VALUES ('24', '51', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('25', '32', '1', null, '42', null, '43');
-INSERT INTO `ds_user_statistics` VALUES ('26', '61', '3', null, '4', null, '7');
-INSERT INTO `ds_user_statistics` VALUES ('27', '81', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('28', '34', '6', null, '3', null, '9');
-INSERT INTO `ds_user_statistics` VALUES ('29', '72', '8', null, '5', null, '13');
-INSERT INTO `ds_user_statistics` VALUES ('30', '74', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('31', '116', '2', null, '12', null, '14');
-INSERT INTO `ds_user_statistics` VALUES ('32', '59', '65', null, '0', null, '65');
-INSERT INTO `ds_user_statistics` VALUES ('33', '142', '6', null, '0', null, '6');
-INSERT INTO `ds_user_statistics` VALUES ('34', '18', '11', null, '5', null, '16');
-INSERT INTO `ds_user_statistics` VALUES ('35', '70', '5', null, '17', null, '22');
-INSERT INTO `ds_user_statistics` VALUES ('36', '130', '1', null, '53', null, '54');
-INSERT INTO `ds_user_statistics` VALUES ('37', '131', '19', null, '10', null, '29');
-INSERT INTO `ds_user_statistics` VALUES ('38', '118', '1', null, '2', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('39', '144', '19', null, '42', null, '61');
-INSERT INTO `ds_user_statistics` VALUES ('40', '86', '20', null, '13', null, '33');
-INSERT INTO `ds_user_statistics` VALUES ('41', '37', '9', null, '71', null, '80');
-INSERT INTO `ds_user_statistics` VALUES ('42', '75', '19', null, '29', null, '48');
-INSERT INTO `ds_user_statistics` VALUES ('43', '115', '6', null, '0', null, '6');
-INSERT INTO `ds_user_statistics` VALUES ('44', '52', '14', null, '2', null, '16');
-INSERT INTO `ds_user_statistics` VALUES ('45', '124', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('46', '76', '322', null, '116', null, '438');
-INSERT INTO `ds_user_statistics` VALUES ('47', '11', '8', null, '7', null, '15');
-INSERT INTO `ds_user_statistics` VALUES ('48', '64', '5', null, '2', null, '7');
-INSERT INTO `ds_user_statistics` VALUES ('49', '47', '7', null, '6', null, '13');
-INSERT INTO `ds_user_statistics` VALUES ('50', '71', '10', null, '14', null, '24');
-INSERT INTO `ds_user_statistics` VALUES ('51', '29', '7', null, '5', null, '12');
-INSERT INTO `ds_user_statistics` VALUES ('52', '161', '1', null, '5', null, '6');
-INSERT INTO `ds_user_statistics` VALUES ('53', '141', '1', null, '10', null, '11');
-INSERT INTO `ds_user_statistics` VALUES ('54', '38', '5', null, '0', null, '5');
-INSERT INTO `ds_user_statistics` VALUES ('55', '15', '12', null, '1', null, '13');
-INSERT INTO `ds_user_statistics` VALUES ('56', '114', '4', null, '4', null, '8');
-INSERT INTO `ds_user_statistics` VALUES ('57', '84', '18', null, '11', null, '29');
-INSERT INTO `ds_user_statistics` VALUES ('58', '149', '1', null, '3', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('59', '77', '64', null, '0', null, '64');
-INSERT INTO `ds_user_statistics` VALUES ('60', '82', '8', null, '0', null, '8');
-INSERT INTO `ds_user_statistics` VALUES ('61', '73', '6', null, '0', null, '6');
-INSERT INTO `ds_user_statistics` VALUES ('62', '125', '4', null, '0', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('63', '225', '10', null, '7', null, '17');
-INSERT INTO `ds_user_statistics` VALUES ('64', '145', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('65', '228', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('66', '8', '8', null, '0', null, '8');
-INSERT INTO `ds_user_statistics` VALUES ('67', '200', '5', null, '0', null, '5');
-INSERT INTO `ds_user_statistics` VALUES ('68', '156', '53', null, '108', null, '161');
-INSERT INTO `ds_user_statistics` VALUES ('69', '169', '13', null, '5', null, '18');
-INSERT INTO `ds_user_statistics` VALUES ('70', '270', '8', null, '7', null, '15');
-INSERT INTO `ds_user_statistics` VALUES ('71', '243', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('72', '48', '6', null, '52', null, '58');
-INSERT INTO `ds_user_statistics` VALUES ('73', '97', '8', null, '0', null, '8');
-INSERT INTO `ds_user_statistics` VALUES ('74', '166', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('75', '264', '59', null, '79', null, '138');
-INSERT INTO `ds_user_statistics` VALUES ('76', '154', '4', null, '0', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('77', '143', '4', null, '6', null, '10');
-INSERT INTO `ds_user_statistics` VALUES ('78', '158', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('79', '254', '3', null, '2', null, '5');
-INSERT INTO `ds_user_statistics` VALUES ('80', '283', '3', null, '1', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('81', '266', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('82', '45', '63', null, '0', null, '63');
-INSERT INTO `ds_user_statistics` VALUES ('83', '210', '5', null, '0', null, '5');
-INSERT INTO `ds_user_statistics` VALUES ('84', '236', '3', null, '2', null, '5');
-INSERT INTO `ds_user_statistics` VALUES ('85', '234', '9', null, '2', null, '11');
-INSERT INTO `ds_user_statistics` VALUES ('86', '232', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('87', '160', '2', null, '1', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('88', '57', '174', null, '5', null, '179');
-INSERT INTO `ds_user_statistics` VALUES ('89', '104', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('90', '184', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('91', '296', '5', null, '2', null, '7');
-INSERT INTO `ds_user_statistics` VALUES ('92', '354', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('93', '262', '1', null, '1', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('94', '68', '4', null, '0', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('95', '105', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('96', '307', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('97', '244', '6', null, '4', null, '10');
-INSERT INTO `ds_user_statistics` VALUES ('98', '252', '146', null, '43', null, '189');
-INSERT INTO `ds_user_statistics` VALUES ('99', '245', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('100', '401', '18', null, '22', null, '40');
-INSERT INTO `ds_user_statistics` VALUES ('101', '123', '42', null, '63', null, '105');
-INSERT INTO `ds_user_statistics` VALUES ('102', '402', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('103', '267', '2', null, '13', null, '15');
-INSERT INTO `ds_user_statistics` VALUES ('104', '450', '7', null, '0', null, '7');
-INSERT INTO `ds_user_statistics` VALUES ('105', '79', '3', null, '5', null, '8');
-INSERT INTO `ds_user_statistics` VALUES ('106', '163', '5', null, '4', null, '9');
-INSERT INTO `ds_user_statistics` VALUES ('107', '247', '30', null, '103', null, '133');
-INSERT INTO `ds_user_statistics` VALUES ('108', '103', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('109', '63', '97', null, '148', null, '245');
-INSERT INTO `ds_user_statistics` VALUES ('110', '537', '34', null, '30', null, '64');
-INSERT INTO `ds_user_statistics` VALUES ('111', '557', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('112', '513', '16', null, '18', null, '34');
-INSERT INTO `ds_user_statistics` VALUES ('113', '313', '16', null, '2', null, '18');
-INSERT INTO `ds_user_statistics` VALUES ('114', '91', '9', null, '2', null, '11');
-INSERT INTO `ds_user_statistics` VALUES ('115', '558', '1', null, '14', null, '15');
-INSERT INTO `ds_user_statistics` VALUES ('116', '486', '4', null, '1', null, '5');
-INSERT INTO `ds_user_statistics` VALUES ('117', '518', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('118', '553', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('119', '609', '6', null, '4', null, '10');
-INSERT INTO `ds_user_statistics` VALUES ('120', '525', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('121', '634', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('122', '610', '3', null, '1', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('123', '272', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('124', '588', '1', null, '1', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('125', '576', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('126', '568', '5', null, '1', null, '6');
-INSERT INTO `ds_user_statistics` VALUES ('127', '601', '27', null, '19', null, '46');
-INSERT INTO `ds_user_statistics` VALUES ('128', '590', '9', null, '10', null, '19');
-INSERT INTO `ds_user_statistics` VALUES ('129', '475', '1', null, '1', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('130', '579', '23', null, '207', null, '230');
-INSERT INTO `ds_user_statistics` VALUES ('131', '324', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('132', '457', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('133', '605', '9', null, '4', null, '13');
-INSERT INTO `ds_user_statistics` VALUES ('134', '572', '4', null, '0', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('135', '618', '14', null, '52', null, '66');
-INSERT INTO `ds_user_statistics` VALUES ('136', '437', '31', null, '0', null, '31');
-INSERT INTO `ds_user_statistics` VALUES ('137', '651', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('138', '533', '33', null, '167', null, '200');
-INSERT INTO `ds_user_statistics` VALUES ('139', '672', '1', null, '14', null, '15');
-INSERT INTO `ds_user_statistics` VALUES ('140', '678', '1', null, '1', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('141', '429', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('142', '122', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('143', '229', '1', null, '44', null, '45');
-INSERT INTO `ds_user_statistics` VALUES ('144', '709', '63', null, '47', null, '110');
-INSERT INTO `ds_user_statistics` VALUES ('145', '702', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('146', '532', '106', null, '161', null, '267');
-INSERT INTO `ds_user_statistics` VALUES ('147', '415', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('148', '700', '1', null, '1', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('149', '707', '7', null, '2', null, '9');
-INSERT INTO `ds_user_statistics` VALUES ('150', '671', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('151', '581', '4', null, '0', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('152', '136', '3', null, '2', null, '5');
-INSERT INTO `ds_user_statistics` VALUES ('153', '500', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('154', '761', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('155', '773', '1', null, '93', null, '94');
-INSERT INTO `ds_user_statistics` VALUES ('156', '734', '1', null, '2', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('157', '765', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('158', '559', '50', null, '0', null, '50');
-INSERT INTO `ds_user_statistics` VALUES ('159', '578', '63', null, '43', null, '106');
-INSERT INTO `ds_user_statistics` VALUES ('160', '755', '3', null, '28', null, '31');
-INSERT INTO `ds_user_statistics` VALUES ('161', '543', '4', null, '0', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('162', '108', '1', null, '8', null, '9');
-INSERT INTO `ds_user_statistics` VALUES ('163', '770', '44', null, '123', null, '167');
-INSERT INTO `ds_user_statistics` VALUES ('164', '791', '10', null, '0', null, '10');
-INSERT INTO `ds_user_statistics` VALUES ('165', '737', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('166', '795', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('167', '608', '94', null, '100', null, '194');
-INSERT INTO `ds_user_statistics` VALUES ('168', '763', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('169', '627', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('170', '793', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('171', '574', '84', null, '37', null, '121');
-INSERT INTO `ds_user_statistics` VALUES ('172', '570', '14', null, '6', null, '20');
-INSERT INTO `ds_user_statistics` VALUES ('173', '814', '4', null, '0', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('174', '723', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('175', '856', '4', null, '0', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('176', '752', '140', null, '29', null, '169');
-INSERT INTO `ds_user_statistics` VALUES ('177', '889', '28', null, '37', null, '65');
-INSERT INTO `ds_user_statistics` VALUES ('178', '943', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('179', '908', '4', null, '0', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('180', '748', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('181', '746', '45', null, '35', null, '80');
-INSERT INTO `ds_user_statistics` VALUES ('182', '843', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('183', '628', '172', null, '57', null, '229');
-INSERT INTO `ds_user_statistics` VALUES ('184', '937', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('185', '926', '34', null, '7', null, '41');
-INSERT INTO `ds_user_statistics` VALUES ('186', '866', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('187', '906', '5', null, '0', null, '5');
-INSERT INTO `ds_user_statistics` VALUES ('188', '965', '11', null, '0', null, '11');
-INSERT INTO `ds_user_statistics` VALUES ('189', '535', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('190', '487', '9', null, '1', null, '10');
-INSERT INTO `ds_user_statistics` VALUES ('191', '767', '65', null, '21', null, '86');
-INSERT INTO `ds_user_statistics` VALUES ('192', '584', '4', null, '0', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('193', '56', '52', null, '1', null, '53');
-INSERT INTO `ds_user_statistics` VALUES ('194', '932', '43', null, '0', null, '43');
-INSERT INTO `ds_user_statistics` VALUES ('195', '952', '2', null, '1', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('196', '652', '14', null, '0', null, '14');
-INSERT INTO `ds_user_statistics` VALUES ('197', '452', '162', null, '60', null, '222');
-INSERT INTO `ds_user_statistics` VALUES ('198', '1010', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('199', '303', '6', null, '1', null, '7');
-INSERT INTO `ds_user_statistics` VALUES ('200', '927', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('201', '1036', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('202', '455', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('203', '1050', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('204', '682', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('205', '1078', '8', null, '0', null, '8');
-INSERT INTO `ds_user_statistics` VALUES ('206', '320', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('207', '1131', '1', null, '1', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('208', '1203', '4', null, '1', null, '5');
-INSERT INTO `ds_user_statistics` VALUES ('209', '848', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('210', '940', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('211', '1278', '5', null, '6', null, '11');
-INSERT INTO `ds_user_statistics` VALUES ('212', '1122', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('213', '1230', '8', null, '0', null, '8');
-INSERT INTO `ds_user_statistics` VALUES ('214', '1150', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('215', '1089', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('216', '1276', '1', null, '1', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('217', '642', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('218', '886', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('219', '1291', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('220', '677', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('221', '1253', '1', null, '277', null, '278');
-INSERT INTO `ds_user_statistics` VALUES ('222', '812', '1', null, '1', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('223', '1373', '1', null, '4', null, '5');
-INSERT INTO `ds_user_statistics` VALUES ('224', '1363', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('225', '1192', '1', null, '1', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('226', '1186', '11', null, '3', null, '14');
-INSERT INTO `ds_user_statistics` VALUES ('227', '787', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('228', '800', '116', null, '1', null, '117');
-INSERT INTO `ds_user_statistics` VALUES ('229', '1227', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('230', '1419', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('231', '864', '2', null, '4', null, '6');
-INSERT INTO `ds_user_statistics` VALUES ('232', '840', '93', null, '6', null, '99');
-INSERT INTO `ds_user_statistics` VALUES ('233', '1397', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('234', '842', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('235', '214', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('236', '1293', '3', null, '1', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('237', '515', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('238', '1494', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('239', '1439', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('240', '426', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('241', '1437', '8', null, '4', null, '12');
-INSERT INTO `ds_user_statistics` VALUES ('242', '1321', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('243', '1603', '6', null, '10', null, '16');
-INSERT INTO `ds_user_statistics` VALUES ('244', '1411', '4', null, '0', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('245', '1579', '2', null, '4', null, '6');
-INSERT INTO `ds_user_statistics` VALUES ('246', '895', '3', null, '3', null, '6');
-INSERT INTO `ds_user_statistics` VALUES ('247', '1484', '2', null, '9', null, '11');
-INSERT INTO `ds_user_statistics` VALUES ('248', '1008', '14', null, '7', null, '21');
-INSERT INTO `ds_user_statistics` VALUES ('249', '959', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('250', '544', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('251', '657', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('252', '83', '1', null, '1', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('253', '1652', '4', null, '0', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('254', '904', '8', null, '19', null, '27');
-INSERT INTO `ds_user_statistics` VALUES ('255', '1586', '16', null, '54', null, '70');
-INSERT INTO `ds_user_statistics` VALUES ('256', '1460', '277', null, '67', null, '344');
-INSERT INTO `ds_user_statistics` VALUES ('257', '174', '26', null, '0', null, '26');
-INSERT INTO `ds_user_statistics` VALUES ('258', '1252', '21', null, '8', null, '29');
-INSERT INTO `ds_user_statistics` VALUES ('259', '1289', '4', null, '2', null, '6');
-INSERT INTO `ds_user_statistics` VALUES ('260', '1640', '24', null, '5', null, '29');
-INSERT INTO `ds_user_statistics` VALUES ('261', '996', '43', null, '0', null, '43');
-INSERT INTO `ds_user_statistics` VALUES ('262', '731', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('263', '1718', '10', null, '7', null, '17');
-INSERT INTO `ds_user_statistics` VALUES ('264', '1663', '9', null, '5', null, '14');
-INSERT INTO `ds_user_statistics` VALUES ('265', '1839', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('266', '718', '2', null, '2', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('267', '1781', '9', null, '25', null, '34');
-INSERT INTO `ds_user_statistics` VALUES ('268', '1724', '5', null, '6', null, '11');
-INSERT INTO `ds_user_statistics` VALUES ('269', '1649', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('270', '1678', '9', null, '3', null, '12');
-INSERT INTO `ds_user_statistics` VALUES ('271', '1747', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('272', '384', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('273', '666', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('274', '1853', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('275', '1821', '8', null, '0', null, '8');
-INSERT INTO `ds_user_statistics` VALUES ('276', '1189', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('277', '1840', '1', null, '14', null, '15');
-INSERT INTO `ds_user_statistics` VALUES ('278', '1935', '4', null, '0', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('279', '757', '14', null, '3', null, '17');
-INSERT INTO `ds_user_statistics` VALUES ('280', '1732', '6', null, '4', null, '10');
-INSERT INTO `ds_user_statistics` VALUES ('281', '335', '5', null, '5', null, '10');
-INSERT INTO `ds_user_statistics` VALUES ('282', '802', '27', null, '2', null, '29');
-INSERT INTO `ds_user_statistics` VALUES ('283', '1801', '13', null, '12', null, '25');
-INSERT INTO `ds_user_statistics` VALUES ('284', '1876', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('285', '1471', '4', null, '7', null, '11');
-INSERT INTO `ds_user_statistics` VALUES ('286', '1879', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('287', '1971', '14', null, '0', null, '14');
-INSERT INTO `ds_user_statistics` VALUES ('288', '1106', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('289', '1882', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('290', '1368', '35', null, '0', null, '35');
-INSERT INTO `ds_user_statistics` VALUES ('291', '1923', '42', null, '142', null, '184');
-INSERT INTO `ds_user_statistics` VALUES ('292', '1461', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('293', '612', '10', null, '0', null, '10');
-INSERT INTO `ds_user_statistics` VALUES ('294', '1891', '1', null, '9', null, '10');
-INSERT INTO `ds_user_statistics` VALUES ('295', '1919', '17', null, '419', null, '436');
-INSERT INTO `ds_user_statistics` VALUES ('296', '1938', '3', null, '135', null, '138');
-INSERT INTO `ds_user_statistics` VALUES ('297', '2024', '3', null, '41', null, '44');
-INSERT INTO `ds_user_statistics` VALUES ('298', '1783', '69', null, '2', null, '71');
-INSERT INTO `ds_user_statistics` VALUES ('299', '2120', '7', null, '0', null, '7');
-INSERT INTO `ds_user_statistics` VALUES ('300', '2073', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('301', '1671', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('302', '1199', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('303', '2085', '415', null, '26', null, '441');
-INSERT INTO `ds_user_statistics` VALUES ('304', '14', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('305', '2046', '1', null, '25', null, '26');
-INSERT INTO `ds_user_statistics` VALUES ('306', '1542', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('307', '1888', '6', null, '0', null, '6');
-INSERT INTO `ds_user_statistics` VALUES ('308', '1907', '4', null, '29', null, '33');
-INSERT INTO `ds_user_statistics` VALUES ('309', '2141', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('310', '1890', '4', null, '3', null, '7');
-INSERT INTO `ds_user_statistics` VALUES ('311', '1706', '1', null, '1', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('312', '1946', '3', null, '2', null, '5');
-INSERT INTO `ds_user_statistics` VALUES ('313', '1758', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('314', '2182', '91', null, '83', null, '174');
-INSERT INTO `ds_user_statistics` VALUES ('315', '2227', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('316', '1005', '25', null, '0', null, '25');
-INSERT INTO `ds_user_statistics` VALUES ('317', '720', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('318', '2078', '9', null, '6', null, '15');
-INSERT INTO `ds_user_statistics` VALUES ('319', '2294', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('320', '863', '81', null, '1', null, '82');
-INSERT INTO `ds_user_statistics` VALUES ('321', '2258', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('322', '2265', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('323', '2261', '1', null, '8', null, '9');
-INSERT INTO `ds_user_statistics` VALUES ('324', '2097', '134', null, '111', null, '245');
-INSERT INTO `ds_user_statistics` VALUES ('325', '2349', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('326', '2389', '7', null, '3', null, '10');
-INSERT INTO `ds_user_statistics` VALUES ('327', '2413', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('328', '2337', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('329', '218', '10', null, '0', null, '10');
-INSERT INTO `ds_user_statistics` VALUES ('330', '2277', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('331', '2114', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('332', '2456', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('333', '531', '4', null, '0', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('334', '2291', '1', null, '113', null, '114');
-INSERT INTO `ds_user_statistics` VALUES ('335', '2514', '6', null, '0', null, '6');
-INSERT INTO `ds_user_statistics` VALUES ('336', '128', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('337', '2416', '8', null, '4', null, '12');
-INSERT INTO `ds_user_statistics` VALUES ('338', '2232', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('339', '2445', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('340', '1557', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('341', '1703', '15', null, '13', null, '28');
-INSERT INTO `ds_user_statistics` VALUES ('342', '960', '29', null, '0', null, '29');
-INSERT INTO `ds_user_statistics` VALUES ('343', '2153', '64', null, '17', null, '81');
-INSERT INTO `ds_user_statistics` VALUES ('344', '345', '2', null, '2', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('345', '1773', '27', null, '0', null, '27');
-INSERT INTO `ds_user_statistics` VALUES ('346', '2192', '25', null, '31', null, '56');
-INSERT INTO `ds_user_statistics` VALUES ('347', '1309', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('348', '1105', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('349', '2609', '1', null, '14', null, '15');
-INSERT INTO `ds_user_statistics` VALUES ('350', '2525', '11', null, '2', null, '13');
-INSERT INTO `ds_user_statistics` VALUES ('351', '2490', '41', null, '2', null, '43');
-INSERT INTO `ds_user_statistics` VALUES ('352', '2433', '3', null, '3', null, '6');
-INSERT INTO `ds_user_statistics` VALUES ('353', '2640', '1', null, '12', null, '13');
-INSERT INTO `ds_user_statistics` VALUES ('354', '2510', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('355', '2645', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('356', '2424', '17', null, '17', null, '34');
-INSERT INTO `ds_user_statistics` VALUES ('357', '2671', '4', null, '0', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('358', '630', '9', null, '3', null, '12');
-INSERT INTO `ds_user_statistics` VALUES ('359', '2515', '2', null, '3', null, '5');
-INSERT INTO `ds_user_statistics` VALUES ('360', '2592', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('361', '2681', '4', null, '4', null, '8');
-INSERT INTO `ds_user_statistics` VALUES ('362', '2691', '12', null, '37', null, '49');
-INSERT INTO `ds_user_statistics` VALUES ('363', '2647', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('364', '2704', '6', null, '0', null, '6');
-INSERT INTO `ds_user_statistics` VALUES ('365', '2741', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('366', '2637', '14', null, '0', null, '14');
-INSERT INTO `ds_user_statistics` VALUES ('367', '2760', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('368', '1997', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('369', '2428', '3', null, '22', null, '25');
-INSERT INTO `ds_user_statistics` VALUES ('370', '2580', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('371', '2266', '10', null, '26', null, '36');
-INSERT INTO `ds_user_statistics` VALUES ('372', '2780', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('373', '1861', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('374', '2775', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('375', '2810', '6', null, '0', null, '6');
-INSERT INTO `ds_user_statistics` VALUES ('376', '1628', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('377', '2777', '17', null, '9', null, '26');
-INSERT INTO `ds_user_statistics` VALUES ('378', '2839', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('379', '2577', '3', null, '19', null, '22');
-INSERT INTO `ds_user_statistics` VALUES ('380', '2802', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('381', '2497', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('382', '2146', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('383', '2857', '9', null, '0', null, '9');
-INSERT INTO `ds_user_statistics` VALUES ('384', '2863', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('385', '2770', '19', null, '41', null, '60');
-INSERT INTO `ds_user_statistics` VALUES ('386', '2867', '19', null, '35', null, '54');
-INSERT INTO `ds_user_statistics` VALUES ('387', '2900', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('388', '2759', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('389', '2893', '7', null, '0', null, '7');
-INSERT INTO `ds_user_statistics` VALUES ('390', '2944', '1', null, '2', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('391', '1549', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('392', '2943', '4', null, '0', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('393', '2450', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('394', '2993', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('395', '2301', '8', null, '0', null, '8');
-INSERT INTO `ds_user_statistics` VALUES ('396', '2988', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('397', '2156', '67', null, '98', null, '165');
-INSERT INTO `ds_user_statistics` VALUES ('398', '2987', '47', null, '46', null, '93');
-INSERT INTO `ds_user_statistics` VALUES ('399', '1883', '103', null, '166', null, '269');
-INSERT INTO `ds_user_statistics` VALUES ('400', '3053', '2', null, '38', null, '40');
-INSERT INTO `ds_user_statistics` VALUES ('401', '2796', '63', null, '44', null, '107');
-INSERT INTO `ds_user_statistics` VALUES ('402', '3077', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('403', '3097', '1', null, '4', null, '5');
-INSERT INTO `ds_user_statistics` VALUES ('404', '3049', '5', null, '0', null, '5');
-INSERT INTO `ds_user_statistics` VALUES ('405', '3086', '38', null, '78', null, '116');
-INSERT INTO `ds_user_statistics` VALUES ('406', '3118', '5', null, '0', null, '5');
-INSERT INTO `ds_user_statistics` VALUES ('407', '1277', '8', null, '38', null, '46');
-INSERT INTO `ds_user_statistics` VALUES ('408', '1894', '30', null, '0', null, '30');
-INSERT INTO `ds_user_statistics` VALUES ('409', '2530', '113', null, '7', null, '120');
-INSERT INTO `ds_user_statistics` VALUES ('410', '3102', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('411', '3063', '104', null, '4', null, '108');
-INSERT INTO `ds_user_statistics` VALUES ('412', '3158', '3', null, '34', null, '37');
-INSERT INTO `ds_user_statistics` VALUES ('413', '3007', '4', null, '6', null, '10');
-INSERT INTO `ds_user_statistics` VALUES ('414', '3218', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('415', '3125', '4', null, '2', null, '6');
-INSERT INTO `ds_user_statistics` VALUES ('416', '3256', '1', null, '22', null, '23');
-INSERT INTO `ds_user_statistics` VALUES ('417', '3046', '10', null, '11', null, '21');
-INSERT INTO `ds_user_statistics` VALUES ('418', '3079', '4', null, '0', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('419', '3230', '11', null, '0', null, '11');
-INSERT INTO `ds_user_statistics` VALUES ('420', '3191', '2', null, '51', null, '53');
-INSERT INTO `ds_user_statistics` VALUES ('421', '3183', '39', null, '0', null, '39');
-INSERT INTO `ds_user_statistics` VALUES ('422', '2976', '3', null, '7', null, '10');
-INSERT INTO `ds_user_statistics` VALUES ('423', '27', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('424', '2891', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('425', '3288', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('426', '1823', '6', null, '6', null, '12');
-INSERT INTO `ds_user_statistics` VALUES ('427', '3323', '35', null, '57', null, '92');
-INSERT INTO `ds_user_statistics` VALUES ('428', '3306', '6', null, '0', null, '6');
-INSERT INTO `ds_user_statistics` VALUES ('429', '3350', '51', null, '0', null, '51');
-INSERT INTO `ds_user_statistics` VALUES ('430', '3242', '6', null, '4', null, '10');
-INSERT INTO `ds_user_statistics` VALUES ('431', '3368', '3', null, '14', null, '17');
-INSERT INTO `ds_user_statistics` VALUES ('432', '3417', '39', null, '51', null, '90');
-INSERT INTO `ds_user_statistics` VALUES ('433', '3275', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('434', '3453', '4', null, '0', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('435', '3259', '13', null, '0', null, '13');
-INSERT INTO `ds_user_statistics` VALUES ('436', '3399', '14', null, '1', null, '15');
-INSERT INTO `ds_user_statistics` VALUES ('437', '3035', '6', null, '0', null, '6');
-INSERT INTO `ds_user_statistics` VALUES ('438', '3493', '15', null, '11', null, '26');
-INSERT INTO `ds_user_statistics` VALUES ('439', '3553', '194', null, '0', null, '194');
-INSERT INTO `ds_user_statistics` VALUES ('440', '3569', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('441', '3294', '10', null, '0', null, '10');
-INSERT INTO `ds_user_statistics` VALUES ('442', '3241', '17', null, '0', null, '17');
-INSERT INTO `ds_user_statistics` VALUES ('443', '2033', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('444', '2010', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('445', '2774', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('446', '3596', '6', null, '0', null, '6');
-INSERT INTO `ds_user_statistics` VALUES ('447', '3481', '10', null, '1', null, '11');
-INSERT INTO `ds_user_statistics` VALUES ('448', '3709', '1', null, '7', null, '8');
-INSERT INTO `ds_user_statistics` VALUES ('449', '3491', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('450', '3586', '11', null, '0', null, '11');
-INSERT INTO `ds_user_statistics` VALUES ('451', '3655', '19', null, '1', null, '20');
-INSERT INTO `ds_user_statistics` VALUES ('452', '3735', '2', null, '3', null, '5');
-INSERT INTO `ds_user_statistics` VALUES ('453', '3591', '14', null, '16', null, '30');
-INSERT INTO `ds_user_statistics` VALUES ('454', '3716', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('455', '3565', '5', null, '5', null, '10');
-INSERT INTO `ds_user_statistics` VALUES ('456', '3820', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('457', '3791', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('458', '982', '1', null, '12', null, '13');
-INSERT INTO `ds_user_statistics` VALUES ('459', '3821', '5', null, '0', null, '5');
-INSERT INTO `ds_user_statistics` VALUES ('460', '3811', '6', null, '1', null, '7');
-INSERT INTO `ds_user_statistics` VALUES ('461', '3724', '4', null, '0', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('462', '2471', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('463', '3784', '10', null, '4', null, '14');
-INSERT INTO `ds_user_statistics` VALUES ('464', '3891', '2', null, '20', null, '22');
-INSERT INTO `ds_user_statistics` VALUES ('465', '2255', '62', null, '0', null, '62');
-INSERT INTO `ds_user_statistics` VALUES ('466', '1332', '4', null, '0', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('467', '3120', '35', null, '0', null, '35');
-INSERT INTO `ds_user_statistics` VALUES ('468', '1354', '4', null, '0', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('469', '3899', '20', null, '3', null, '23');
-INSERT INTO `ds_user_statistics` VALUES ('470', '3993', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('471', '3122', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('472', '4002', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('473', '3090', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('474', '1900', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('475', '2924', '6', null, '1', null, '7');
-INSERT INTO `ds_user_statistics` VALUES ('476', '3936', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('477', '2239', '12', null, '0', null, '12');
-INSERT INTO `ds_user_statistics` VALUES ('478', '4037', '3', null, '1', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('479', '3402', '113', null, '0', null, '113');
-INSERT INTO `ds_user_statistics` VALUES ('480', '4092', '1', null, '8', null, '9');
-INSERT INTO `ds_user_statistics` VALUES ('481', '4063', '7', null, '0', null, '7');
-INSERT INTO `ds_user_statistics` VALUES ('482', '4073', '3', null, '5', null, '8');
-INSERT INTO `ds_user_statistics` VALUES ('483', '4054', '7', null, '1', null, '8');
-INSERT INTO `ds_user_statistics` VALUES ('484', '4049', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('485', '831', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('486', '2576', '3', null, '1', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('487', '4141', '1', null, '4', null, '5');
-INSERT INTO `ds_user_statistics` VALUES ('488', '3916', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('489', '4185', '4', null, '0', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('490', '4119', '1', null, '3', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('491', '4174', '7', null, '9', null, '16');
-INSERT INTO `ds_user_statistics` VALUES ('492', '4206', '4', null, '0', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('493', '4164', '9', null, '2', null, '11');
-INSERT INTO `ds_user_statistics` VALUES ('494', '3562', '9', null, '2', null, '11');
-INSERT INTO `ds_user_statistics` VALUES ('495', '2018', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('496', '4159', '3', null, '2', null, '5');
-INSERT INTO `ds_user_statistics` VALUES ('497', '4220', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('498', '4179', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('499', '4229', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('500', '4212', '4', null, '1', null, '5');
-INSERT INTO `ds_user_statistics` VALUES ('501', '1171', '2', null, '3', null, '5');
-INSERT INTO `ds_user_statistics` VALUES ('502', '257', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('503', '4236', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('504', '50', '22', null, '0', null, '22');
-INSERT INTO `ds_user_statistics` VALUES ('505', '3626', '12', null, '8', null, '20');
-INSERT INTO `ds_user_statistics` VALUES ('506', '1412', '1', null, '1', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('507', '4297', '9', null, '1', null, '10');
-INSERT INTO `ds_user_statistics` VALUES ('508', '4343', '1', null, '1', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('509', '4111', '8', null, '1', null, '9');
-INSERT INTO `ds_user_statistics` VALUES ('510', '805', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('511', '4424', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('512', '4428', '3', null, '1', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('513', '4290', '9', null, '0', null, '9');
-INSERT INTO `ds_user_statistics` VALUES ('514', '3282', '22', null, '0', null, '22');
-INSERT INTO `ds_user_statistics` VALUES ('515', '238', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('516', '3415', '5', null, '2', null, '7');
-INSERT INTO `ds_user_statistics` VALUES ('517', '4014', '3', null, '2', null, '5');
-INSERT INTO `ds_user_statistics` VALUES ('518', '4444', '39', null, '0', null, '39');
-INSERT INTO `ds_user_statistics` VALUES ('519', '4528', '4', null, '0', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('520', '2013', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('521', '4298', '3', null, '4', null, '7');
-INSERT INTO `ds_user_statistics` VALUES ('522', '2927', '10', null, '0', null, '10');
-INSERT INTO `ds_user_statistics` VALUES ('523', '207', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('524', '565', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('525', '1574', '14', null, '6', null, '20');
-INSERT INTO `ds_user_statistics` VALUES ('526', '4519', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('527', '4730', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('528', '1576', '4', null, '2', null, '6');
-INSERT INTO `ds_user_statistics` VALUES ('529', '4374', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('530', '4244', '3', null, '3', null, '6');
-INSERT INTO `ds_user_statistics` VALUES ('531', '4427', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('532', '593', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('533', '4676', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('534', '4764', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('535', '3807', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('536', '3840', '12', null, '22', null, '34');
-INSERT INTO `ds_user_statistics` VALUES ('537', '3726', '7', null, '0', null, '7');
-INSERT INTO `ds_user_statistics` VALUES ('538', '4099', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('539', '4699', '57', null, '0', null, '57');
-INSERT INTO `ds_user_statistics` VALUES ('540', '2782', '4', null, '0', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('541', '4573', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('542', '4421', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('543', '4383', '7', null, '0', null, '7');
-INSERT INTO `ds_user_statistics` VALUES ('544', '4743', '4', null, '0', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('545', '1498', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('546', '4596', '6', null, '2', null, '8');
-INSERT INTO `ds_user_statistics` VALUES ('547', '1865', '1', null, '2', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('548', '4530', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('549', '3981', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('550', '4863', '9', null, '0', null, '9');
-INSERT INTO `ds_user_statistics` VALUES ('551', '4922', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('552', '1858', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('553', '5004', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('554', '4947', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('555', '4919', '23', null, '0', null, '23');
-INSERT INTO `ds_user_statistics` VALUES ('556', '5003', '8', null, '1', null, '9');
-INSERT INTO `ds_user_statistics` VALUES ('557', '4999', '7', null, '2', null, '9');
-INSERT INTO `ds_user_statistics` VALUES ('558', '4437', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('559', '5078', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('560', '5132', '166', null, '36', null, '202');
-INSERT INTO `ds_user_statistics` VALUES ('561', '4937', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('562', '5135', '6', null, '0', null, '6');
-INSERT INTO `ds_user_statistics` VALUES ('563', '4868', '5', null, '3', null, '8');
-INSERT INTO `ds_user_statistics` VALUES ('564', '1011', '48', null, '3', null, '51');
-INSERT INTO `ds_user_statistics` VALUES ('565', '3033', '11', null, '4', null, '15');
-INSERT INTO `ds_user_statistics` VALUES ('566', '4552', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('567', '4724', '25', null, '7', null, '32');
-INSERT INTO `ds_user_statistics` VALUES ('568', '1609', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('569', '3382', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('570', '4772', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('571', '5116', '3', null, '3', null, '6');
-INSERT INTO `ds_user_statistics` VALUES ('572', '5161', '4', null, '2', null, '6');
-INSERT INTO `ds_user_statistics` VALUES ('573', '945', '3', null, '5', null, '8');
-INSERT INTO `ds_user_statistics` VALUES ('574', '5268', '10', null, '6', null, '16');
-INSERT INTO `ds_user_statistics` VALUES ('575', '4572', '8', null, '0', null, '8');
-INSERT INTO `ds_user_statistics` VALUES ('576', '4892', '2', null, '31', null, '33');
-INSERT INTO `ds_user_statistics` VALUES ('577', '3197', '4', null, '0', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('578', '5316', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('579', '3989', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('580', '1218', '3', null, '1', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('581', '4487', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('582', '5364', '2', null, '4', null, '6');
-INSERT INTO `ds_user_statistics` VALUES ('583', '3390', '3', null, '2', null, '5');
-INSERT INTO `ds_user_statistics` VALUES ('584', '4382', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('585', '1134', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('586', '4387', '43', null, '0', null, '43');
-INSERT INTO `ds_user_statistics` VALUES ('587', '5367', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('588', '3968', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('589', '5376', '1', null, '6', null, '7');
-INSERT INTO `ds_user_statistics` VALUES ('590', '5389', '9', null, '1', null, '10');
-INSERT INTO `ds_user_statistics` VALUES ('591', '5288', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('592', '5498', '6', null, '0', null, '6');
-INSERT INTO `ds_user_statistics` VALUES ('593', '5512', '4', null, '8', null, '12');
-INSERT INTO `ds_user_statistics` VALUES ('594', '5453', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('595', '5475', '7', null, '3', null, '10');
-INSERT INTO `ds_user_statistics` VALUES ('596', '5444', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('597', '4398', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('598', '5291', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('599', '4929', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('600', '2712', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('601', '5391', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('602', '5561', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('603', '5483', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('604', '4588', '2', null, '1', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('605', '5544', '1', null, '2', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('606', '5581', '3', null, '4', null, '7');
-INSERT INTO `ds_user_statistics` VALUES ('607', '4210', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('608', '5185', '5', null, '30', null, '35');
-INSERT INTO `ds_user_statistics` VALUES ('609', '5608', '51', null, '0', null, '51');
-INSERT INTO `ds_user_statistics` VALUES ('610', '5626', '1', null, '126', null, '127');
-INSERT INTO `ds_user_statistics` VALUES ('611', '1559', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('612', '5310', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('613', '253', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('614', '2300', '66', null, '0', null, '66');
-INSERT INTO `ds_user_statistics` VALUES ('615', '5731', '28', null, '85', null, '113');
-INSERT INTO `ds_user_statistics` VALUES ('616', '4592', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('617', '5390', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('618', '5555', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('619', '5701', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('620', '5533', '19', null, '46', null, '65');
-INSERT INTO `ds_user_statistics` VALUES ('621', '5113', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('622', '5477', '21', null, '4', null, '25');
-INSERT INTO `ds_user_statistics` VALUES ('623', '5685', '9', null, '3', null, '12');
-INSERT INTO `ds_user_statistics` VALUES ('624', '5744', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('625', '5530', '4', null, '0', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('626', '5802', '7', null, '7', null, '14');
-INSERT INTO `ds_user_statistics` VALUES ('627', '5798', '11', null, '12', null, '23');
-INSERT INTO `ds_user_statistics` VALUES ('628', '5274', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('629', '5702', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('630', '5549', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('631', '1750', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('632', '3059', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('633', '3454', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('634', '5203', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('635', '1024', '39', null, '0', null, '39');
-INSERT INTO `ds_user_statistics` VALUES ('636', '5536', '10', null, '1', null, '11');
-INSERT INTO `ds_user_statistics` VALUES ('637', '4371', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('638', '5009', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('639', '5616', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('640', '5788', '4', null, '0', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('641', '5881', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('642', '5912', '6', null, '0', null, '6');
-INSERT INTO `ds_user_statistics` VALUES ('643', '5856', '1', null, '1', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('644', '5885', '11', null, '2', null, '13');
-INSERT INTO `ds_user_statistics` VALUES ('645', '5534', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('646', '308', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('647', '5546', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('648', '2737', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('649', '5666', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('650', '5884', '2', null, '2', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('651', '735', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('652', '4877', '32', null, '20', null, '52');
-INSERT INTO `ds_user_statistics` VALUES ('653', '5949', '5', null, '1', null, '6');
-INSERT INTO `ds_user_statistics` VALUES ('654', '1529', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('655', '5740', '126', null, '0', null, '126');
-INSERT INTO `ds_user_statistics` VALUES ('656', '5811', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('657', '4269', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('658', '5758', '2', null, '2', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('659', '6064', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('660', '4932', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('661', '6039', '27', null, '0', null, '27');
-INSERT INTO `ds_user_statistics` VALUES ('662', '5499', '5', null, '0', null, '5');
-INSERT INTO `ds_user_statistics` VALUES ('663', '5898', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('664', '6001', '10', null, '0', null, '10');
-INSERT INTO `ds_user_statistics` VALUES ('665', '5215', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('666', '5568', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('667', '5567', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('668', '2953', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('669', '6169', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('670', '5914', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('671', '4087', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('672', '6150', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('673', '2962', '22', null, '0', null, '22');
-INSERT INTO `ds_user_statistics` VALUES ('674', '5719', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('675', '6044', '22', null, '4', null, '26');
-INSERT INTO `ds_user_statistics` VALUES ('676', '6438', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('677', '2410', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('678', '4709', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('679', '616', '1', null, '1', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('680', '1209', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('681', '6333', '2', null, '19', null, '21');
-INSERT INTO `ds_user_statistics` VALUES ('682', '6337', '6', null, '0', null, '6');
-INSERT INTO `ds_user_statistics` VALUES ('683', '4455', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('684', '6474', '31', null, '49', null, '80');
-INSERT INTO `ds_user_statistics` VALUES ('685', '6248', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('686', '5119', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('687', '6543', '3', null, '8', null, '11');
-INSERT INTO `ds_user_statistics` VALUES ('688', '5107', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('689', '3682', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('690', '6493', '1', null, '3', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('691', '4081', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('692', '6087', '5', null, '0', null, '5');
-INSERT INTO `ds_user_statistics` VALUES ('693', '6615', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('694', '1805', '5', null, '16', null, '21');
-INSERT INTO `ds_user_statistics` VALUES ('695', '5343', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('696', '5362', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('697', '3878', '149', null, '8', null, '157');
-INSERT INTO `ds_user_statistics` VALUES ('698', '6834', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('699', '6193', '26', null, '29', null, '55');
-INSERT INTO `ds_user_statistics` VALUES ('700', '6319', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('701', '6820', '6', null, '4', null, '10');
-INSERT INTO `ds_user_statistics` VALUES ('702', '6844', '2', null, '1', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('703', '6858', '1', null, '1', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('704', '6870', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('705', '5429', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('706', '4457', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('707', '5315', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('708', '6893', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('709', '6903', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('710', '5791', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('711', '5950', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('712', '6867', '1', null, '4', null, '5');
-INSERT INTO `ds_user_statistics` VALUES ('713', '387', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('714', '3517', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('715', '7025', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('716', '6928', '1', null, '4', null, '5');
-INSERT INTO `ds_user_statistics` VALUES ('717', '6855', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('718', '4102', '4', null, '0', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('719', '4798', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('720', '5854', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('721', '2002', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('722', '6942', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('723', '6920', '4', null, '3', null, '7');
-INSERT INTO `ds_user_statistics` VALUES ('724', '6605', '19', null, '0', null, '19');
-INSERT INTO `ds_user_statistics` VALUES ('725', '7095', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('726', '2925', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('727', '3969', '4', null, '0', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('728', '6937', '46', null, '0', null, '46');
-INSERT INTO `ds_user_statistics` VALUES ('729', '7001', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('730', '7056', '4', null, '0', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('731', '3548', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('732', '6904', '13', null, '3', null, '16');
-INSERT INTO `ds_user_statistics` VALUES ('733', '7014', '4', null, '2', null, '6');
-INSERT INTO `ds_user_statistics` VALUES ('734', '5839', '4', null, '0', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('735', '7190', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('736', '7209', '6', null, '5', null, '11');
-INSERT INTO `ds_user_statistics` VALUES ('737', '7252', '1', null, '8', null, '9');
-INSERT INTO `ds_user_statistics` VALUES ('738', '3318', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('739', '492', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('740', '7307', '7', null, '19', null, '26');
-INSERT INTO `ds_user_statistics` VALUES ('741', '7297', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('742', '7181', '1', null, '2', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('743', '7319', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('744', '7329', '8', null, '0', null, '8');
-INSERT INTO `ds_user_statistics` VALUES ('745', '2298', '1', null, '1', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('746', '6728', '3', null, '3', null, '6');
-INSERT INTO `ds_user_statistics` VALUES ('747', '6091', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('748', '7207', '3', null, '1', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('749', '7264', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('750', '797', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('751', '7387', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('752', '7379', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('753', '7321', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('754', '6590', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('755', '6865', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('756', '1283', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('757', '7324', '5', null, '4', null, '9');
-INSERT INTO `ds_user_statistics` VALUES ('758', '7441', '7', null, '0', null, '7');
-INSERT INTO `ds_user_statistics` VALUES ('759', '1225', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('760', '7365', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('761', '7491', '1', null, '10', null, '11');
-INSERT INTO `ds_user_statistics` VALUES ('762', '7538', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('763', '7120', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('764', '7342', '19', null, '0', null, '19');
-INSERT INTO `ds_user_statistics` VALUES ('765', '7450', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('766', '2283', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('767', '7397', '50', null, '0', null, '50');
-INSERT INTO `ds_user_statistics` VALUES ('768', '7485', '53', null, '0', null, '53');
-INSERT INTO `ds_user_statistics` VALUES ('769', '7395', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('770', '5559', '3', null, '2', null, '5');
-INSERT INTO `ds_user_statistics` VALUES ('771', '4671', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('772', '1088', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('773', '7153', '7', null, '0', null, '7');
-INSERT INTO `ds_user_statistics` VALUES ('774', '5655', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('775', '2098', '1', null, '1', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('776', '7706', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('777', '613', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('778', '7853', '14', null, '11', null, '25');
-INSERT INTO `ds_user_statistics` VALUES ('779', '3179', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('780', '7863', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('781', '7899', '4', null, '0', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('782', '7353', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('783', '7769', '3', null, '3', null, '6');
-INSERT INTO `ds_user_statistics` VALUES ('784', '7812', '1', null, '7', null, '8');
-INSERT INTO `ds_user_statistics` VALUES ('785', '7914', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('786', '5418', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('787', '7966', '2', null, '8', null, '10');
-INSERT INTO `ds_user_statistics` VALUES ('788', '944', '3', null, '5', null, '8');
-INSERT INTO `ds_user_statistics` VALUES ('789', '675', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('790', '6007', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('791', '4394', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('792', '1446', '107', null, '0', null, '107');
-INSERT INTO `ds_user_statistics` VALUES ('793', '7997', '7', null, '0', null, '7');
-INSERT INTO `ds_user_statistics` VALUES ('794', '7725', '46', null, '3', null, '49');
-INSERT INTO `ds_user_statistics` VALUES ('795', '7864', '2', null, '28', null, '30');
-INSERT INTO `ds_user_statistics` VALUES ('796', '8060', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('797', '8070', '5', null, '0', null, '5');
-INSERT INTO `ds_user_statistics` VALUES ('798', '8137', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('799', '4865', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('800', '7836', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('801', '8111', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('802', '7651', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('803', '7351', '20', null, '0', null, '20');
-INSERT INTO `ds_user_statistics` VALUES ('804', '8125', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('805', '8162', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('806', '7999', '6', null, '0', null, '6');
-INSERT INTO `ds_user_statistics` VALUES ('807', '8141', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('808', '8132', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('809', '60', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('810', '8179', '2', null, '25', null, '27');
-INSERT INTO `ds_user_statistics` VALUES ('811', '7418', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('812', '8143', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('813', '8072', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('814', '7973', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('815', '8297', '25', null, '1', null, '26');
-INSERT INTO `ds_user_statistics` VALUES ('816', '4553', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('817', '5777', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('818', '6726', '7', null, '1', null, '8');
-INSERT INTO `ds_user_statistics` VALUES ('819', '1001', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('820', '2399', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('821', '8153', '27', null, '0', null, '27');
-INSERT INTO `ds_user_statistics` VALUES ('822', '6978', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('823', '7734', '46', null, '3', null, '49');
-INSERT INTO `ds_user_statistics` VALUES ('824', '5890', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('825', '5436', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('826', '6528', '2', null, '1', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('827', '6103', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('828', '6009', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('829', '8536', '1', null, '1', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('830', '7595', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('831', '8566', '1', null, '1', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('832', '589', '39', null, '0', null, '39');
-INSERT INTO `ds_user_statistics` VALUES ('833', '7962', '5', null, '1', null, '6');
-INSERT INTO `ds_user_statistics` VALUES ('834', '8589', '1', null, '1', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('835', '8620', '1', null, '1', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('836', '7641', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('837', '5025', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('838', '8642', '1', null, '1', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('839', '8611', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('840', '545', '3', null, '2', null, '5');
-INSERT INTO `ds_user_statistics` VALUES ('841', '6677', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('842', '3960', '2', null, '4', null, '6');
-INSERT INTO `ds_user_statistics` VALUES ('843', '8225', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('844', '8551', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('845', '8636', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('846', '3252', '7', null, '0', null, '7');
-INSERT INTO `ds_user_statistics` VALUES ('847', '8721', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('848', '8562', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('849', '8667', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('850', '7652', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('851', '6453', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('852', '8704', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('853', '7391', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('854', '3734', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('855', '8818', '1', null, '12', null, '13');
-INSERT INTO `ds_user_statistics` VALUES ('856', '5766', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('857', '2878', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('858', '8709', '4', null, '0', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('859', '3702', '1', null, '1', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('860', '8809', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('861', '5105', '2', null, '1', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('862', '8665', '1', null, '1', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('863', '8508', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('864', '8553', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('865', '4490', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('866', '9043', '1', null, '1', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('867', '6265', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('868', '8462', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('869', '685', '9', null, '0', null, '9');
-INSERT INTO `ds_user_statistics` VALUES ('870', '3722', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('871', '9009', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('872', '9095', '1', null, '1', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('873', '7887', '37', null, '47', null, '84');
-INSERT INTO `ds_user_statistics` VALUES ('874', '1874', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('875', '8909', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('876', '8871', '11', null, '0', null, '11');
-INSERT INTO `ds_user_statistics` VALUES ('877', '5704', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('878', '2295', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('879', '7327', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('880', '8954', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('881', '9119', '1', null, '3', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('882', '8442', '6', null, '0', null, '6');
-INSERT INTO `ds_user_statistics` VALUES ('883', '9198', '3', null, '9', null, '12');
-INSERT INTO `ds_user_statistics` VALUES ('884', '3308', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('885', '5863', '7', null, '0', null, '7');
-INSERT INTO `ds_user_statistics` VALUES ('886', '8945', '1', null, '64', null, '65');
-INSERT INTO `ds_user_statistics` VALUES ('887', '8841', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('888', '7679', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('889', '3161', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('890', '2963', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('891', '9106', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('892', '6763', '3', null, '8', null, '11');
-INSERT INTO `ds_user_statistics` VALUES ('893', '9244', '1', null, '1', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('894', '7488', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('895', '9250', '64', null, '0', null, '64');
-INSERT INTO `ds_user_statistics` VALUES ('896', '4254', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('897', '9001', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('898', '9309', '1', null, '1', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('899', '6443', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('900', '8629', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('901', '6347', '11', null, '3', null, '14');
-INSERT INTO `ds_user_statistics` VALUES ('902', '7438', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('903', '9328', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('904', '6368', '1', null, '13', null, '14');
-INSERT INTO `ds_user_statistics` VALUES ('905', '9345', '1', null, '1', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('906', '6776', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('907', '9271', '7', null, '0', null, '7');
-INSERT INTO `ds_user_statistics` VALUES ('908', '9360', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('909', '8937', '12', null, '0', null, '12');
-INSERT INTO `ds_user_statistics` VALUES ('910', '9382', '1', null, '1', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('911', '3939', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('912', '6633', '1', null, '1', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('913', '9195', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('914', '7074', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('915', '9431', '1', null, '1', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('916', '8989', '7', null, '2', null, '9');
-INSERT INTO `ds_user_statistics` VALUES ('917', '9468', '1', null, '1', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('918', '240', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('919', '9370', '13', null, '5', null, '18');
-INSERT INTO `ds_user_statistics` VALUES ('920', '8628', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('921', '9406', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('922', '9133', '45', null, '4', null, '49');
-INSERT INTO `ds_user_statistics` VALUES ('923', '2075', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('924', '9516', '1', null, '1', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('925', '1436', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('926', '6288', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('927', '5405', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('928', '9573', '1', null, '1', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('929', '9456', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('930', '9581', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('931', '9580', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('932', '6852', '14', null, '0', null, '14');
-INSERT INTO `ds_user_statistics` VALUES ('933', '9289', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('934', '9650', '1', null, '1', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('935', '9584', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('936', '9562', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('937', '9684', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('938', '8504', '1', null, '1', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('939', '8461', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('940', '5739', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('941', '9377', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('942', '8823', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('943', '9694', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('944', '9651', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('945', '241', '1', null, '2', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('946', '9521', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('947', '6090', '4', null, '0', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('948', '6698', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('949', '9731', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('950', '8429', '2', null, '3', null, '5');
-INSERT INTO `ds_user_statistics` VALUES ('951', '9405', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('952', '9770', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('953', '8630', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('954', '9855', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('955', '9652', '14', null, '12', null, '26');
-INSERT INTO `ds_user_statistics` VALUES ('956', '9783', '2', null, '2', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('957', '9701', '4', null, '0', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('958', '9901', '3', null, '10', null, '13');
-INSERT INTO `ds_user_statistics` VALUES ('959', '9479', '1', null, '23', null, '24');
-INSERT INTO `ds_user_statistics` VALUES ('960', '6038', '31', null, '0', null, '31');
-INSERT INTO `ds_user_statistics` VALUES ('961', '9838', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('962', '7522', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('963', '1450', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('964', '9875', '3', null, '1', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('965', '9935', '2', null, '1', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('966', '9733', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('967', '7920', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('968', '6313', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('969', '9672', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('970', '9948', '23', null, '0', null, '23');
-INSERT INTO `ds_user_statistics` VALUES ('971', '9867', '57', null, '0', null, '57');
-INSERT INTO `ds_user_statistics` VALUES ('972', '3058', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('973', '6269', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('974', '10047', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('975', '251', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('976', '9037', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('977', '10119', '7', null, '1', null, '8');
-INSERT INTO `ds_user_statistics` VALUES ('978', '6774', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('979', '6706', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('980', '3419', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('981', '10055', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('982', '10156', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('983', '10083', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('984', '9825', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('985', '10194', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('986', '6129', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('987', '4784', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('988', '8813', '7', null, '0', null, '7');
-INSERT INTO `ds_user_statistics` VALUES ('989', '10013', '2', null, '2', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('990', '954', '4', null, '9', null, '13');
-INSERT INTO `ds_user_statistics` VALUES ('991', '6786', '3', null, '3', null, '6');
-INSERT INTO `ds_user_statistics` VALUES ('992', '9208', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('993', '7614', '4', null, '0', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('994', '8896', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('995', '10135', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('996', '10247', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('997', '4786', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('998', '9842', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('999', '10323', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1000', '10296', '8', null, '0', null, '8');
-INSERT INTO `ds_user_statistics` VALUES ('1001', '10342', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('1002', '6457', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('1003', '1693', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1004', '10267', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1005', '6676', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1006', '5273', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1007', '8685', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1008', '4481', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1009', '9421', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('1010', '4375', '1', null, '3', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('1011', '10162', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('1012', '7586', '10', null, '0', null, '10');
-INSERT INTO `ds_user_statistics` VALUES ('1013', '6284', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1014', '8752', '2', null, '1', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('1015', '4619', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1016', '9487', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1017', '10480', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('1018', '7154', '3', null, '8', null, '11');
-INSERT INTO `ds_user_statistics` VALUES ('1019', '5829', '5', null, '0', null, '5');
-INSERT INTO `ds_user_statistics` VALUES ('1020', '10535', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('1021', '5986', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1022', '1990', '1', null, '1', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('1023', '10449', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('1024', '7745', '1', null, '1', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('1025', '2513', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1026', '9939', '11', null, '0', null, '11');
-INSERT INTO `ds_user_statistics` VALUES ('1027', '10626', '4', null, '1', null, '5');
-INSERT INTO `ds_user_statistics` VALUES ('1028', '10483', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('1029', '10658', '1', null, '8', null, '9');
-INSERT INTO `ds_user_statistics` VALUES ('1030', '10621', '1', null, '1', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('1031', '10355', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('1032', '818', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1033', '10590', '4', null, '0', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('1034', '10725', '8', null, '0', null, '8');
-INSERT INTO `ds_user_statistics` VALUES ('1035', '4323', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1036', '10735', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1037', '10577', '1', null, '3', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('1038', '10695', '36', null, '0', null, '36');
-INSERT INTO `ds_user_statistics` VALUES ('1039', '10534', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1040', '9740', '8', null, '1', null, '9');
-INSERT INTO `ds_user_statistics` VALUES ('1041', '5194', '5', null, '3', null, '8');
-INSERT INTO `ds_user_statistics` VALUES ('1042', '10686', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1043', '10679', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('1044', '10766', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('1045', '4367', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1046', '849', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('1047', '2264', '3', null, '2', null, '5');
-INSERT INTO `ds_user_statistics` VALUES ('1048', '796', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1049', '10895', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1050', '10955', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1051', '10298', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1052', '10773', '1', null, '1', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('1053', '10936', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1054', '8016', '1', null, '1', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('1055', '10362', '20', null, '0', null, '20');
-INSERT INTO `ds_user_statistics` VALUES ('1056', '5846', '1', null, '1', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('1057', '10431', '1', null, '1', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('1058', '2836', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1059', '11017', '2', null, '1', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('1060', '10830', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('1061', '10559', '2', null, '1', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('1062', '7612', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1063', '10897', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('1064', '9947', '10', null, '0', null, '10');
-INSERT INTO `ds_user_statistics` VALUES ('1065', '10875', '11', null, '0', null, '11');
-INSERT INTO `ds_user_statistics` VALUES ('1066', '11011', '12', null, '10', null, '22');
-INSERT INTO `ds_user_statistics` VALUES ('1067', '1220', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1068', '10956', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1069', '10610', '4', null, '0', null, '4');
-INSERT INTO `ds_user_statistics` VALUES ('1070', '10951', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('1071', '11083', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1072', '7289', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1073', '5076', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('1074', '10461', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1075', '1794', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1076', '11092', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1077', '11120', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1078', '11012', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1079', '11115', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1080', '4152', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1081', '11032', '1', null, '1', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('1082', '8774', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1083', '11172', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('1084', '10933', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1085', '11234', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1086', '11184', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1087', '6070', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1088', '11268', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1089', '2022', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('1090', '7738', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1091', '11241', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('1092', '11069', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1093', '10713', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1094', '5595', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1095', '11391', '3', null, '0', null, '3');
-INSERT INTO `ds_user_statistics` VALUES ('1096', '6524', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1097', '9398', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1098', '11077', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1099', '11160', '2', null, '0', null, '2');
-INSERT INTO `ds_user_statistics` VALUES ('1100', '11079', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1101', '10921', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1102', '5479', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1103', '11351', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1104', '11298', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1105', '8049', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1106', '7911', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1107', '11023', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1108', '11431', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1109', '10660', '1', null, '0', null, '1');
-INSERT INTO `ds_user_statistics` VALUES ('1110', '1', '0', null, '4', null, '504');
-INSERT INTO `ds_user_statistics` VALUES ('1111', '2338', '0', null, '3', null, '3');
+INSERT INTO `ds_user_statistics` VALUES ('1', '1', '3', '0', '1', '0', '4', '68.2000');
+INSERT INTO `ds_user_statistics` VALUES ('2', '2', '1', '0', '0', '0', '1', '2.0000');
+INSERT INTO `ds_user_statistics` VALUES ('3', '29', '0', '0', '0', '0', '0', '18.0000');
+INSERT INTO `ds_user_statistics` VALUES ('4', '30', '0', '0', '0', '0', '0', '2.0000');
 
 -- ----------------------------
 -- Table structure for `ds_xiangmu`

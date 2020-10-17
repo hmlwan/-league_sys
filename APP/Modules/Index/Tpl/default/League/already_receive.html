@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!--申明当前页面的编码集-->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <!--网页标题-->
+    <title>联盟奖励</title>
+    <include file="Public:header"/>
+</head>
+<body style="background-color: #f4f3fb">
+<input type="hidden" name="mui-tab-item" value="5">
+    <header>
+        <div class="header_bt">
+            <div class="header_f"><a href="javascript:history.back()" class="header_fh"></a></div>
+            <div class="header_c">联盟奖励</div>
+        </div>
+        <div style="height: .74rem;clear: both;"></div>
+    </header>
+    <div class="wdtd_page lmjl_page">
+        <div class="nav_title flexbox  spacebetween">
+            <a href="{:U('/index/League/index')}">联盟任务</a>
+            <a href="javascript:;"  class="active">已经领取</a>
+        </div>
+        <if condition="$list">
+            <volist name="list" id="vo">
+                <div class="zt_page">
+                    <div class="zt_con">
+                        <p class="title">
+                            <a><i></i>{$vo.league_info.name}</a>
+                        </p>
+                        <div class="ds_item">
+                            <p>
+                                <span>直推人数：<em>{$vo.league_info.push_level_one_num|default='/'}人</em></span>
+
+                                <span>卖出手续费：<em>
+                                    <if condition="$vo['league_info']['trade_rate']">
+                                         {$vo['league_info']['trade_rate']*100}%
+                                    <else />
+                                        /
+                                    </if>
+                                   </em></span>
+                            </p>
+                            <p>
+                                <span class="tdrs">团队人数：<em>{$vo.league_info.team_num|default='/'}人</em></span>
+                                <span>全网分红：<em>
+                                    <if condition="$vo['league_info']['bonus_rate']">
+                                         {$vo['league_info']['bonus_rate']*100}%
+                                    <else />
+                                        /
+                                    </if></em></span>
+                            </p>
+                            <p>
+                                <span>直推要求：<em>
+                                    <if condition="$vo['league_info']['push_level_one_ask']">
+                                        {$vo.league_info.push_level_one_ask}个{$vo.league_info.push_level_one_name}
+                                    <else />
+                                        /
+                                    </if>
+                                    </em></span>
+                                <span>赠体验矿机：<em>1台</em></span>
+                            </p>
+                            <p>
+                                <span>团队{$vo.league_info.team_buy_ask_1|default='/'}代购买：<em>{$vo.league_info.team_buy_ask_2|default='/'}次矿机</em></span>
+                                <span class="btn no_fuhe" >已经领取</span>
+                            </p>
+                            <p class="tips">每个等级只能领取一次，领取后获得矿机将会开始计时消耗。满足条件后需要手动领取奖励。</p>
+                        </div>
+                    </div>
+                </div>
+            </volist>
+        <else />
+            <div class="show_on_content">
+                <p><img src="/Public/mobile/image/no_data_icon.png" alt=""></p>
+                <p class="show_text">暂无内容</p>
+            </div>
+        </if>
+    </div>
+    <include file="Public:nav"/>
+</body>
+
+<include file="Public:footer"/>
+</html>
+

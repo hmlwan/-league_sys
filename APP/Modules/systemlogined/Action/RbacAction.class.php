@@ -5,6 +5,8 @@
 		public function index(){
 			$user = D('UserRelation')->field('password',true)->relation(true)->select();
 			$this->assign('user',$user);
+            $role = M('role')->select();
+            $this->assign('role',$role);
 			$this->display();
 		}
 
@@ -37,21 +39,22 @@
 			}else{
 				$_POST['password'] = md5($password);
 			}
-			$role = $_POST['role'];
-			unset($_POST['role']);
-	
+			$role_id = $_POST['role_id'];
+//			unset($_POST['role']);
+
 			M('user')->where(array('id'=>$_POST['uid']))->save($_POST);//更新会员信息 
 			//先删除用户所佣有的角色
 			$db = M('role_user');
 			//删除原来的所角色
 			$db->where(array('user_id'=>I('uid')))->delete(); 
 			//添加新的角色
-			foreach ($role as $v) {
+			foreach ($role_id as $v) {
 				$data[] = array(
 						'role_id'=> $v,
 						'user_id'=> I('uid')
 						);
 			}
+
 			$db->addAll($data);
 			//添加日志操作
 			$desc = '编辑ID为'. I('uid') .'的管理员';
@@ -71,15 +74,15 @@
 			//开始删除用户
 			if ($db->where(array('id'=>$id))->delete()) {
 				//开始删除中间表role_user
-				if (M("role_user")->where(array('user_id'=>$id))->delete()) {
-					//添加日志操作
-					$desc = '删除了ID为'. $id .'的用户';
-					write_log(session('username'),'admin',$desc);
-
-					$this->success('删除成功!',U(GROUP_NAME.'/Rbac/index'));
-				}else{
-					$this->error('用户删除成功，但角色关系删除失败!');
-				}
+//				if (M("role_user")->where(array('user_id'=>$id))->delete()) {
+//					//添加日志操作
+//					$desc = '删除了ID为'. $id .'的用户';
+//					write_log(session('username'),'admin',$desc);
+//
+//					$this->success('删除成功!',U(GROUP_NAME.'/Rbac/index'));
+//				}else{
+//					$this->error('用户删除成功，但角色关系删除失败!');
+//				}
 			}else{
 				$this->error('删除失败!');
 			}
@@ -167,6 +170,7 @@
 			$user = array(
 				'username'=>I('username'),
 				'password'=>I('password','','md5'),
+				'role_id'=>I('role_id',''),
 				'logtime'=>time(),
 				'loginip'=>get_client_ip()
 				);
@@ -178,7 +182,7 @@
 			}
 
 			if ($uid = M('user')->add($user)) {
-				foreach ($_POST['role_id'] as $v) {
+				foreach ($_POST['role'] as $v) {
 					$role[] = array(
 						'role_id'=> $v,
 						'user_id'=> $uid

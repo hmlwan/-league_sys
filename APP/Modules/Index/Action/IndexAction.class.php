@@ -16,7 +16,7 @@ Class IndexAction extends CommonAction
   public function index()
   {
       $member = D('Member');
-      $user_id = session('id');
+      $user_id = session('mid');
       $info = $member->getByUserId($user_id);
       $jifen_arr = explode('.',$info['jifen']);
       $lmjifen_arr = explode('.',$info['lmjifen']);
@@ -57,6 +57,12 @@ Class IndexAction extends CommonAction
       $xm_list = $counsel_db->where(array('type_id'=>3))->order('sort desc')->limit(3)->select();
       $xm_count = $counsel_db->where(array('type_id'=>3))->count();
 
+      $is_senior_cert = 0;
+      $member_senior_info = M('member_senior_cert')->where(array('user_id'=>$user_id))->find();
+      if($member_senior_info && $member_senior_info['is_senior_cert'] == 1){
+          $is_senior_cert = 1;
+      }
+
       $data = array(
           'zx_list' => $zx_list,
           'zx_count' => $zx_count,
@@ -64,7 +70,9 @@ Class IndexAction extends CommonAction
           'jys_count' => $jys_count,
           'xm_list' => $xm_list,
           'xm_count' => $xm_count,
+          'is_senior_cert' => $is_senior_cert,
       );
+
       $this->assign($data);
       $this->display();
   }
@@ -73,7 +81,7 @@ Class IndexAction extends CommonAction
   public function bonus_op(){
       $member = D('Member');
 
-      $user_id = session('id');
+      $user_id = session('mid');
       $info = $member->getByUserId($user_id);
       //分红
       $bonus_m = D('Bonus');

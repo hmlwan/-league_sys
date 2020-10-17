@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<title>修改商品</title>
+		<title>添加矿机</title>
 
 		<meta name="description" content="Minimal empty page" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -62,7 +62,7 @@
 						</li>
 
 						<li>
-							<a href="#">果树管理</a>
+							<a href="#">矿机管理</a>
 
 							<span class="divider">
 								<i class="icon-angle-right"></i>
@@ -74,112 +74,93 @@
 				<div id="page-content" class="clearfix">
 					<div class="page-header position-relative">
 						<h1>
-							修改果树
+							添加矿机
 						</h1>
 					</div><!--/.page-header-->
 
 					<div class="row-fluid">
 						<!--PAGE CONTENT BEGINS HERE-->
-							<form class="form-horizontal" name="editProductHandle"  enctype="multipart/form-data" action="{:U(GROUP_NAME .'/Shop/editProductHandle')}" method="post">
-							<input type="hidden"  name="id" value="{$product.id}">
+							<form class="form-horizontal" name="addProductHandle"  enctype="multipart/form-data" action="{:U(GROUP_NAME .'/Shop/editProductHandle')}" method="post">
+								<input type="hidden" name="id" value="{$product.id}">
 								<div class="control-group">
-									<label class="control-label" for="title"> 果树名称</label>
-                                   
+									<label class="control-label" for="product_name"> 矿机名称</label>
+
 									<div class="controls">
-										<input type="text" value="{$product.title}" name="title" id="title" placeholder="" />
+										<input type="text" value="{$product.product_name}" name="product_name" id="product_name" placeholder="" />
 									</div>
 								</div>
 								<div class="control-group">
-									<label class="control-label" for="tid"> 分类</label>
+									<label class="control-label" for="num"> 价格</label>
 
 									<div class="controls">
-									   <select name="tid">
-									     <option value="-1">请选择分类</option>	   
-											<foreach name="types" item="type">
-												<if condition='$product["tid"] eq $type["id"]'>
-													<option value="{$type.id}" selected>{$type.name}</option>
-												<else/>
-													<option value="{$type.id}">{$type.name}</option>
-												</if>
-													
-											</foreach>
-										</select>
+										<input type="text" value="{$product.num}" name="num" id="num" placeholder="" />
 									</div>
 								</div>
 								<div class="control-group">
-									<label class="control-label" for="price"> 单价</label>
+									<label class="control-label" for="sort"> 排序</label>
 
 									<div class="controls">
-										<input type="text" value="{$product.price}" name="price" id="price" placeholder="" />
+										<input type="text" value="{$product.sort}" name="sort" id="sort" placeholder="" />
 									</div>
 								</div>
 								<div class="control-group">
-									<label class="control-label" for="stock"> 库存</label>
+									<label class="control-label" for="energy_num"> 产量</label>
 
 									<div class="controls">
-										<input type="text" value="{$product.stock}" name="stock" id="stock" placeholder="" />
+										<input type="text" value="{$product.energy_num}" name="energy_num" id="energy_num" placeholder="" />/天
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label" for="return_num"> 总收益 </label>
+
+									<div class="controls">
+										<input type="text" value="{$product.return_num}" name="return_num" id="return_num" placeholder="" />
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label" for="bg_color"> 背景色 </label>
+
+									<div class="controls">
+										<input type="text" value="{$product.bg_color}" name="bg_color" id="bg_color" placeholder="" />
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label" for="hold_num"> 最大可持有数量</label>
+
+									<div class="controls">
+										<input type="text" value="{$product.hold_num}" name="hold_num" id="hold_num" placeholder="" />
 									</div>
 								</div>		
 
+
 								<div class="control-group">
-									<label class="control-label" for="yxzq"> 运行周期</label>
+									<label class="control-label" for="period"> 运行周期</label>
 
 									<div class="controls">
-										<input type="text" value="{$product.yxzq}" name="yxzq" id="yxzq" placeholder="" />
-									</div>
-								</div>	
-								<div class="control-group">
-									<label class="control-label" for="shouyi"> 收益</label>
-
-									<div class="controls">
-										<input type="text" value="{$product.shouyi}" name="shouyi" id="shouyi" placeholder="" /> /每小时
-									</div>
-								</div>
-                                
-                                
-                                 <div class="control-group">
-									<label class="control-label" for="xiangou"> 限购</label>
-
-									<div class="controls">
-										<input type="text" value="{$product.xiangou}" name="xiangou" id="xiangou" placeholder="" />
+										<input type="text" value="{$product.period}" name="period" id="period" placeholder="" />
 									</div>
 								</div>	
 
-                                
-                                 <div class="control-group">
-									<label class="control-label" for="is_on"> 上下架</label>
+
+                                <div class="control-group">
+									<label class="control-label" for="status"> 状态</label>
 
 									<div class="controls">
-										
-                                        
-                                          <select name="is_on">
-                                            <option value="0" <if condition="$product['is_on'] eq 0 "> selected="selected"</if>>上架</option>
-                                            <option value="1" <if condition="$product['is_on'] eq 1 "> selected="selected"</if>>下架</option>
+                                          <select name="status">
+											  <option value="1"  <if condition="$product['status'] eq 1">selected</if> >开启</option>
+                                            <option value="0" <if condition="$product['status'] eq 0">selected</if> >关闭</option>
                                          </select>
-                                        
-                                        
-                                        
 									</div>
 								</div>	
-                                
-                                
-                                
-                                	
+                                								
 								<div class="control-group">
-									<label class="control-label" for="price"> 缩略图</label>
+									<label class="control-label" for="logo_url"> 空间logo</label>
 
 									<div class="controls">
-										 <input type="file" name="thumb"> 缩略图大小：300*250 
-									</div>
+										 <input type="file" name="logo_url"> 缩略图大小：300*250
+									</div> 
 								</div>
-								<div class="control-group">
-									<label class="control-label" for="content"> 商品详情</label>
 
-									<div class="controls">
-										<textarea name="content" id="content" style="width:700px; height:300px">{$product.content}</textarea>
-									</div>
-								</div>
-              						
 								<div class="form-actions">
 									<button class="btn btn-info no-border" type="submit">
 										<i class="icon-ok bigger-110"></i>
@@ -240,7 +221,7 @@
                                     
 		<script type="text/javascript">
 		
-		$('form[name="editProductHandle"]').validate({
+		$('form[name="addProductHandle"]').validate({
 					//默认为lable
 					errorElement : 'span',
 					//失败时先移除成功的class
@@ -251,26 +232,22 @@
 					},
 
 					rules:{
-						title:{required : true},
-						tid:{min : 1},
-						price:{required : true},
-						stock:{required : true,min : 1},
-						gonglv:{required : true},
-						yszq:{required : true},
-						shouyi:{required : true},
-						xiangou:{required : true,min : 1},
-						content:{required : true}
+                        product_name:{required : true},
+                        num:{required : true},
+                        energy_num:{required : true},
+                        return_num:{required : true},
+                        bg_color:{required : true},
+                        hold_num:{required : true},
+                        period:{required : true},
 					},
 					messages:{
-						title:{required:'商品名称不能为空'},
-                        tid:{min:'请选择商品分类'},	
-                        price:{required:'商品价格不能为空'},
-						stock:{required:'库存不能为空',min:'库存不能小于等于0'},
-						gonglv:{required:'请填写算力值'},	
-						yszq:{required:'请填写运行周期'},	
-						shouyi:{required:'请填写收益'},
-						xiangou:{required:'请填写限购数量'},	
-                        content:{required:'商品详情不能为空'}				
+                        product_name:{required:'矿机名称不能为空'},
+                        num:{required:'价格不能为空'},
+                        energy_num:{required:'产量不能为空'},
+                        return_num:{required:'请填写总收益'},
+                        bg_color:{required:'请填写背景色'},
+                        hold_num:{required:'请填写最大可持有数量'},
+                        period:{required:'请填写运行周期'},
 					}
 
 				});

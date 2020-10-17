@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!--申明当前页面的编码集-->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <!--网页标题-->
+    <title>云空间</title>
+    <include file="Public:header"/>
+</head>
+<body>
+<header>
+    <div class="header_bt">
+        <div class="header_f"><a href="{:U('/index/product/machine_hire')}" class="header_fh"></a></div>
+        <div class="header_c">云空间</div>
+        <div class="header_r"><a href="{:U('/index/product/newcomer_intro')}">说明</a></div>
+    </div>
+    <div style="height: .74rem;clear: both;"></div>
+</header>
+<input type="hidden" name="mui-tab-item" value="1">
+<div class="dhkj-page">
+    <div class="dhkj_tips">
+        <p><i class="laba_icon"></i><span>当云空间到期后，可持有数量将会相对应恢复。</span></p>
+    </div>
+    <div class="dhkj_header flexbox wrap spacebetween">
+        <span><a href="{:U('/index/product/machine_hire')}">租云空间</a></span>
+        <span><a href="{:U('/index/product/running_machine')}">运行中</a></span>
+        <span  class="active_l">已到期</span>
+    </div>
+    <if condition="$list">
+        <div class="dhkj_content">
+            <volist name="list" id="item">
+                <div class="dhkj_item flexbox column expire_bgk">
+                    <i class="gc">
+                        <img src="{$item.logo_url|default='/Public/mobile/image/gc1.png'}" alt="">
+                    </i>
+                    <div class="first_item">
+                        <span class="title">{$item.product_name}</span>
+                        <span>产量/天：{$item.energy_num|default='0'}</span>
+                    </div>
+                    <div>
+                        <span>兑换数量：{$item.num|default='0'} ANE</span>
+                        <span>可持有：{$item.hold_num|default='0'}台</span>
+                    </div>
+                    <div class="last_item flexbox wrap spacebetween">
+
+                        <p class="flexbox column">
+                            <em>周期产量：{$item.return_num} ANE</em>
+                            <em>运行周期：{$item.period|default='0'}天</em>
+                        </p>
+                        <p>
+                            <span class="op_data">已到期</span>
+                        </p>
+                    </div>
+                </div>
+            </volist>
+        </div>
+    <else />
+        <div class="show_on_content">
+            <p><img src="/Public/mobile/image/no_data_icon.png" alt=""></p>
+            <p class="show_text">暂无内容</p>
+        </div>
+    </if>
+</div>
+
+<include file="Public:nav"/>
+</body>
+<include file="Public:footer"/>

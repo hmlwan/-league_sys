@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!--申明当前页面的编码集-->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <!--网页标题-->
+    <title>联盟奖励</title>
+    <include file="Public:header"/>
+</head>
+<body style="background-color: #f4f3fb">
+    <input type="hidden" name="mui-tab-item" value="5">
+    <header>
+        <div class="header_bt">
+            <div class="header_f"><a href="{:U('/index/member/index')}" class="header_fh"></a></div>
+            <div class="header_c">联盟奖励</div>
+        </div>
+        <div style="height: .74rem;clear: both;"></div>
+    </header>
+    <div class="wdtd_page lmjl_page">
+        <div class="nav_title flexbox  spacebetween">
+            <a href="javascript:;" class="active">联盟任务</a>
+            <a href="{:U('/index/League/already_receive')}">已经领取</a>
+        </div>
+        <div class="zt_page">
+           <div class="zt_con">
+               <p class="title flexbox spacebetween">
+                   <a><i></i>{$mem_league_info.name}</a>
+                   <a href="{:U('/index/member/team')}" class="wdtd">我的团队></a>
+               </p>
+               <div class="zt_data flexbox wrap spacebetween">
+                   <p class="flexbox column">
+                       <span class="num">{$mem_league_info.push_level_one_num}</span>
+                       <span class="text">有效直推</span>
+                   </p>
+                   <span class="line"></span>
+                   <p class="flexbox column">
+                       <span class="num">{$mem_league_info.team_num}</span>
+                       <span class="text">团队数量</span>
+                   </p>
+                   <p class="flexbox column">
+                       <span class="num">{$mem_league_info.push_level_one_ask}</span>
+                       <span class="text">{$mem_league_info.name}(直推)</span>
+                   </p>
+                   <span class="line"></span>
+                   <p class="flexbox column">
+                       <span class="num">{$mem_league_info.next_team_buy_ask_num}</span>
+                       <span class="text">{$mem_league_info.next_team_buy_ask_desc}代团队购买数量</span>
+                   </p>
+               </div>
+           </div>
+        </div>
+        <volist name="list" id="vo">
+            <form id="league-form{$key}" action="{:U('/index/league/update_level')}" method="post" onsubmit="return false">
+                <input type="hidden" name="id" value="{$vo.id}" >
+                <div class="zt_page">
+                    <div class="zt_con">
+                        <p class="title">
+                            <a><i></i>{$vo.name}</a>
+                        </p>
+                        <div class="ds_item">
+                            <p>
+                                <span>直推人数：<em>{$vo.push_level_one_num}人</em></span>
+                                <span>卖出手续费：<em>{$vo['trade_rate']*100}%</em></span>
+                            </p>
+                            <p>
+                                <span class="tdrs">团队人数：<em>{$vo.team_num}人</em></span>
+                                <span>全网分红：<em>{$vo['bonus_rate']*100}%</em></span>
+                            </p>
+                            <p>
+                                <span>直推要求：<em>{$vo.push_level_one_ask}个{$vo.push_level_one_name}</em></span>
+                                <span>赠体验矿机：<em>1台</em></span>
+                            </p>
+                            <p>
+                                <span>团队{$vo.team_buy_ask_1}代购买：<em>{$vo.team_buy_ask_2}次矿机</em></span>
+                                <if condition="$vo['is_reveive'] eq 1">
+                                    <span class="btn" data-form="league-form{$key}" onclick="ajaxPost(this)">升级</span>
+                                <else />
+                                    <span  class="btn no_fuhe">未符合条件</span>
+                                </if>
+                            </p>
+                            <p class="tips">每个等级只能领取一次，领取后获得矿机将会开始计时消耗。满足条件后需要手动领取奖励。</p>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </volist>
+        <!--<div class="zt_page">-->
+            <!--<div class="zt_con">-->
+                <!--<p class="title">-->
+                    <!--<a><i></i>初级大使</a>-->
+                <!--</p>-->
+                <!--<div class="ds_item">-->
+                    <!--<p>-->
+                        <!--<span>直推人数：<em>10人</em></span>-->
+                        <!--<span>卖出手续费：<em>40%</em></span>-->
+                    <!--</p>-->
+                    <!--<p>-->
+                        <!--<span class="tdrs">团队人数：<em>100人</em></span>-->
+                        <!--<span>全网分红：<em>20%</em></span>-->
+                    <!--</p>-->
+                    <!--<p>-->
+                        <!--<span>直推要求：<em>3个体验大使</em></span>-->
+                        <!--<span>赠体验矿机：<em>1台</em></span>-->
+                    <!--</p>-->
+                    <!--<p>-->
+                        <!--<span>团队3代购买：<em>30次矿机</em></span>-->
+
+                        <!--<span class="btn">升级</span>-->
+                    <!--</p>-->
+                    <!--<p class="tips">每个等级只能领取一次，领取后获得矿机将会开始计时消耗。满足条件后需要手动领取奖励。</p>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div class="zt_page">-->
+            <!--<div class="zt_con">-->
+                <!--<p class="title">-->
+                    <!--<a><i></i>中级大使</a>-->
+                <!--</p>-->
+                <!--<div class="ds_item">-->
+                    <!--<p>-->
+                        <!--<span>直推人数：<em>10人</em></span>-->
+                    <!--</p>-->
+                    <!--<p>-->
+                        <!--<span  class="tdrs">团队人数：<em>100人</em></span>-->
+                        <!--<span>生态积分：<em>5000</em></span>-->
+                    <!--</p>-->
+                    <!--<p>-->
+                        <!--<span>直推要求：<em>3个高级会员</em></span>-->
+                    <!--</p>-->
+                    <!--<p>-->
+                        <!--<span>下线2代奖励比例：<em>5%/4%</em></span>-->
+                        <!--<span  class="btn no_fuhe">未符合条件</span>-->
+                    <!--</p>-->
+                    <!--<p class="tips">该等级获得的生态积分为30天有效时间，当符合左边的升级条件后将可以升级</p>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    </div>
+    <include file="Public:nav"/>
+</body>
+
+<include file="Public:footer"/>
+<style>
+    .zt_page .title a:hover{
+        color: #8d6dfc !important;
+    }
+</style>
+</html>
+

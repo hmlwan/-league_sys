@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!--申明当前页面的编码集-->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <!--网页标题-->
+    <title>兑换矿机</title>
+    <include file="Public:header"/>
+</head>
+<body>
+<header>
+    <div class="header_bt">
+        <div class="header_f"><a href="{:U('/index/index/index')}" class="header_fh"></a></div>
+        <div class="header_c">租云空间</div>
+        <div class="header_r"><a href="{:U('/index/product/newcomer_intro')}">说明</a></div>
+    </div>
+    <div style="height: .74rem;clear: both;"></div>
+</header>
+<input type="hidden" name="mui-tab-item" value="1">
+<div class="dhkj-page">
+    <div class="dhkj_tips">
+        <p><i class="laba_icon"></i><span>租用云空间运行周期都是35天、周期收益40%</span></p>
+    </div>
+    <div class="dhkj_header flexbox wrap spacebetween">
+        <span class="active_l">租云空间</span>
+        <span><a href="{:U('/index/product/running_machine')}">运行中</a></span>
+        <span><a href="{:U('/index/product/expired_machine')}">已到期</a></span>
+    </div>
+    <div class="dhkj_content">
+        <volist name="list" id="item">
+            <form id="product-form{$key}" action="{:U('/index/product/do_hire')}" method="post" onsubmit="return false">
+                <input type="hidden" name="product_id" value="{$item.id}">
+                <div class="dhkj_item flexbox column " style="background-color: {$item.bg_color|default='#5991fe'}">
+                    <i class="gc">
+                        <img src="{$item.logo_url|default='/Public/mobile/image/gc1.png'}" alt="">
+                    </i>
+                    <div class="first_item">
+                        <span class="title">{$item.product_name}</span>
+                        <span>产量/天：{$item.energy_num|default='0'}</span>
+                    </div>
+                    <div>
+                        <span>兑换数量：{$item.num|default='0'} ANE </span>
+                        <span>可持有：{$item.hold_num|default='0'}台</span>
+                    </div>
+                    <div class="last_item flexbox wrap spacebetween">
+
+                        <p class="flexbox column">
+                            <em>周期产量：{$item.return_num} ANE </em>
+                            <em>运行周期：{$item.period|default='0'}天</em>
+                        </p>
+                        <p>
+                            <span class="op_data"  data-form="product-form{$key}" onclick="ajaxPost(this)">立即租用</span>
+                        </p>
+                    </div>
+                </div>
+            </form>
+        </volist>
+    </div>
+</div>
+<include file="Public:nav"/>
+</body>
+<include file="Public:footer"/>

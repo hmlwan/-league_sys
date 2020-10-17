@@ -102,7 +102,11 @@
 									<label class="control-label" for="role">所属角色</label>
 									<div class="controls">
 											<foreach name="role" item="v">
-												<input name="role[]" type="checkbox" <foreach name="user.role" item="value"><if condition='$v["name"] eq $value["name"]'>checked="checked"</if></foreach> value="{$v.id}"/><span class="lbl"> {$v.remark}</span>&nbsp;&nbsp;
+												<input name="role_id" type="radio"
+
+													<if condition='$user["role_id"] eq $v["id"]'>checked="checked"</if>
+										 value="{$v.id}"/>
+												<span class="lbl"> {$v.remark}</span>&nbsp;&nbsp;
 											</foreach>	
 									</div>
 								</div>

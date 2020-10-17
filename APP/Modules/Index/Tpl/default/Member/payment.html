@@ -1,0 +1,134 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>收款管理</title>
+    <include file="Public:header"/>
+</head>
+<body  style="background-color: #f7f7f9">
+    <input type="hidden" name="mui-tab-item" value="5">
+    <div class="skgl">
+        <a class="return_btn" href="{:U('/index/member/index')}"></a>
+        <div class="skgl_top">
+            <img src="/Public/mobile/image/sk.png" alt="">
+            <div class="skgl_nav flexbox spacebetween">
+                <a href="{:U('/index/member/payment')}"  <if condition="$type eq ''">class="active"</if> >支付宝 </a>
+                <a href="{:U('/index/member/payment',array('type'=>'wx'))}" <if condition="$type eq 'wx'">class="active"</if>  >微信</a>
+            </div>
+        </div>
+        <form id="payment-form" action="{:U('/index/member/payment_op')}" method="post" onsubmit="return false">
+            <input type="hidden" name="type" value="{$type}">
+            <if condition="$type eq 'wx'">
+                <input type="hidden" name="upload_img" value="{$info.wx_img}">
+                <div class="skgl_con">
+                    <ul class="flexbox column">
+                        <li>
+                            <span>收款方式</span>
+                            <span>微信</span>
+                        </li>
+                        <li>
+                            <span>微信账号</span>
+                            <span><input type="text" name="account" value="{$info.wx}"></span>
+                        </li>
+                        <li class="upload_code">
+                            <if condition="$info['wx_img']">
+                                <img src="{$info.wx_img}" class="upload" style="width: 2.8rem;height: 2.2rem;" alt="">
+                            <else />
+                                <img src="/Public/mobile/image/xiangji.png" class="upload" alt="">
+                            </if>
+                            <span style="display: none"> <input type="file" class="upload_file"></span>
+                            <span style="font-size: .24rem;">上传微信收款码</span>
+                        </li>
+                        <li>
+                            <span>收款姓名</span>
+                            <span>{$info.truename}</span>
+                        </li>
+                    </ul>
+                </div>
+            <else />
+                <input type="hidden" name="upload_img" value="{$info.zfb_img}">
+                <div class="skgl_con">
+                    <ul class="flexbox column">
+                        <li>
+                            <span>收款方式</span>
+                            <span>支付宝</span>
+                        </li>
+                        <li>
+                            <span>支付宝账号</span>
+                            <span><input type="text"  name="account" value="{$info.zfb}"></span>
+                        </li>
+                        <li class="upload_code">
+                            <if condition="$info['zfb_img']">
+                                <img src="{$info.zfb_img}" style="width: 2.8rem;height: 2.2rem;" class="upload" alt="">
+                            <else />
+                                <img src="/Public/mobile/image/xiangji.png" class="upload" alt="">
+                            </if>
+                            <span style="display: none"> <input type="file" class="upload_file"></span>
+                            <span style="font-size: .24rem;">上传支付宝收款码</span>
+                        </li>
+                        <li>
+                            <span>收款姓名</span>
+                            <span>{$info.truename}</span>
+                        </li>
+                    </ul>
+                </div>
+            </if>
+
+            <div class="skgl_btn" data-form="payment-form" onclick="ajaxPost(this)">
+                <img src="/Public/mobile/image/ljxg.png" alt="">
+            </div>
+        </form>
+    </div>
+
+    <include file="Public:nav"/>
+</body>
+<include file="Public:footer"/>
+<script>
+    $(".upload").click(function () {
+        $(".upload_file").click();
+    })
+    $(".upload_file").change(function(){
+        var $this = $(this);
+        var file = this.files[0];
+        if(file.length == 0)
+        {
+            layer.msg('请选择要上传的图片', '')
+            return false;
+        }
+        var data = new FormData();
+        data.append('image',file);
+        data.append('dir_name','cert');
+        // console.log(data);return false;
+        loading(true)
+        $.ajax({
+            url:"/index/common/ajax_upload",
+            type:"post",
+            data:data,
+            processData:false,
+            contentType:false,
+            dataType:'json',
+            success:function(data){
+                loading(false)
+                if(data.result != 0){
+                    var url = data.url;
+                    layer.msg("上传成功！");
+                    $("input[name='upload_img']").val(url);
+                    $('.skgl_con .upload').attr('src',url);
+                    $('.skgl_con .upload').css('width','2.8rem')
+                    $('.skgl_con .upload').css('height','2.2rem')
+                }else{
+                    layer.msg(data.msg);
+                }
+            }
+        })
+    })
+
+</script>
+<style>
+    .skgl_top .skgl_nav a:hover{
+        color:#fff !important;
+    }
+
+</style>
+</html>
+

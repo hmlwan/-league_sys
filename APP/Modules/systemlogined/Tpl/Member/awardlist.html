@@ -62,20 +62,20 @@
 								<i class="icon-angle-right"></i>
 							</span>
 						</li>
-						<li class="active">发放奖励记录</li>
+						<li class="active">发放分红记录</li>
 					</ul><!--.breadcrumb-->
 				</div>
 
 				<div id="page-content" class="clearfix">
 					<div class="page-header position-relative">
-						<h1> 发放奖励记录 </h1>
+						<h1> 发放分红记录 </h1>
 					</div><!--/.page-header-->
 
 					<div class="row-fluid">
 						<!--PAGE CONTENT BEGINS HERE-->
-						<form id="table-searchbar" method="POST" action="{:U(GROUP_NAME.'/member/awardlist')}" class="form-inline well well-small">
-							<div class="row-fluid">&nbsp;&nbsp;用户ID 
-				                <input type="text" class="input-small" name="id" value="{:$_POST['id']}">    
+						<form id="table-searchbar" method="GET" action="{:U(GROUP_NAME.'/member/awardlist')}" class="form-inline well well-small">
+							<div class="row-fluid">&nbsp;&nbsp;联盟等级
+				                <input type="text" class="input-small" name="level" value="{:$_GET['level']}">
 		                        <button type="submit" class="btn btn-small no-border" id="btn-query" type="button"><i class="icon-search"></i>查询</button>
 							</div>
 						</form>
@@ -85,25 +85,22 @@
 								<thead>
 									<tr>
 										<th class="center">序号</th>
-                                        <th>用户ID</th>
-										<th>发放种类</th>
-										<th>发放时间</th>
-										
+                                        <th>等级</th>
+										<th>分红金额</th>
+										<th>分红用户会员数</th>
+										<th>分红时间</th>
+										<th>操作</th>
 									</tr>
 								</thead>
 								<tbody>
 									<foreach name="list" item="v">
 										<tr>
 											<td>{$v.id}</td>
-                                            <td><a target="_blank" href="{:U('Member/inMember',array('u'=>$v['username']))}">{$v.user_id}</a></td>
-
-											<td>
-                                            	<if condition="$v['send_style'] eq 1">
-                                                	<font style="color:#F00;">赠送果树</font>
-                                                </if>
-                                            </td>
+											<td>{$v.level_name}</td>
+											<td>{$v.num}</td>
+											<td>{$v.member_num}</td>
 											<td>{$v.add_time|date='Y-m-d H:i:s',###}</td>
-                                           
+											<td><a href="{:U(GROUP_NAME.'/member/awarddetail',array('bonus_id'=>$v['id']))}">查看详情</a></td>
 										</tr>
 									</foreach>
 									<tr>

@@ -1,0 +1,116 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>实名认证</title>
+    <include file="Public:header"/>
+</head>
+<body class="qgzx_body gjrz_body" style="background-color: #f7f7f9">
+    <header>
+        <div class="header_bt">
+            <div class="header_f"><a href="{:U('/index/member/index')}" class="header_fwh"></a></div>
+            <div class="header_c">实名认证</div>
+            <div class="header_r"><a href="{:U('/index/member/senior_cert_intro')}">认证说明</a></div>
+        </div>
+        <div style="height: .74rem;clear: both;"></div>
+    </header>
+    <input type="hidden" name="mui-tab-item" value="5">
+    <form id="cert-form" action="{:U('/index/member/senior_cert_op')}" method="post" onsubmit="return false">
+        <div class="gjrz_page">
+            <if condition="$cert_info['is_senior_cert'] eq 1">
+                <img class="jdt" src="/Public/mobile/image/shz.png" alt="">
+            <else />
+                <img class="jdt" src="/Public/mobile/image/ysh.png" alt="">
+            </if>
+            <input type="hidden" name="id_card_reverse" value="{$cert_info.id_card_reverse}">
+            <div class="gjrz_info">
+                <ul class="flexbox column">
+                    <li>
+                        <em></em>实名认证信息
+                    </li>
+                    <li>
+                        姓名： <span>{$info.truename}</span>
+                    </li>
+                    <li>
+                        证件信息： <span>{$info.idcard}</span>
+                    </li>
+                    <li>
+                        银行卡账户： <span>{$info.card}</span>
+                    </li>
+                    <li>
+                        银行预留手机号： <span>{$info.username}</span>
+                    </li>
+                </ul>
+                <div class="cert_img">
+                    <div class="scrz upload_btn">
+                        <input type="file" style="display: none" id="upload_file">
+                        <if condition="$cert_info['id_card_reverse']">
+                            <img  src="{$cert_info.id_card_reverse}"  alt="">
+                        <else />
+                            <img  src="/Public/mobile/image/cert_upload.png" alt="">
+                        </if>
+                    </div>
+                </div>
+                <if condition="$cert_info['is_senior_cert'] eq 1">
+                    <div class="tip">已经完成高级认证</div>
+                <elseif condition="$cert_info['is_senior_cert'] eq 2" />
+                    <div class="tip">等待审核预计24小时内完成审核,请耐心等待</div>
+                <elseif condition="$cert_info['is_senior_cert'] eq 3" />
+                    <div class="tip">审核未通过（{$cert_info.cert_fail_reason}）</div>
+                </if>
+                <if condition="($cert_info['is_senior_cert'] neq 1) AND ($cert_info['is_senior_cert'] neq 2)">
+                    <div class="upload_btn">
+                        <button data-form="cert-form" onclick="ajaxPost(this)">提交实名</button>
+                    </div>
+                </if>
+            </div>
+        </div>
+    </form>
+    <include file="Public:nav"/>
+</body>
+<include file="Public:footer"/>
+<style>
+    .gjrz_body .header_bt .header_r a:hover{
+        color:#fff !important;
+    }
+</style>
+<script>
+    $(".upload_btn img").click(function () {
+        $("#upload_file").click();
+    })
+    $("#upload_file").change(function(){
+        var $this = $(this);
+        var file = this.files[0];
+        if(file.length == 0)
+        {
+            layer.msg('请选择要上传的图片', '')
+            return false;
+        }
+        var data = new FormData();
+        data.append('image',file);
+        data.append('dir_name','cert');
+        // console.log(data);return false;
+        loading(true)
+        $.ajax({
+            url:"/index/common/ajax_upload",
+            type:"post",
+            data:data,
+            processData:false,
+            contentType:false,
+            dataType:'json',
+            success:function(data){
+                loading(false)
+                if(data.result != 0){
+                    var url = data.url;
+                    layer.msg("上传成功！");
+                    $("input[name='id_card_reverse']").val(url);
+                    $('.cert_img .scrz').find('img').attr('src',url)
+                }else{
+                    layer.msg(data.msg);
+                }
+            }
+        })
+    })
+</script>
+</html>
+

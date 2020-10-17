@@ -20,24 +20,26 @@ class UserStatisticsModel extends Model
             return false;
         }
         if($this->getByUserId($user_id)){
-            $r = $this->where(array('user_id'=>$user_id))->setInc($field,$num);
+            $w = array('user_id'=>$user_id);
+            $r = $this->where($w)->setInc($field,$num);
             if($field == 'one_sub_cert_nums' ){
-                $r = $this->where(array('user_id'=>$user_id))->setDec('one_sub_nocert_nums',$num);
+                $r = $this->where($w)->setDec('one_sub_nocert_nums',$num);
             }
             if( $field == 'two_sub_cert_nums'){
-                $r = $this->where(array('user_id'=>$user_id))->setDec('two_sub_nocert_nums',$num);
+                $r = $this->where($w)->setDec('two_sub_nocert_nums',$num);
             }
             if($field == 'one_sub_nocert_nums' || $field == 'two_sub_nocert_nums'){
-                $this->where(array('user_id'=>$user_id))->setInc("total_sub_nums",$num);
+                $this->where($w)->setInc("total_sub_nums",$num);
             }
         }else{
             $r = $this->add(array(
                 'user_id' =>  $user_id,
                 'one_sub_cert_nums' => $field == 'one_sub_cert_nums' ? $num : 0,
                 'one_sub_nocert_nums' => $field == 'one_sub_nocert_nums' ? $num : 0,
-                'two_sub_cert_nums' => $field = 'two_sub_cert_nums' ? $num : 0,
-                'two_sub_nocert_nums' => $field = 'two_sub_nocert_nums' ? $num : 0,
-                'total_sub_nums' =>  $num ,
+                'two_sub_cert_nums' => $field == 'two_sub_cert_nums' ? $num : 0,
+                'two_sub_nocert_nums' => $field == 'two_sub_nocert_nums' ? $num : 0,
+                'total_product_receive' => $field == 'total_product_receive' ? $num : 0,
+                'total_sub_nums' =>  $field != 'total_product_receive' ? $num : 0 ,
             ));
         }
         if(false !== $r){

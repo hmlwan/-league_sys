@@ -14,12 +14,15 @@
 				</div><!--#sidebar-shortcuts-->
 
 				<ul class="nav nav-list">
-					<li>
-						<a href="{:U(GROUP_NAME.'/Index/index')}">
-							<i class="icon-dashboard"></i>
-							<span>首页</span>
-						</a>
-					</li>
+					<if condition="(isset($acc[strtoupper(GROUP_NAME)][strtoupper('Member')])) or (!empty($_SESSION[C('ADMIN_AUTH_KEY')]))">
+
+						<li>
+							<a href="{:U(GROUP_NAME.'/Index/index')}">
+								<i class="icon-dashboard"></i>
+								<span>首页</span>
+							</a>
+						</li>
+					</if>
 <if condition="(isset($acc[strtoupper(GROUP_NAME)][strtoupper('Member')])) or (!empty($_SESSION[C('ADMIN_AUTH_KEY')]))">						
 					<li sid="Memberuncheck_Membercheck" <if condition="MODULE_NAME eq 'Member'">class="open"</if>>
 						<a href="#" class="dropdown-toggle">
@@ -64,14 +67,14 @@
 							<li url="Memberuncheck">
 								<a href="{:U(GROUP_NAME.'/Member/gaward')}">
 									<i class="icon-double-angle-right"></i>
-									赠送果树
+									全网分红
 								</a>
 							</li>
 
 							<li url="Memberuncheck">
 								<a href="{:U(GROUP_NAME.'/Member/awardlist')}">
 									<i class="icon-double-angle-right"></i>
-									发放奖励记录
+									发放分红记录
 								</a>
 							</li>
 
@@ -124,7 +127,7 @@
                         <li sid="top"  <if condition="MODULE_NAME eq 'Shop'">class="open"</if>>
 						<a href="#" class="dropdown-toggle">
 							<i class="icon-random"></i>
-							<span>果树管理</span>
+							<span>矿机管理</span>
 
 							<b class="arrow icon-angle-down"></b>
 						</a>
@@ -150,18 +153,43 @@
 							<li url="Memberuncheck">
 								<a href="{:U(GROUP_NAME.'/Shop/lists')}">
 									<i class="icon-double-angle-right"></i>
-									果树列表
-								</a>
-							</li>
-</if>					
-<if condition="(isset($acc[strtoupper(GROUP_NAME)][strtoupper('Shop')][strtoupper('orderlist')])) or (!empty($_SESSION[C('ADMIN_AUTH_KEY')]))">				
-							<li url="Memberuncheck">
-								<a href="{:U(GROUP_NAME.'/Shop/orderlist')}">
-									<i class="icon-double-angle-right"></i>
-									已购果树
+									工厂列表
 								</a>
 							</li>
 </if>
+	<if condition="(isset($acc[strtoupper(GROUP_NAME)][strtoupper('Shop')][strtoupper('orderlist')])) or (!empty($_SESSION[C('ADMIN_AUTH_KEY')]))">
+		<li url="Memberuncheck">
+			<a href="{:U(GROUP_NAME.'/Shop/orderlist')}">
+				<i class="icon-double-angle-right"></i>
+				已购矿机记录
+			</a>
+		</li>
+	</if>
+	<if condition="(isset($acc[strtoupper(GROUP_NAME)][strtoupper('Shop')][strtoupper('order_record')])) or (!empty($_SESSION[C('ADMIN_AUTH_KEY')]))">
+		<li url="Memberuncheck">
+			<a href="{:U(GROUP_NAME.'/Shop/order_record')}">
+				<i class="icon-double-angle-right"></i>
+				领取收益记录
+			</a>
+		</li>
+	</if>
+	<if condition="(isset($acc[strtoupper(GROUP_NAME)][strtoupper('Shop')][strtoupper('league')])) or (!empty($_SESSION[C('ADMIN_AUTH_KEY')]))">
+		<li url="Memberuncheck">
+			<a href="{:U(GROUP_NAME.'/Shop/league')}">
+				<i class="icon-double-angle-right"></i>
+				联盟升级配置
+			</a>
+		</li>
+	</if>
+	<if condition="(isset($acc[strtoupper(GROUP_NAME)][strtoupper('Shop')][strtoupper('league_record')])) or (!empty($_SESSION[C('ADMIN_AUTH_KEY')]))">
+		<li url="Memberuncheck">
+			<a href="{:U(GROUP_NAME.'/Shop/league_record')}">
+				<i class="icon-double-angle-right"></i>
+				会员升级记录
+			</a>
+		</li>
+	</if>
+
 	<if condition="(isset($acc[strtoupper(GROUP_NAME)][strtoupper('Shop')][strtoupper('editshouyi')])) or (!empty($_SESSION[C('ADMIN_AUTH_KEY')]))">
 		<li url="Memberuncheck">
 			<a href="{:U(GROUP_NAME.'/Shop/editshouyi')}">
@@ -170,6 +198,7 @@
 			</a>
 		</li>
 	</if>
+
 	</ul>
 					</li>
 </if>						
@@ -334,27 +363,27 @@
 </if>	
 						
 <if condition="(isset($acc[strtoupper(GROUP_NAME)][strtoupper('Rbac')][strtoupper('role')])) or (!empty($_SESSION[C('ADMIN_AUTH_KEY')]))">							
-						<!--<li url="Rbacrole">-->
-						<!--		<a href="{:U(GROUP_NAME.'/Rbac/role')}">-->
-						<!--			<i class="icon-double-angle-right"></i>-->
-						<!--			角色列表-->
-						<!--		</a>-->
-						<!--	</li>-->
+						<li url="Rbacrole">
+								<a href="{:U(GROUP_NAME.'/Rbac/role')}">
+									<i class="icon-double-angle-right"></i>
+									角色列表
+								</a>
+							</li>
 </if>	
 
 
 
 
-<!--							
-<if condition="(isset($acc[strtoupper(GROUP_NAME)][strtoupper('Rbac')][strtoupper('node')])) or (!empty($_SESSION[C('ADMIN_AUTH_KEY')]))">							
-						 <li url="Rbacnode">
-								<a href="{:U(GROUP_NAME.'/Rbac/node')}">
-									<i class="icon-double-angle-right"></i>
-									节点列表
-								</a>
-							</li> 
+
+<!--<if condition="(isset($acc[strtoupper(GROUP_NAME)][strtoupper('Rbac')][strtoupper('node')])) or (!empty($_SESSION[C('ADMIN_AUTH_KEY')]))">-->
+						 <!--<li url="Rbacnode">-->
+								<!--<a href="{:U(GROUP_NAME.'/Rbac/node')}">-->
+									<!--<i class="icon-double-angle-right"></i>-->
+									<!--节点列表-->
+								<!--</a>-->
+							<!--</li>-->
 </if>
--->				
+
 				
 						</ul>
 						
@@ -399,9 +428,44 @@
 	</ul>
 					</li>
 				
-</if>					
-					
-				</ul><!--/.nav-list-->
+</if>
+		<li sid="Logindex_BakbackUp_SystemcustomSetting"  <if condition="MODULE_NAME eq 'Kefu'">class="open"</if>>
+		<a href="#" class="dropdown-toggle">
+			<i class="icon-text-width"></i>
+			<span>客服管理</span>
+
+			<b class="arrow icon-angle-down"></b>
+		</a>
+
+		<ul class="submenu" <if condition="MODULE_NAME eq 'Kefu'">style="display: block;"</if>>
+			<li url="BakbackUp">
+				<a href="{:U(GROUP_NAME.'/Kefu/index')}">
+					<i class="icon-double-angle-right"></i>
+					审核管理
+				</a>
+			</li>
+
+		</ul>
+		</li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	</ul><!--/.nav-list-->
 
 				<div id="sidebar-collapse">
 					<i class="icon-double-angle-left"></i>

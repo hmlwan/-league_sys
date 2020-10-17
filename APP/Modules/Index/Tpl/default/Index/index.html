@@ -25,6 +25,9 @@
                <i></i>
            </div>
         </div>
+        <div class="wk_img" onclick="senior_cert({$is_senior_cert})">
+            <img src="/Public/mobile/image/bjt99.png" alt="">
+        </div>
         <div class="sy_box sy_rm">
             <p class="sy_rm_con flexbox wrap spacebetween">
                 <a href="{:U('/index/index/contract_address')}">
@@ -180,6 +183,15 @@
                 layer.msg(data.info, '');
             }
         }, 'json')
+    }
+    function senior_cert($is_senior_cert) {
+        if($is_senior_cert == '1'){
+            window.location.href = "/index/product/machine_hire"
+        }else{
+            layer.msg("请先去高级认证", '', function () {
+                window.location.href = "/index/member/senior_cert"
+            })
+        }
     }
 
 </script>
