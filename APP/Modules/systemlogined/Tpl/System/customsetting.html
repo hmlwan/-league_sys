@@ -194,7 +194,15 @@
 
 										<div class="control-group" >
 											<label class="control-label" for="goumai">交易配置</label>
-
+											<div class="controls">
+												是否暂停交易
+												<select id="trade_is_stop" name="trade_is_stop"  class="span3" style=" width: 100px;" >
+													<option value="0" <if condition="$config['trade_is_stop'] eq '0'">selected</if>>否</option>
+													<option value="1" <if condition="$config['trade_is_stop'] eq '1'">selected</if>>是</option>
+												</select>&nbsp;&nbsp;<font color="red">(是否暂停交易 0否 1是)</font>
+												暂停描述 <input type="text" id="trade_stop_reason" name="trade_stop_reason" value="{$config.trade_stop_reason}" class="span3"/>&nbsp;&nbsp;
+											</div>
+											<div style="height: 20px;"></div>
 											<div class="controls">
 												交易时间 开始时间 <input type="text" id="trade_start_receive" name="trade_start_receive" value="{$config.trade_start_receive}" style=" width: 100px;" class="span3"/>&nbsp;&nbsp;
 												结束时间 <input type="text" id="trade_end_receive" name="trade_end_receive" value="{$config.trade_end_receive}" style=" width: 100px;" class="span3"/>&nbsp;&nbsp;

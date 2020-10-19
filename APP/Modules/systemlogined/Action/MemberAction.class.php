@@ -351,8 +351,141 @@
             }
         }
 
+        /*求购订单*/
+        public function order(){
 
+            $order_m = D('Orders'); // 实例化Data数据对象
+            import("@.ORG.Util.Page");// 导入分页类
+            $status = I('status');
+            $mobile = I('mobile');
+            $w = array();
+            $w['o.types'] = $order_m::TYPE_BUY;
+            if ($status) {
+                $w['status'] = $status;
+            }
+            if ($mobile) {
+                $w['username'] = $mobile;
+            }
 
+            $count      = $order_m->alias('o')->where($w)->count();// 查询满足要求的总记录数
+
+            $Page       = new Page($count,30);// 实例化分页类 传入总记录数
+            $list = $order_m->alias('o')
+                ->field('o.*,u.truename,u.username as mobile')
+                ->where($w)
+                ->limit($Page ->firstRow.','.$Page -> listRows)
+                ->join(" LEFT JOIN ds_member u ON u.id = o.user_id")
+                ->order("o.status,6,1,2,3,4,5")
+                ->select();
+            foreach ($list as &$value){
+                $value['status_name'] =  $order_m->getStatus($value['status']);
+            }
+            $show       = $Page->show();// 分页显示输出
+            $this->assign('page',$show);// 赋值分页输出
+            $this->assign('list',$list);// 赋值数据集
+            $this->display(); // 输出模板
+        }
+        /*求购订单*/
+        public function order_detail(){
+
+            $id = I('get.order_id');
+            $order_m = D('Orders');
+            $order = $order_m->getOneById($id);
+            if (!$order) {
+                $this->redirect('order');
+
+            }
+            $order['status_name'] = $order_m->getStatus($order['status']);
+            $userInfo = M('member')->where('id='.$order['user_id'])->find();
+            if ($order['status'] > 1) {
+                $targetUser = M('member')->where('id='.$order['target_user_id'])->find();
+            }
+            $this->assign([
+                'order' => $order,
+                'userInfo' => $userInfo,
+                'targetUser' => isset($targetUser) ? $targetUser : ''
+            ]);
+            $this->display();
+        }
+
+        public function deleteOrder()
+        {
+            $order_m = D('Orders');
+            $id = I('get.order_id');
+
+            $order = $order_m->getOneById($id);
+            if (!$id || !$order) {
+               $this->error('订单不存在');
+            }
+
+            $save_data = array('id'=>$order['id']);
+            if ($order['status'] == 1) {
+                $r = $order_m->saveOrder(
+                    $save_data,
+                    array('status'=>5,'expired_time'=>time())
+                );
+            } else if ($order['status'] == 2 || $order['status'] == 6) {
+                $order_m->saveOrder($save_data,array('status'=>5,'expired_time'=>time()));
+                $re_num = $order['number'] + $order['charge_number'];
+                $uml_m = D("UserAneLog");
+
+                $r = $uml_m->changeUserNum($order['target_user_id'], [
+                    'num' => $re_num,
+                    'remark' => '市场卖出退回'.$re_num.'ANE',
+                    'type' => 9
+                ], 1);
+            }
+
+            if (!$r) {
+                $this->error('取消失败');
+            }
+            $this->success('取消成功');
+
+        }
+
+        /**
+         * @power 交易市场|出售订单@确认收款
+         */
+        public function updateOrder()
+        {
+            $id = I('get.order_id');
+            $order_m = D('Orders');
+            $order = $order_m->getOneById($id);
+            if (!$id || !$order) {
+                $this->error('订单不存在');
+            }
+            if ($order['status'] < $order_m::STATUS_CONFIRM){
+                $this->error('订单还没付款，不能操作');
+            }
+            $result = true;
+            if ($order['status'] == 3 ||$order['status'] == 6 ) {
+                //是否首次交易成功
+//                $trade_succuss_w = array(
+//                    'user_id' => $order['user_id'],
+//                    'status' => 4,
+//                );
+//                $trade_succuss_info = Orders::get($trade_succuss_w);
+
+                $result = $order_m->saveOrder(array('id' => $order['id']),
+                    array(
+                        'status' => 4,
+                        'finish_time' => time())
+                );
+                $number = $order['number'];
+                $uml_m = D("UserAneLog");
+
+                $r = $uml_m->changeUserNum($order['user_id'], [
+                    'num' => $number,
+                    'remark' => '市场买入' . $number . 'ANE',
+                    'type' => 7
+                ], 1);
+            }
+            if(!$result){
+                $this->error('操作失败');
+
+            }
+            $this->success('操作成功');
+        }
     }
 
 ?>

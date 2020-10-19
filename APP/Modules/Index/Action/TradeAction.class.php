@@ -6,11 +6,74 @@
  * Time: 21:21
  */
 class TradeAction extends CommonAction{
+    public function _initialize()
+    {
+        $user_id = session('mid');
+        $member_senior_info = M('member_senior_cert')->where(array('user_id'=>$user_id))->find();
 
+        if($member_senior_info['is_senior_cert'] != 1){
+            $this->redirect('index/member/senior_cert');
+        }
+    }
     /*交易大厅*/
     public function index(){
+        $trade_is_stop = C('trade_is_stop');
+        $trade_stop_reason = C('trade_stop_reason');
+        $trade_start_receive = C('trade_start_receive');
+        $trade_end_receive = C('trade_end_receive');
+        $tips = '';
+        $is_trade = 1;
+        $is_over_time = 0;
+        if($trade_is_stop == 1){
+            $tips = $trade_stop_reason;
+            $is_trade = 0;
+        }
+        if(time()< strtotime($trade_start_receive) || time() > strtotime($trade_end_receive) ){
+            $tips = "交易时间为：{$trade_start_receive}-{$trade_end_receive}";
+            $is_over_time = 1;
+        }
 
+        $user_id = session('mid');
+        $member = D('Member');
+        $info = $member->getByUserId($user_id);
+        $is_skm = 0;
+        if($info['wx'] || $info['zfb']){
+            $is_skm = 1;
+        }
+        $member_league = M('member_league')->where(array('user_id'=>$user_id))->find();
+        $sxf_rate = $member_league['sxf_rate'];
+        $get_k = $this->get_k();
+        $k_line_arr = array_values($get_k);
+
+        $data = array(
+            'is_trade'=> $is_trade,
+            'is_skm'=> $is_skm,
+            'is_over_time'=> $is_over_time,
+            'tips'=> $tips,
+            'sxf_rate'=> $sxf_rate,
+            'k_line_arr'=> $k_line_arr,
+            'times'=> date("Y-m-d",time()),
+        );
+        $this->assign($data);
         $this->display();
+    }
+    public function get_k(){
+        $k_line = M('k_line')->order('add_time desc')->select();
+        $k_line_arr = array();
+        foreach ($k_line as $value){
+            $k_line_arr[date("m-d",$value['add_time'])] = $value['price'];
+        }
+        $k_line_arr = array_slice($k_line_arr,0,7);
+        return $k_line_arr;
+    }
+    public function get_k_data(){
+
+        $k_line_arr = $this->get_k();
+        $data = array(
+            'price'=> array_values($k_line_arr),
+            'date'=> array_keys($k_line_arr),
+        );
+        $this->ajaxReturn($data);
     }
     /*求购中心*/
     public function buy(){
@@ -55,6 +118,12 @@ class TradeAction extends CommonAction{
         $this->assign('trade_price',$trade_price);
         $this->display();
     }
+
+    /*交易协议*/
+    public function agreement(){
+        $this->display();
+    }
+
     /**
      * @param Request $request
      * 买入
@@ -148,6 +217,11 @@ class TradeAction extends CommonAction{
         if(!$order || $orderId <= 0){
             $this->ajaxReturn(array('info' => '未知错误！'));
         }
+        $trade_is_stop = C('trade_is_stop');
+        $trade_stop_reason = C('trade_stop_reason');
+        if($trade_is_stop == 1){
+            $this->ajaxReturn(array('info' => $trade_stop_reason));
+        }
         try {
             $order_m->checkSaleTa($orderId, $user_id);
         } catch (\Exception $e) {
@@ -178,7 +252,7 @@ class TradeAction extends CommonAction{
         $charge_number = set_number($charge_number,2);
 
         //卖ta
-        $result = $order_m->saleTa($orderId, $user_id,$charge_number);
+        $result = $order_m->saleTa($orderId, $user_id,$charge_number,$member_league['sxf_rate']);
         if ($result) {
             //发短信
             $buy_mobile = $user_m->where(array('id'=>$order['user_id']))->getField('username');
@@ -307,8 +381,29 @@ class TradeAction extends CommonAction{
         $user_id = session('mid');
         $order_m = D("Orders");
         $finish = $order_m->getFinishList($user_id);
-        $this->assign('list',$finish);
-        $this->display();
+
+        $limit = I('get.limit',7);
+        $page = I('get.p', 1);
+
+        $p = ($page-1)*$limit;
+        $finish1 = array_slice($finish,$p,$limit);
+
+        if($finish1){
+            foreach ($finish1 as &$value){
+                $value['sk_way_arr'] = explode(',',$value['sk_way']);
+            }
+        }
+        $this->assign('list', $finish1);
+        if(IS_AJAX){
+            $data['content'] = $this->fetch('ajax_finish');
+            $data['count'] = array(
+                'totalRows'=> count($finish),
+                'listRows'=> 7,
+            );
+            $this->ajaxReturn($data);
+        }else{
+            $this->display();
+        }
     }
     /**
      * 买家详情
@@ -433,6 +528,8 @@ class TradeAction extends CommonAction{
         );
         $r = $order_m->saveOrder(array('id'=>$id),$save_data);
         if ($r) {
+            //恶意不付款清0
+            M("member")->where(array('id'=>$user_id))->save(array('trade_refuse_pay_times'=>0));
             $this->ajaxReturn(array('info' => '付款成功！', 'result' => 1));
         }
         $this->ajaxReturn(array('info' => '操作失败，请联系管理员处理！'));
@@ -510,6 +607,7 @@ class TradeAction extends CommonAction{
             'status' => $order_m::STATUS_COMPLAIN,
             'report_time' => time(),
         );
+
         $r = $order_m->saveOrder(array('id'=>$id),$save_data);
 
         if ($r) {

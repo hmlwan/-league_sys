@@ -16,8 +16,8 @@
 <div class="fbdd-page">
     <input type="hidden" name="mui-tab-item" value="4">
     <div class="fbdd-qhzt flexbox spacebetween">
-        <a href="javascript:;"  class="active"><span>进行中</span></a>
-        <a href="{:U('/index/trade/finish')}" style="margin-right: 8%"><span >已完成</span></a>
+        <a href="{:U('/index/trade/record')}" ><span>进行中</span></a>
+        <a href="javascript:;"   class="active" style="margin-right: 8%"><span >已完成</span></a>
     </div>
     <if condition="$list">
         <div class="flow_load">
@@ -36,7 +36,7 @@
 </body>
 <include file="Public:footer"/>
 <script>
-    lazy_loading('/index/trade/record');
+    lazy_loading('/index/trade/finish');
 </script>
 </html>
 

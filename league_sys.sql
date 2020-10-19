@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50553
 File Encoding         : 65001
 
-Date: 2020-10-16 17:51:30
+Date: 2020-10-19 20:23:52
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -532,6 +532,30 @@ INSERT INTO `ds_jinbidetail` VALUES ('15', '0', '2', '13888888888', '1550000000'
 INSERT INTO `ds_jinbidetail` VALUES ('16', '0', '0', null, '18888888888', '50000.00000', '0.00000', '50000.00000', '1592668110', '', '0', '平台充值', '1');
 
 -- ----------------------------
+-- Table structure for `ds_k_line`
+-- ----------------------------
+DROP TABLE IF EXISTS `ds_k_line`;
+CREATE TABLE `ds_k_line` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `price` decimal(16,2) DEFAULT '0.00' COMMENT '修改后的价格',
+  `add_time` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of ds_k_line
+-- ----------------------------
+INSERT INTO `ds_k_line` VALUES ('1', '1.57', '1603103171');
+INSERT INTO `ds_k_line` VALUES ('2', '2.36', '1603020869');
+INSERT INTO `ds_k_line` VALUES ('3', '1.57', '1602934469');
+INSERT INTO `ds_k_line` VALUES ('4', '8.26', '1602848069');
+INSERT INTO `ds_k_line` VALUES ('5', '5.68', '1602588869');
+INSERT INTO `ds_k_line` VALUES ('6', '0.01', '1602502469');
+INSERT INTO `ds_k_line` VALUES ('7', '1.00', '1602416069');
+INSERT INTO `ds_k_line` VALUES ('8', '2.00', '1602329669');
+INSERT INTO `ds_k_line` VALUES ('9', '3.01', '1602329669');
+
+-- ----------------------------
 -- Table structure for `ds_league_bonus`
 -- ----------------------------
 DROP TABLE IF EXISTS `ds_league_bonus`;
@@ -610,7 +634,7 @@ CREATE TABLE `ds_log` (
   `logiplocal` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `logtype` (`logtype`)
-) ENGINE=MyISAM AUTO_INCREMENT=141 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=68 ROW_FORMAT=DYNAMIC COMMENT='系统操作日志';
+) ENGINE=MyISAM AUTO_INCREMENT=146 DEFAULT CHARSET=utf8 AVG_ROW_LENGTH=68 ROW_FORMAT=DYNAMIC COMMENT='系统操作日志';
 
 -- ----------------------------
 -- Records of ds_log
@@ -755,6 +779,11 @@ INSERT INTO `ds_log` VALUES ('137', '1602645207', '', '127.0.0.1', '会员退出
 INSERT INTO `ds_log` VALUES ('138', '1602820122', '', '127.0.0.1', '会员退出', 'member', '本机地址');
 INSERT INTO `ds_log` VALUES ('139', '1602833229', '', '127.0.0.1', '会员退出', 'member', '本机地址');
 INSERT INTO `ds_log` VALUES ('140', '1602839632', '', '127.0.0.1', '会员退出', 'member', '本机地址');
+INSERT INTO `ds_log` VALUES ('141', '1602842049', 'admin', '127.0.0.1', '管理员admin登出', 'admin', '本机地址');
+INSERT INTO `ds_log` VALUES ('142', '1602842081', 'admin', '127.0.0.1', '管理员[admin]登录', 'admin', '本机地址');
+INSERT INTO `ds_log` VALUES ('143', '1602920912', '', '127.0.0.1', '会员退出', 'member', '本机地址');
+INSERT INTO `ds_log` VALUES ('144', '1602921001', '', '127.0.0.1', '会员退出', 'member', '本机地址');
+INSERT INTO `ds_log` VALUES ('145', '1603077296', 'admin', '127.0.0.1', '管理员[admin]登录', 'admin', '本机地址');
 
 -- ----------------------------
 -- Table structure for `ds_member`
@@ -781,7 +810,7 @@ CREATE TABLE `ds_member` (
   `lmjifen` decimal(20,4) unsigned DEFAULT '0.0000' COMMENT '联盟积分',
   `truename` varchar(255) DEFAULT NULL COMMENT '真实姓名',
   `mobile` varchar(20) DEFAULT NULL COMMENT '手机',
-  `logintime` int(10) DEFAULT '0' COMMENT '本次登录时间',
+  `logintime` int(11) DEFAULT '0' COMMENT '本次登录时间',
   `gamecount` int(10) DEFAULT '0',
   `robotcount` int(10) DEFAULT '0' COMMENT '机器人总数',
   `logincount` int(10) DEFAULT '0' COMMENT '登录总次数',
@@ -798,6 +827,8 @@ CREATE TABLE `ds_member` (
   `zfb_img` varchar(100) DEFAULT NULL COMMENT '支付宝收款码',
   `wx_img` varchar(100) DEFAULT NULL COMMENT '微信收款码',
   `ane` decimal(20,2) DEFAULT '0.00' COMMENT 'ANE ',
+  `order_status` tinyint(10) DEFAULT '1' COMMENT '会员订单状态 1 正常 -1禁用',
+  `trade_refuse_pay_times` tinyint(10) DEFAULT '0' COMMENT '恶意次数',
   PRIMARY KEY (`id`,`parentcount`),
   KEY `username` (`username`),
   KEY `parent` (`parent`)
@@ -806,12 +837,12 @@ CREATE TABLE `ds_member` (
 -- ----------------------------
 -- Records of ds_member
 -- ----------------------------
-INSERT INTO `ds_member` VALUES ('2', '15888888888', 'e10adc3949ba59abbe56e057f20f883e', '0', 'UGL289', '', '美国', '1584031737', '18888888888', '1', '', '103.85', null, '123123', '0.00', '1', '会员', '310812.0000', '初始账户2', null, '1584096019', '1', '0', '10', '1|1|', '1602820122', null, null, null, 'e10adc3949ba59abbe56e057f20f883e', '1', '123123', null, null, null, null, '6.00');
-INSERT INTO `ds_member` VALUES ('3', '13888888888', 'e10adc3949ba59abbe56e057f20f883e', '0', 'YKB572', '', '美国', '1584031868', '15888888888', '2', '', '0.00', null, '', '0.00', '0', '会员', '0.0000', '初始账号3', null, '1584123247', '0', '3', '11', '1|1|26|', '1584125648', null, null, null, null, '-1', null, null, null, null, null, null);
-INSERT INTO `ds_member` VALUES ('1', '18888888888', 'e10adc3949ba59abbe56e057f20f883e', '0', 'WSB903', '', '美国', '1584030607', '1550000000', '0', '', '13.30', null, '', '0.00', '1', '会员', '71308.6800', '初始账户1', null, '1601020191', '2', '0', '30', '1|', '1602838547', null, null, null, null, '1', null, '13166666666', '15222222223', '/Public/Uploads/cert/1602432304373.jpg', '/Public/Uploads/cert/1602432342894.jpg', '639.20');
-INSERT INTO `ds_member` VALUES ('28', '15179811533', 'e10adc3949ba59abbe56e057f20f883e', '1', 'BAX256', '', '本机地址', '1602830796', '18888888888', '1', '', '100.00', null, '123123123', '0.00', '0', '张三', '0.0000', '张三', null, '0', '0', '0', '1', '1|1|', '1602833229', null, null, null, 'e10adc3949ba59abbe56e057f20f883e', '1', '', null, null, null, null, '0.00');
-INSERT INTO `ds_member` VALUES ('29', '15179811534', 'e10adc3949ba59abbe56e057f20f883e', '1', 'DUS403', '', '本机地址', '1602833496', '18888888888', '1', '', '100.00', null, '123123123123', '0.00', '0', '李四', '0.0000', '王五', null, '0', '0', '0', '1', '1|1|', '1602839632', null, null, null, 'e10adc3949ba59abbe56e057f20f883e', '1', '', null, null, null, null, '68.00');
-INSERT INTO `ds_member` VALUES ('30', '15179811535', 'e10adc3949ba59abbe56e057f20f883e', '1', 'THK710', '', '本机地址', '1602839699', '15888888888', '2', '', '100.00', null, '1231231231231231', '0.00', '0', '赵七', '0.0000', '赵七', null, '0', '0', '0', '1', '1|1|2|', '1602839854', null, null, null, 'e10adc3949ba59abbe56e057f20f883e', '1', '', null, null, null, null, '98.00');
+INSERT INTO `ds_member` VALUES ('2', '15888888888', 'e10adc3949ba59abbe56e057f20f883e', '0', 'UGL289', '', '美国', '1584031737', '18888888888', '1', '', '103.85', null, '123123', '0.00', '1', '会员', '310812.0000', '初始账户2', null, '1584096019', '1', '0', '10', '1|1|', '1602820122', null, null, null, 'e10adc3949ba59abbe56e057f20f883e', '1', '123123', null, null, null, null, '6.00', '1', '0');
+INSERT INTO `ds_member` VALUES ('3', '13888888888', 'e10adc3949ba59abbe56e057f20f883e', '0', 'YKB572', '', '美国', '1584031868', '15888888888', '2', '', '0.00', null, '', '0.00', '0', '会员', '0.0000', '初始账号3', null, '1584123247', '0', '3', '11', '1|1|26|', '1584125648', null, null, null, null, '-1', null, null, null, null, null, null, '1', '0');
+INSERT INTO `ds_member` VALUES ('1', '18888888888', 'e10adc3949ba59abbe56e057f20f883e', '0', 'WSB903', '', '美国', '1584030607', '1550000000', '0', '', '13.30', null, '', '0.00', '1', '会员', '71308.6800', '初始账户1', null, '1603075300', '2', '0', '33', '1|', '1603100458', null, null, null, null, '1', null, '13166666666', '1111111111111111', '/Public/Uploads/cert/1602432304373.jpg', '/Public/Uploads/cert/1602909529936.png', '639.20', '1', '0');
+INSERT INTO `ds_member` VALUES ('28', '15179811533', 'e10adc3949ba59abbe56e057f20f883e', '1', 'BAX256', '', '本机地址', '1602830796', '18888888888', '1', '', '100.00', null, '123123123', '0.00', '0', '张三', '0.0000', '张三', null, '0', '0', '0', '1', '1|1|', '1602833229', null, null, null, 'e10adc3949ba59abbe56e057f20f883e', '1', '', null, null, null, null, '0.00', '1', '0');
+INSERT INTO `ds_member` VALUES ('29', '15179811534', 'e10adc3949ba59abbe56e057f20f883e', '1', 'DUS403', '', '本机地址', '1602833496', '18888888888', '1', '', '100.00', null, '123123123123', '0.00', '0', '李四', '0.0000', '王五', null, '0', '0', '0', '1', '1|1|', '1602839632', null, null, null, 'e10adc3949ba59abbe56e057f20f883e', '1', '', null, null, null, null, '68.00', '1', '0');
+INSERT INTO `ds_member` VALUES ('30', '15179811535', 'e10adc3949ba59abbe56e057f20f883e', '1', 'THK710', '', '本机地址', '1602839699', '15888888888', '2', '', '100.00', null, '1231231231231231', '0.00', '0', '赵七', '0.0000', '赵七', null, '1603075318', '0', '0', '3', '1|1|2|', '1603110207', null, null, null, 'e10adc3949ba59abbe56e057f20f883e', '1', '', '111111', null, '/Public/Uploads/cert/1602923096981.png', null, '98.00', '1', '0');
 
 -- ----------------------------
 -- Table structure for `ds_member_award_log`
@@ -847,16 +878,17 @@ CREATE TABLE `ds_member_league` (
   `team_buy_ask_4` varchar(50) DEFAULT '0' COMMENT '下个等级团队购买情况(4代内)',
   `team_buy_ask_5` varchar(50) DEFAULT '0' COMMENT '下个等级团队购买情况(5代内)',
   `team_buy_ask_6` varchar(50) DEFAULT '0' COMMENT '下个等级团队购买情况(6代内)',
+  `sxf_rate` decimal(10,2) DEFAULT '0.00' COMMENT '手续费',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of ds_member_league
 -- ----------------------------
-INSERT INTO `ds_member_league` VALUES ('1', '1', '2', '2', '3', '0', '2', '0', '0', '0');
-INSERT INTO `ds_member_league` VALUES ('2', '2', '1', '1', '1', '1', '2', '0', '0', '0');
-INSERT INTO `ds_member_league` VALUES ('3', '29', '1', '0', '0', '0', '0', '0', '0', '0');
-INSERT INTO `ds_member_league` VALUES ('4', '30', '1', '0', '0', '0', '0', '0', '0', '0');
+INSERT INTO `ds_member_league` VALUES ('1', '1', '2', '2', '3', '0', '2', '0', '0', '0', '0.20');
+INSERT INTO `ds_member_league` VALUES ('2', '2', '1', '1', '1', '1', '2', '0', '0', '0', '0.10');
+INSERT INTO `ds_member_league` VALUES ('3', '29', '1', '0', '0', '0', '0', '0', '0', '0', '0.10');
+INSERT INTO `ds_member_league` VALUES ('4', '30', '1', '0', '0', '0', '0', '0', '0', '0', '0.10');
 
 -- ----------------------------
 -- Table structure for `ds_member_league_receive`
@@ -1122,6 +1154,45 @@ INSERT INTO `ds_order` VALUES ('2', '13888888888', '15888888888', '3', '沉香',
 INSERT INTO `ds_order` VALUES ('3', '13888888888', '15888888888', '3', '沉香', '0.00', '1000.00', '2020-03-14 01:26:52', '1584120412', '1', '3', '/Public/Uploads/20200313/5e6b31dbc9cb7.png', '2160', '0.74500000', 'C142041286', '0.00000000');
 
 -- ----------------------------
+-- Table structure for `ds_orders`
+-- ----------------------------
+DROP TABLE IF EXISTS `ds_orders`;
+CREATE TABLE `ds_orders` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `order_number` varchar(30) NOT NULL COMMENT 'orderid',
+  `user_id` int(11) unsigned NOT NULL COMMENT '用户ID',
+  `number` int(11) unsigned NOT NULL COMMENT '数量',
+  `price` decimal(12,2) unsigned NOT NULL COMMENT '单价',
+  `create_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '发布时间',
+  `target_user_id` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '对方ID',
+  `match_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '匹配时间',
+  `image` varchar(200) DEFAULT NULL COMMENT '图片',
+  `pay_time` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '支付时间',
+  `finish_time` int(11) unsigned DEFAULT '0' COMMENT '完成时间',
+  `status` tinyint(3) unsigned NOT NULL DEFAULT '1' COMMENT '状态',
+  `charge_number` decimal(12,2) unsigned NOT NULL DEFAULT '0.00' COMMENT '手续费',
+  `is_comment` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '是否评论',
+  `types` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '1:买入,2:卖出',
+  `total_price` decimal(12,2) unsigned NOT NULL COMMENT '总的价格。美元',
+  `total_price_china` decimal(12,2) unsigned NOT NULL COMMENT '总的价格。人民币',
+  `report_time` int(11) DEFAULT NULL COMMENT '举报时间',
+  `expired_time` int(11) DEFAULT NULL COMMENT '失效时间',
+  `sk_way` varchar(50) DEFAULT NULL COMMENT '收款方式 wx 微信 zfb 支付宝 ',
+  `charge_rate` decimal(16,2) DEFAULT '0.00' COMMENT '手续费比例',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `order_number` (`order_number`),
+  KEY `user_id` (`user_id`),
+  KEY `target_user_id` (`target_user_id`),
+  KEY `status` (`status`),
+  KEY `types` (`types`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of ds_orders
+-- ----------------------------
+INSERT INTO `ds_orders` VALUES ('1', '202010171123822', '1', '3', '2.87', '1602909502', '30', '1602923113', '/Public/Uploads/trade/1602939588696.png', '1602939600', '0', '5', '0.30', '0', '1', '8.61', '0.00', '1603098180', '1603099596', 'zfb,wx', '0.10');
+
+-- ----------------------------
 -- Table structure for `ds_pay`
 -- ----------------------------
 DROP TABLE IF EXISTS `ds_pay`;
@@ -1330,11 +1401,8 @@ CREATE TABLE `ds_session` (
 -- ----------------------------
 -- Records of ds_session
 -- ----------------------------
-INSERT INTO `ds_session` VALUES ('sbkn4tojisi2uu7qe9ddes9944', '1602928263', 0x7665726966797C733A33323A223538366639623430333565353939376637373633356231336363303439383463223B69647C733A313A2231223B4B4546555F524F4C455F49447C623A313B5F4143434553535F4C4953547C613A303A7B7D39636230383230643666616137333130363235623762356133303231643034367C623A303B61646D696E757365726E616D657C733A353A2261646D696E223B6C6F6774696D657C733A31393A22323032302D31302D31312031393A30313A3030223B6C6F67696E69707C733A393A223132372E302E302E31223B737570657261646D696E7C623A313B6D69647C733A313A2231223B757365726E616D657C733A31313A223138383838383838383838223B6D656D6265727C733A31313A226D656D6265726C6F67696E223B);
-INSERT INTO `ds_session` VALUES ('b9t4c4nco54270b8tgu3mc1an1', '1602917131', '');
-INSERT INTO `ds_session` VALUES ('otqkg9m4hiri7u746nml982g83', '1602917139', '');
-INSERT INTO `ds_session` VALUES ('oufvqi2t4jq16kv9ckai3366h6', '1602917140', '');
-INSERT INTO `ds_session` VALUES ('v68d01rf0up0rabeaqhfov6mn1', '1602927427', 0x6D69647C733A323A223330223B757365726E616D657C733A31313A223135313739383131353335223B6D656D6265727C733A31313A226D656D6265726C6F67696E223B);
+INSERT INTO `ds_session` VALUES ('sbkn4tojisi2uu7qe9ddes9944', '1603196611', 0x6D69647C733A323A223330223B757365726E616D657C733A31313A223135313739383131353335223B6D656D6265727C733A31313A226D656D6265726C6F67696E223B7665726966797C733A33323A223433646434396234666462396265646536353365393434363866663864663165223B69647C733A313A2231223B61646D696E757365726E616D657C733A353A2261646D696E223B6C6F6774696D657C733A31393A22323032302D31302D31362031373A35343A3431223B6C6F67696E69707C733A393A223132372E302E302E31223B737570657261646D696E7C623A313B);
+INSERT INTO `ds_session` VALUES ('lb5dgcp1dh0bp1mgrungkvdta0', '1603186859', 0x6D69647C733A313A2231223B757365726E616D657C733A31313A223138383838383838383838223B6D656D6265727C733A31313A226D656D6265726C6F67696E223B);
 
 -- ----------------------------
 -- Table structure for `ds_sms_log`
@@ -1414,7 +1482,7 @@ CREATE TABLE `ds_user` (
 -- ----------------------------
 -- Records of ds_user
 -- ----------------------------
-INSERT INTO `ds_user` VALUES ('1', 'admin', 'e10adc3949ba59abbe56e057f20f883e', '1602425453', '127.0.0.1', '0', '0');
+INSERT INTO `ds_user` VALUES ('1', 'admin', 'e10adc3949ba59abbe56e057f20f883e', '1603077296', '127.0.0.1', '0', '0');
 INSERT INTO `ds_user` VALUES ('3', 'kefu123', 'e10adc3949ba59abbe56e057f20f883e', '1602216168', '127.0.0.1', '0', '1');
 INSERT INTO `ds_user` VALUES ('6', 'kefu2', 'e10adc3949ba59abbe56e057f20f883e', '1602415429', '127.0.0.1', '0', '1');
 
@@ -1435,7 +1503,7 @@ CREATE TABLE `ds_user_ane_log` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`) USING BTREE,
   KEY `type` (`types`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of ds_user_ane_log
@@ -1453,6 +1521,8 @@ INSERT INTO `ds_user_ane_log` VALUES ('12', '29', '18.00', '50.00', '68.00', '�
 INSERT INTO `ds_user_ane_log` VALUES ('13', '30', '2.00', '0.00', '2.00', '挖矿奖励2.00ANE', '1', '1602839862', '0');
 INSERT INTO `ds_user_ane_log` VALUES ('14', '30', '-2.00', '2.00', '0.00', '租用空间消耗2.0000ANE', '4', '1602839951', '0');
 INSERT INTO `ds_user_ane_log` VALUES ('15', '30', '-2.00', '100.00', '98.00', '租用空间消耗2.00ANE', '4', '1602841024', '0');
+INSERT INTO `ds_user_ane_log` VALUES ('16', '30', '-3.30', '98.00', '94.70', '市场卖出3.3ANE', '8', '1602923113', '0');
+INSERT INTO `ds_user_ane_log` VALUES ('17', '30', '3.30', '94.70', '98.00', '市场卖出退回3.3ANE', '9', '1603099596', '0');
 
 -- ----------------------------
 -- Table structure for `ds_user_eco_log`

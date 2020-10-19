@@ -56,7 +56,7 @@
                     </div>
                 </li>
                 <li>
-                    <div class="xieyi"><i class="sel_icon"></i>我已阅读并接受<em>《交易协议》</em></div>
+                    <div class="xieyi"><i class="sel_icon"></i>我已阅读并接受<a href="{:U('/index/trade/agreement')}"><em>《交易协议》</em></a></div>
                 </li>
             </ul>
             <div class="public_btn">
@@ -105,13 +105,13 @@
         console.log(sk_way_str);
         $("input[name='sk_way']").val(sk_way_str);
     });
-    $(".xieyi").click(function () {
+    $(".xieyi .sel_icon").click(function () {
         var is_read = $("input[name='is_read']").val();
         if(!is_read){
-            $(this).find('i').attr('class','sel_icon active');
+            $(this).attr('class','sel_icon active');
             $("input[name='is_read']").val(1);
         }else{
-            $(this).find('i').attr('class','sel_icon');
+            $(this).attr('class','sel_icon');
             $("input[name='is_read']").val('');
         }
     });

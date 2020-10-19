@@ -22,6 +22,8 @@ class UserAneLogModel extends Model
                 return '市场买入';
             case 8:
                 return '市场卖出';
+            case 9:
+                return '市场卖出退回';
         }
     }
     public  function addInfo($userId, $remark, $num, $old, $new, $type,$valid_period)

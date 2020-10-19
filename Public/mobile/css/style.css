@@ -2147,6 +2147,9 @@
 .wym_cx ul li span.red_color{
     color:#f2551e
 }
+.wym_cx ul li span.blue_color{
+    color:#02a8f1
+}
 .wym_cx ul li.zfb_li{
     border-top: 1px solid #efefef;
     padding-top: .25rem;
@@ -2249,6 +2252,7 @@
     font-size: .22rem;
     margin-top: .2rem;
     font-weight: bold;
+    text-align: center;
 }
 .ddxq-page p.wx_tips{
     color: #05b793;

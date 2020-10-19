@@ -38,6 +38,7 @@
 		public function bonusConf(){
 			$path = './App/Conf/system.php';
 			$config = include $path;
+            $old_trade_price = $config['trade_price'];
 
 			$config['ONE']      = I('post.ONE',0,'floatval');
 			$config['TWO']      = I('post.TWO',0,'floatval');
@@ -93,7 +94,9 @@
 
             $config['trade_start_receive']      = I('post.trade_start_receive');
             $config['trade_end_receive']      = I('post.trade_end_receive');
-            $config['trade_price']      = I('post.trade_price');
+            $new_trade_price = I('post.trade_price');
+            $config['trade_price']      = $new_trade_price;
+
             $config['trade_pay_overtime']      = I('post.trade_pay_overtime');
             $config['trade_sk_overtime']      = I('post.trade_sk_overtime');
             $config['trade_is_sort']      = I('post.trade_is_sort');
@@ -104,9 +107,18 @@
             $config['trade_running_num']      = I('post.trade_running_num');
             $config['trade_whitelist']      = I('post.trade_whitelist');
             $config['trade_complain_saler_deal_hours']      = I('post.trade_complain_saler_deal_hours');
+            $config['trade_is_stop']      = I('post.trade_is_stop');
+            $config['trade_stop_reason']      = I('post.trade_stop_reason');
 
  			$data = "<?php\r\nreturn " . var_export($config, true) . ";\r\n?>";
 			if (file_put_contents($path, $data)) {
+                /*价格变动记录*/
+                if($old_trade_price != $new_trade_price){
+                    M('k_line')->add(array(
+                        'price' => $new_trade_price,
+                        'add_time' => time(),
+                    ));
+                }
 				$this->success('修改成功', U(GROUP_NAME.'/System/customSetting'));
 			} else {
 				$this->error('修改失败， 请修改' . $path . '的写入权限');

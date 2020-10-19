@@ -159,6 +159,18 @@
                 卖家已投诉
             </div>
         </div>
+   <elseif condition="$info['status'] eq '5'" />
+        <p class="tips wx_tips">交易失败</p>
+        <div class="upload_page flexbox wrap spacearound">
+            <div class="upload_show pay no_pay_l" id="img">
+                <!--<input type="file" id="file" class="input_line">-->
+                <a href="javascript:;" class="upload_img"><img src="{$info.image|default=''}" alt=""></a>
+                <em class="fd_icon" style="display: inline-block"></em>
+            </div>
+            <div class="upload_show pay_r pay" >
+                已完成
+            </div>
+        </div>
      <else />
         <p class="tips wx_tips">交易完成</p>
         <div class="upload_page flexbox wrap spacearound">

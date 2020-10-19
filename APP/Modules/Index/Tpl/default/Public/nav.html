@@ -16,11 +16,20 @@
                 应用
             </li>
         </a>
-        <a href="{:U('index/trade/index')}">
-            <li class="footer_f4 mui-item">
-                交易
-            </li>
-        </a>
+        <if condition="$is_senior_cert eq 1">
+            <a href="{:U('index/trade/index')}">
+                <li class="footer_f4 mui-item">
+                    交易
+                </li>
+            </a>
+        <else />
+            <a href="javascript:;" class="trade" >
+                <li class="footer_f4 mui-item">
+                    交易
+                </li>
+            </a>
+        </if>
+
         <a href="{:U('index/member/index')}">
             <li class="footer_f5 mui-item">
                 我的
@@ -28,3 +37,10 @@
         </a>
     </ul>
 </div>
+<script>
+    $(".trade").click(function () {
+        layer.msg("请先去高级认证",'',function () {
+            window.location.href = '/index/member/senior_cert'
+        })
+    })
+</script>

@@ -16,14 +16,14 @@
     </header>
     <div class="trade_page">
         <div class="trade_top">
-            <p class="cur_time">当前价格(2020-09-29)</p>
-            <p class="price">35.00<em>￥</em></p>
+            <p class="cur_time">当前价格({$times})</p>
+            <p class="price">{$k_line_arr[0]|default=0.00}<em>￥</em></p>
             <p class="btn">
                 <span>价格</span>
             </p>
             <div class="info flexbox spacebetween">
-                <span>昨日价：<em>34.56</em></span>
-                <span>卖手续费：<em>25%</em></span>
+                <span>昨日价：<em>{$k_line_arr[1]|default=0.00}</em></span>
+                <span>卖手续费：<em>{$sxf_rate*100}%</em></span>
             </div>
         </div>
         <div class="trade_con" style="height:4.5rem">
@@ -31,27 +31,61 @@
         </div>
         <div class="trade_bottom">
             <ul class="flexbox wrap spacearound">
-                <a href="{:U('/index/trade/buy')}">
-                    <li>
-                        <i class="jq"></i><span>求购中心</span>
-                    </li>
-                </a>
-                <a href="{:U('/index/trade/publish')}">
-                    <li>
-                        <i class="fabu"></i><span>发布求购</span>
-                    </li>
-                </a>
+                <if condition="$is_trade neq 1 OR $is_over_time eq 1">
+                    <a href="javascript:;" class="stop_trade">
+                        <li>
+                            <i class="jq"></i><span>求购中心</span>
+                        </li>
+                    </a>
+                <else />
+                    <a href="{:U('/index/trade/buy')}">
+                        <li>
+                            <i class="jq"></i><span>求购中心</span>
+                        </li>
+                    </a>
+                </if>
+                <if condition="$is_trade neq 1 ">
+                    <a href="javascript:;" class="stop_trade">
+                        <li>
+                            <i class="fabu"></i><span>发布求购</span>
+                        </li>
+                     </a>
+                <else />
+                    <a href="{:U('/index/trade/publish')}">
+                        <li>
+                            <i class="fabu"></i><span>发布求购</span>
+                        </li>
+                    </a>
+                </if>
+
                 <a href="{:U('/index/trade/order')}">
                     <li>
                         <i class="dingdan"></i><span>我的订单</span>
                     </li>
                 </a>
-                <a href="{:U('/index/trade/record')}">
-                    <li>
-                        <i class="jilu"></i><span>交易记录</span>
-                    </li>
-                </a>
+                <if condition="$is_skm eq 1">
+                    <a href="{:U('/index/trade/record')}">
+                        <li>
+                            <i class="jilu"></i><span>交易记录</span>
+                        </li>
+                    </a>
+                <else />
+                    <a href="javascript:;" class="trade_record">
+                        <li>
+                            <i class="jilu"></i><span>交易记录</span>
+                        </li>
+                    </a>
+                </if>
+
             </ul>
+        </div>
+    </div>
+    <div class="zhezhao_h"></div>
+    <div class="order_tips_pop fx_pop" style="display: none">
+        <div class="order_tips_pop_view">
+            <p class="title">温馨提示</p>
+            <p>{$tips}</p>
+            <p class="btn" style="padding-bottom: .2rem"></p>
         </div>
     </div>
 <include file="Public:nav"/>
@@ -61,98 +95,125 @@
     var dom = document.getElementById("main");
     var myChart = echarts.init(dom);
     window.onresize = myChart.resize;  // 适应屏幕放大缩小
-    var app = {};
-    option = null;
-    option = {
-        baseOption: {
-            title: {
-                text: '',
-                subtext: ''
-            },
-            tooltip: {
-                trigger: 'axis'
-            },
-            legend: {
-                data:['ANE']
-            },
-            itemStyle: {
-                // 点的颜色。
-                color: '#0080ff'
-            },
-            toolbox: {
-                show: true,
-                feature: {
-                    /* magicType: {show: true, type: ['stack', 'tiled']},*/
-                    saveAsImage: {show: false}   //可下载图片
-                }
-            },
-            grid: {
-                left: '15%',     //设置canvas图距左的距离
-                top: '20%',
-                right: '10%',
-                bottom: '10%'
-            },
-            xAxis: {
-                splitLine :{    //网格线
-                    lineStyle:{
-                        type:'dashed'    //设置网格线类型 dotted：虚线   solid:实线
-                    },
-                    show:true //隐藏或显示
+    myChart.showLoading();
+    $.post("/index/trade/get_k_data", function (data) {
+        myChart.hideLoading();
+        console.log(data);
+        var app = {};
+        option = null;
+        option = {
+            baseOption: {
+                title: {
+                    text: '',
+                    subtext: ''
                 },
-                type: 'category',
-                axisTick:{
-                    lineStyle:{
-                        type:'dashed'
-                    },
-                    show:true
+                tooltip: {
+                    trigger: 'axis'
                 },
-                boundaryGap: false,
-                data: ['周一','周二','周三','周四','周五','周六','周日']
-            },
-            yAxis: {
-                type: 'value',
-                axisTick:{
-                    lineStyle:{
-                        type:'dashed'
-                    },
-                    show:true
+                legend: {
+                    data:['ANE']
                 },
-                splitLine :{    //网格线
-                    lineStyle:{
-                        type:'dashed'    //设置网格线类型 dotted：虚线   solid:实线
-                    },
-                    show:true //隐藏或显示
-                },
-//                min:"0",
-//                max:1000,
-            },
-            emphasis: {
                 itemStyle: {
-                    // 高亮时点的颜色。
+                    // 点的颜色。
                     color: '#0080ff'
                 },
-            },
-            series: [
-                {
-                    areaStyle: {
-                        normal: {
-                            color: '#d0e9ff' //改变区域颜色
-                        }
+                toolbox: {
+                    show: true,
+                    feature: {
+                        /* magicType: {show: true, type: ['stack', 'tiled']},*/
+                        saveAsImage: {show: false}   //可下载图片
+                    }
+                },
+                grid: {
+                    left: '15%',     //设置canvas图距左的距离
+                    top: '20%',
+                    right: '10%',
+                    bottom: '10%'
+                },
+                xAxis: {
+                    splitLine :{    //网格线
+                        lineStyle:{
+                            type:'dashed'    //设置网格线类型 dotted：虚线   solid:实线
+                        },
+                        show:true //隐藏或显示
                     },
-                    symbol:'circle',
-                    symbolSize:8,
-                    name: 'ANE',
-                    type: 'line',
-                    smooth: false,
-                    data: [10, 12, 21, 54, 260, 830]
-                }
-            ]
-        }
-    };
-    if (option && typeof option === "object") {
-        myChart.setOption(option, true);
-    }
+                    type: 'category',
+                    axisTick:{
+                        lineStyle:{
+                            type:'dashed'
+                        },
+                        show:true
+                    },
+                    boundaryGap: false,
+//                    data: ['周一','周二','周三','周四','周五','周六','周日']
+                    data: data.date
 
+                },
+                yAxis: {
+                    type: 'value',
+                    axisTick:{
+                        lineStyle:{
+                            type:'dashed'
+                        },
+                        show:true
+                    },
+                    axisLabel: {
+                        formatter: function (value, index) {
+                            return value.toFixed(2);
+                        }
+                   },
+                    splitLine :{    //网格线
+                        lineStyle:{
+                            type:'dashed'    //设置网格线类型 dotted：虚线   solid:实线
+                        },
+                        show:true //隐藏或显示
+                    },
+                    splitNumber: 3,
+//                min:"0",
+//                max:1000,
+                },
+                emphasis: {
+                    itemStyle: {
+                        // 高亮时点的颜色。
+                        color: '#0080ff'
+                    },
+                },
+                series: [
+                    {
+                        areaStyle: {
+                            normal: {
+                                color: '#d0e9ff' //改变区域颜色
+                            }
+                        },
+                        symbol:'circle',
+                        symbolSize:8,
+                        name: 'ANE',
+                        type: 'line',
+                        smooth: false,
+//                        data: [10, 12, 21, 54, 260, 830]
+                        data:  data.price
+                    }
+                ]
+            }
+        };
+        if (option && typeof option === "object") {
+            myChart.setOption(option, true);
+        }
+    });
+
+
+
+    $(".stop_trade").click(function () {
+        $(".zhezhao_h").addClass('zhezhao');
+        $(".fx_pop").show();
+    })
+    $('.zhezhao_h').click(function () {
+        $(".zhezhao_h").removeClass('zhezhao');
+        $(".fx_pop").hide();
+    });
+    $(".trade_record").click(function () {
+        window.location.href="/index/member/payment"
+    })
 </script>
 </html>
 

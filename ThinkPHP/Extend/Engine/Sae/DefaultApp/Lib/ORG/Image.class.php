@@ -295,6 +295,7 @@ class Image {
      * @return string
      */
     static function buildImageVerify($length=4, $mode=1, $type='png', $width=48, $height=22, $verifyName='verify') {
+
         import('@.ORG.String');
         $randval = String::randString($length, $mode);
         session($verifyName, md5($randval));

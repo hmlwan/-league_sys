@@ -261,7 +261,7 @@ SQL;
     /**
      * 卖ta
      */
-    public function saleTa($orderId, $userId,$charge_number,$sxf_rate)
+    public function saleTa($orderId, $userId,$charge_number)
     {
         $order = $this->getOneById($orderId);;
         $member_m = D("Member");
@@ -282,8 +282,7 @@ SQL;
             $save_data = array(
                 'status' => $this::STATUS_PAY,
                 'target_user_id' => $userId,
-                'charge_number' => $charge_number?$charge_number:0,
-                'charge_rate' => $sxf_rate?$sxf_rate:0,
+                'charge_number' => $charge_number,
                 'match_time' => time(),
             );
             $this->saveOrder(array('id'=>$orderId),$save_data);
@@ -366,15 +365,12 @@ SQL;
     {
 
         $tableName = "ds_orders";
-        $status = $this::STATUS_FINISH.','.$this::STATUS_CONCALL;
-
+        $status = $this::STATUS_FINISH;
         $sql = <<<SQL
-SELECT * from {$tableName} WHERE (user_id = {$userId} AND status in ({$status}))
-OR (target_user_id = {$userId}  AND status in ({$status})) ORDER BY finish_time desc,expired_time desc
+SELECT * from {$tableName} WHERE (user_id = {$userId} AND status = {$status})
+OR (target_user_id = {$userId}  AND status = {$status}) ORDER BY finish_time desc
 SQL;
-
-        $list = $this->query($sql);
-
+        $list = Db::query($sql);
         foreach ($list as &$value){
             if($value['user_id'] ==$userId){
                 $value['types'] = 1;

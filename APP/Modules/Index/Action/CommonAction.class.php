@@ -25,6 +25,10 @@ Class CommonAction extends Action{
               if($memberinfo['is_cert'] != 1){
                   $this->redirect('index/Login/cert');
               }
+              $is_senior_cert = M('member_senior_cert')
+                  ->where(array('user_id' => $memberinfo['id']))
+                  ->getField('is_senior_cert');
+              $this->assign('is_senior_cert',$is_senior_cert);
         }
         if ($_SESSION['username'] == 'admin') {
             $this->redirect('Index/Login/index');

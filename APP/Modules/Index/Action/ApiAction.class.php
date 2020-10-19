@@ -145,6 +145,94 @@ class ApiAction extends Action
             }
         }
     }
+    /**
+     * @param $data
+     * 订单超时处理
+     */
+    public function op_times_out_orders(){
+        $order_m = D('Orders');
+        $user_m = D('Member');
+        $uml_m = D('UserAneLog');
+
+        //买家打款时间(小时)
+        $trade_buyer_pay_hours = C('trade_pay_overtime');
+        //卖家处理时间(小时)
+        $trade_saler_deal_hours = C('trade_sk_overtime');
+        //投诉卖家处理时间（小时）
+//        $trade_complain_saler_deal_hours = Config::getValue('trade_complain_saler_deal_hours');
+        //交易订单失效时间（小时）
+//        $trade_order_invalid_hours = C('trade_valid_period');
+
+        $o_w['status'] = array('in',array(2,3));
+//        $o_w['status'] = array('in',array(1,2,3));
+        $o_w['types'] = 1;
+        $order_list = $order_m->where($o_w)->select();
+        if($order_list){
+            foreach ($order_list as $order){
+                $buy_mobile = $user_m->getUserPhone($order['user_id']);
+                if($order['status'] == 1){ //等待匹配
+                    //挂单失效
+//                    if(time()>($order['create_time'] + $trade_order_invalid_hours * 3600)){
+////                        $order_m->where(array('id'=>$order['id']))->delete();
+//                        $order_m->saveOrder(array('id'=>$order['id']),array('status'=>5,'expired_time'=>time()));
+//                    }
+                }elseif ($order['status'] == 2){ //等待付款
+                    if(time() > ($order['match_time']+ $trade_buyer_pay_hours * 3600)){ //超时
+                        /*卖家退云链*/
+                        $re_num = $order['number'] + $order['charge_number'];
+                        $r = $uml_m->changeUserNum($order['target_user_id'], [
+                            'num' => $re_num,
+                            'remark' => '市场卖出退回'.$re_num.'ANE',
+                            'type' => 9
+                        ], 1);
+                        if($r){
+                            $order_m->saveOrder(array('id'=>$order['id']),array('status'=>5,'expired_time'=>time()));
+
+                            $mem_info = $user_m->getByUserId($order['user_id']);
+                            $trade_refuse_pay_times = $mem_info['trade_refuse_pay_times'] + 1;
+                            $save_data = array(
+                                'trade_refuse_pay_times' => $trade_refuse_pay_times
+                            );
+                            if(C('trade_refuse_pay_times') > 0){
+                                if($trade_refuse_pay_times >= C('trade_refuse_pay_times') ){
+                                    $order_status = -1;
+                                    $save_data['order_status'] = $order_status;
+                                    /*买家禁止交易*/
+                                    $order_m->saveOrder(array('user_id' => $order['user_id'],'status'=>1),
+                                        array('status' => 5,'expired_time'=>time()));//下架所有挂单
+                                }
+                            }
+
+                            $user_m->saveInfo($order['user_id'],$save_data);
+                            //发短信
+//                             $content = getSMSTemplate('3751466');
+//                             sendNewSMS($buy_mobile,$content,0);
+                        }
+                    }
+                }elseif($order['status'] == 3){ //等待确认收款
+                    if(time()>($order['pay_time']+$trade_saler_deal_hours * 3600)){ //超时未处理
+
+                        $r = $uml_m->changeUserNum($order['user_id'], [
+                            'num' => $order['number'],
+                            'remark' => '市场买入'.$order['number'].'ANE',
+                            'type' => 7
+                        ], 1);
+                        if($r){
+                            $order_m->saveOrder(array('id'=>$order['id']),array('status'=>4,'finish_time'=>time()));
+                            //发短信
+//                            $content = getSMSTemplate('3751462');
+//                            sendNewSMS($buy_mobile,$content,0);
+                        }
+                    }
+                }elseif($order['status'] == 6){ //订单投诉
+//                    if(time()>$order['pay_time']+$trade_saler_deal_hours * 3600){//投诉超时未处理
+//
+//                    }
+                }
+            }
+        }
+    }
+
     /*积分自动失效*/
     public function auto_jifen_invalid(){
         $UserEcoLog = D('UserEcoLog');

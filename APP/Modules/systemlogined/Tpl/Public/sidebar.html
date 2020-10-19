@@ -40,29 +40,36 @@
 									会员列表
 								</a>
 							</li>	
-</if>
-	<li url="Memberuncheck">
-		<a href="{:U(GROUP_NAME.'/Member/shuadan')}">
-			<i class="icon-double-angle-right"></i>
-			刷单数量
-		</a>
-	</li>
-	<li url="Memberuncheck">
-		<a href="{:U(GROUP_NAME.'/Member/lockuser')}">
-			<i class="icon-double-angle-right"></i>
-			封停会员
-		</a>
-	</li>
+							</if>
+								<!--<li url="Memberuncheck">-->
+									<!--<a href="{:U(GROUP_NAME.'/Member/shuadan')}">-->
+										<!--<i class="icon-double-angle-right"></i>-->
+										<!--刷单数量-->
+									<!--</a>-->
+								<!--</li>-->
+								<!--<li url="Memberuncheck">-->
+									<!--<a href="{:U(GROUP_NAME.'/Member/lockuser')}">-->
+										<!--<i class="icon-double-angle-right"></i>-->
+										<!--封停会员-->
+									<!--</a>-->
+								<!--</li>-->
 
 
-	<if condition="(isset($acc[strtoupper(GROUP_NAME)][strtoupper('Member')][strtoupper('shu_list')])) or (!empty($_SESSION[C('ADMIN_AUTH_KEY')]))">
-							<!--<li url="Membercheck">-->
-							<!--	<a href="{:U(GROUP_NAME.'/Member/shu_list')}">-->
-							<!--		<i class="icon-double-angle-right"></i>-->
-							<!--		团队树形图-->
-							<!--	</a>-->
-							<!--</li>-->
-</if>	
+								<if condition="(isset($acc[strtoupper(GROUP_NAME)][strtoupper('Member')][strtoupper('shu_list')])) or (!empty($_SESSION[C('ADMIN_AUTH_KEY')]))">
+														<!--<li url="Membercheck">-->
+														<!--	<a href="{:U(GROUP_NAME.'/Member/shu_list')}">-->
+														<!--		<i class="icon-double-angle-right"></i>-->
+														<!--		团队树形图-->
+														<!--	</a>-->
+														<!--</li>-->
+							</if>
+							<li url="Memberuncheck">
+								<a href="{:U(GROUP_NAME.'/Member/order')}">
+									<i class="icon-double-angle-right"></i>
+									求购订单
+								</a>
+							</li>
+
 
 							<li url="Memberuncheck">
 								<a href="{:U(GROUP_NAME.'/Member/gaward')}">

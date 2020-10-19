@@ -9,7 +9,7 @@
                 <span>数量：{$item.number} ANE</span>
                 <if condition="$item['types'] eq '1'">
                     <span class="red_color">买单</span>
-                <else />
+                    <else />
                     <span class="blue_color">卖单</span>
                 </if>
             </li>
@@ -17,7 +17,7 @@
                 <span>单价：{$item.price} CNY</span>
                 <if condition="$item['types'] eq '1'">
                     <span class="red_color">{$item.number}  CNY</span>
-                <else />
+                    <else />
                     <span class="blue_color">{$item.number}  CNY</span>
                 </if>
             </li>
@@ -29,24 +29,13 @@
                         </volist>
                     </if>
                 </span>
-                <if condition="$item['order_status'] eq '1'">
-                    <span>
-                        <if condition="$item['types'] eq '1'">
-                            <a href="{:U('/index/trade/buy_detail',array('order_id'=>$item['id']))}" class="m1_bgk">详情</a>
-                        <else />
-                            <a href="{:U('/index/trade/sale_detail',array('order_id'=>$item['id']))}" class="m2_bgk">详情</a>
-                        </if>
-                    </span>
-                <else />
-                    <span class="is_order_status">
-                       <if condition="$item['types'] eq '1'">
-                           <em  class="m1_bgk">详情</em>
-
-                        <else />
-                            <em  class="m2_bgk">详情</em>
-                        </if>
-                    </span>
-                </if>
+                <span>
+                    <if condition="$item['types'] eq '1'">
+                        <a href="{:U('/index/trade/buy_detail',array('order_id'=>$item['id']))}" class="m1_bgk">详情</a>
+                    <else />
+                        <a href="{:U('/index/trade/sale_detail',array('order_id'=>$item['id']))}" class="m2_bgk">详情</a>
+                    </if>
+                </span>
             </li>
         </ul>
     </div>

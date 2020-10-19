@@ -18,6 +18,12 @@ class UserAneLogModel extends Model
                 return '联盟奖励';
             case 6:
                 return '联盟分红';
+            case 7:
+                return '市场买入';
+            case 8:
+                return '市场卖出';
+            case 9:
+                return '市场卖出退回';
         }
     }
     public  function addInfo($userId, $remark, $num, $old, $new, $type,$valid_period)
